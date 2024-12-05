@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcrypt'
-
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -23,7 +22,6 @@ const userSchema = new mongoose.Schema({
   },
   no_of_user: {
     type: Number,
-    
   },
   // organization_name: {
   //   type: String,
@@ -52,7 +50,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// funtion to generate the access token 
+// funtion to generate the access token
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -65,10 +63,8 @@ userSchema.methods.generateAccessToken = function () {
       expiresIn: process.env.EXPIRE_ACCESS_TOKEN,
     }
   );
- 
+
   // function to generate the refreshToken
-  
-  
 };
 
 export const User = mongoose.model("User", userSchema);
