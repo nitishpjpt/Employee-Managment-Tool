@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 
 const Register = () => {
   const [OTP, setOTP] = useState("");
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,12 +41,12 @@ const Register = () => {
       organizationName,
       organizationSize,
       phnNumber,
-      contactId
+      contactId,
     };
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/register`,  // Correct the endpoint if needed
+        `http://localhost:8000/api/v1/user/register`, // Correct the endpoint if needed
         userData,
         {
           headers: {
@@ -81,7 +81,10 @@ const Register = () => {
         <h1 className="text-4xl font-semibold">EMP Monitor</h1>
       </div>
       <div className="max-w-[100vw] p-4">
-        <form onSubmit={submitHandler} className="max-w-[60vw] mx-auto p-8 bg-white rounded-lg shadow-md">
+        <form
+          onSubmit={submitHandler}
+          className="max-w-[60vw] mx-auto p-8 bg-white rounded-lg shadow-md"
+        >
           <div className="mb-4">
             <h1 className="text-xl font-semibold">Register Page</h1>
             <p className="bg-slate-200 p-2">
@@ -101,7 +104,7 @@ const Register = () => {
                 onChange={(e) => setCouponCode(e.target.value)}
               />
             </div>
-            
+
             <div className="mb-4">
               <label className="font-semibold">Organization Name</label>
               <input
@@ -209,7 +212,9 @@ const Register = () => {
               <p>This is my WhatsApp Number as well.</p>
             </div>
             <div className="mb-4">
-              <label className="font-semibold">Preferred Points of Contact:</label>
+              <label className="font-semibold">
+                Preferred Points of Contact:
+              </label>
               <input
                 className="border p-1 w-full"
                 required
@@ -219,7 +224,9 @@ const Register = () => {
                 onChange={(e) => setContactId(e.target.value)}
               />
             </div>
-            <button className="bg-slate-200 p-2 w-full sm:w-auto">Register</button>
+            <button className="bg-slate-200 p-2 w-full sm:w-auto">
+              Register
+            </button>
           </div>
         </form>
       </div>

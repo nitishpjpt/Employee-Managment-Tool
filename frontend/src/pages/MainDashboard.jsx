@@ -16,19 +16,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
-import HomeIcon from "@mui/icons-material/Home";
-import BadgeIcon from "@mui/icons-material/Badge";
-import PunchClockIcon from "@mui/icons-material/PunchClock";
-import DashTable from "../components/Table";
-import SettingsIcon from "@mui/icons-material/Settings";
-import DraftsIcon from "@mui/icons-material/Drafts";
 import { useNavigate } from "react-router-dom";
-
-
-
-
-
+import { SlCalender } from "react-icons/sl";
+import { IoMdTimer } from "react-icons/io";
+import { GoProject } from "react-icons/go";
+import { BsPersonCircle } from "react-icons/bs";
+import { FaHome } from "react-icons/fa";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { RiListSettingsLine } from "react-icons/ri";
+import { IoMdSettings } from "react-icons/io";
+import { MdPerson } from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -113,7 +110,6 @@ const Drawer = styled(MuiDrawer, {
 export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  
 
   const navigate = useNavigate();
 
@@ -124,7 +120,7 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  
+
   // navigate on onclick
   const handleNavigation = (path) => {
     navigate(path);
@@ -168,17 +164,61 @@ export default function Dashboard() {
 
         <List>
           {[
-            { text: "Dashboard", icon: <HomeIcon />, path: "/dashboard" },
-            { text: "Employee", icon: <BadgeIcon />, path: "/employee-details" },
-            { text: "Timesheet", icon: <PunchClockIcon />, path: "/timesheet" },
-            { text: "Projects", icon: <MailIcon />, path: "/projects" },
-            { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+            {
+              text: "Dashboard",
+              icon: <FaHome className="text-3xl text-[#233D7A]" />,
+              path: "/dashboard",
+            },
+            {
+              text: "Employee",
+              icon: <BsPersonCircle className="text-3xl text-[#233D7A]" />,
+              path: "/employee-details",
+            },
+            {
+              text: "Timesheet",
+              icon: <SlCalender className="text-2xl text-[#233D7A]" />,
+              path: "/timesheet",
+            },
+            {
+              text: "Projects",
+              icon: <IoMdTimer className="text-3xl text-[#233D7A]" />,
+              path: "/time-claim",
+            },
+            {
+              text: "Settings",
+              icon: <GoProject className="text-3xl text-[#233D7A]" />,
+              path: "/projects",
+            },
+            {
+              text: "Reports",
+              icon: (
+                <HiOutlineDocumentReport className="text-3xl text-[#233D7A]" />
+              ),
+              path: "/reports",
+            },
+            {
+              text: "DLP",
+              icon: <RiListSettingsLine className="text-3xl text-[#233D7A]" />,
+              path: "/dlp",
+            },
+            {
+              text: "Setting",
+              icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
+              path: "/setting",
+            },
+            {
+              text: "Behaviour",
+              icon: <MdPerson className="text-3xl text-[#233D7A]" />,
+              path: "/behavior",
+            },
           ].map(({ text, icon, path }) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[
                   { minHeight: 48, px: 2.5 },
-                  open ? { justifyContent: "initial" } : { justifyContent: "center" },
+                  open
+                    ? { justifyContent: "initial" }
+                    : { justifyContent: "center" },
                 ]}
                 onClick={() => handleNavigation(path)}
               >
@@ -192,15 +232,12 @@ export default function Dashboard() {
                 </ListItemIcon>
                 <ListItemText
                   primary={text}
-                  sx={[
-                    open ? { opacity: 1 } : { opacity: 0 },
-                  ]}
+                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
                 />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-
 
         <Divider />
       </Drawer>
@@ -209,39 +246,39 @@ export default function Dashboard() {
         <Typography sx={{ marginBottom: 2 }}>
           {/* <!-- Statistics Cards --> */}
           <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 p-4 gap-4">
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">1,257</p>
+                <p class="text-xl">55</p>
                 <p>Total Enrollments</p>
               </div>
             </div>
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#E371B4] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">557</p>
+                <p class="text-xl">35</p>
                 <p>Currently active</p>
               </div>
             </div>
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#00DCCE] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">$11,257</p>
+                <p class="text-xl">5</p>
                 <p>Currently idle</p>
               </div>
             </div>
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#FF9A19] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">$75,257</p>
+                <p class="text-xl">10</p>
                 <p>Currently offline</p>
               </div>
             </div>
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#FC8188] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-2xl">$75,257</p>
+                <p class="text-2xl">5</p>
                 <p>Absent</p>
               </div>
             </div>
-            <div class="bg-blue-500 dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+            <div class="bg-[#51BAD6] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-2xl">$75,257</p>
+                <p class="text-2xl">2</p>
                 <p>Suspended</p>
               </div>
             </div>
