@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcrypt from 'bcrypt'
 
 const employeeSchema = new mongoose.Schema({
   firstName: {
@@ -10,16 +10,16 @@ const employeeSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+
     unique: true,
   },
   password: {
     type: Number,
-    required: true,
+    required: [true, "Password is required"],
   },
   confirmPassword: {
     type: Number,
-    required: true,
+    required: [true, "Password is required"],
   },
   phnNumber: {
     type: String,
@@ -38,7 +38,7 @@ const employeeSchema = new mongoose.Schema({
     type: String,
   },
   date: {
-    type: Number,
+    type: String,
   },
   timezone: {
     type: String,
@@ -50,5 +50,19 @@ const employeeSchema = new mongoose.Schema({
     type: String,
   },
 });
+
+
+///function to bcrypt the password
+// employeeSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
+
+//   this.password = await bcrypt.hash(this.password, 10);
+//   return next();
+// });
+
+// // function to compare the password
+// employeeSchema.methods.isPasswordCorrect = async function (password) {
+//   return await bcrypt.compare(password, this.password);
+// };
 
 export const Employee = mongoose.model("Employee", employeeSchema);

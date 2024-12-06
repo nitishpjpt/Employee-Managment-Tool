@@ -27,7 +27,8 @@ const userRegister = async (req, res) => {
   // Check if all required fields are provided and valid
   if (
     [username, email, password, contactId].some(
-      (field) => !field || !field.trim())
+      (field) => !field || !field.trim()
+    )
     // organizationName === undefined ||
     // organizationSize === null
   ) {
@@ -50,7 +51,7 @@ const userRegister = async (req, res) => {
     password,
     organizationSize,
     contactId,
-    firstName
+    firstName,
   });
 
   if (!user) {

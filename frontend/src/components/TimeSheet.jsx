@@ -1,10 +1,11 @@
 import React from "react";
 import MainDashboard from "../pages/MainDashboard";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoEyeSharp } from "react-icons/io5";
-import { IoIosSettings } from "react-icons/io";
+import { EmployeeContext } from "../context/EmployeeContext";
+import { useContext } from "react";
 
 const TimeSheet = () => {
+  const { employees } = useContext(EmployeeContext);
+
   return (
     <>
       <MainDashboard />
@@ -62,131 +63,69 @@ const TimeSheet = () => {
         </form>
       </div>
       {/*--------Table-------------*/}
-      <div>
-        <div class="relative overflow-x-auto ml-[5rem] pt-10">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="relative overflow-x-auto ml-[5rem] pt-10">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th className="px-6 py-3">Name</th>
+              <th className="px-6 py-3">Email-id</th>
+              <th className="px-6 py-3">Employee Code</th>
+              <th className="px-6 py-3">Location</th>
+              <th className="px-6 py-3">Department</th>
+              <th className="px-6 py-3">Clock-in</th>
+              <th className="px-6 py-3">Clock-out</th>
+              <th className="px-6 py-3">Total Hour</th>
+              <th className="px-6 py-3">Office Hour</th>
+              <th className="px-6 py-3">Active Hour</th>
+              <th className="px-6 py-3 text-[#35A745]">Productive</th>
+              <th className="px-6 py-3 text-red-500">Unproductive</th>
+              <th className="px-6 py-3">Neutral</th>
+              <th className="px-6 py-3 text-yellow-300">Idle</th>
+              <th className="px-6 py-3">Offline Hours</th>
+              <th className="px-6 py-3">Break</th>
+              <th className="px-6 py-3 text-blue-400">Productivity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.length > 0 ? (
+              employees.map((employee, index) => (
+                <tr
+                  key={index}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {employee.firstName ?? ""}
+                  </td>
+                  <td className="px-6 py-4">{employee.email ?? ""}</td>
+                  <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
+                  <td className="px-6 py-4">{employee.location ?? ""}</td>
+                  <td className="px-6 py-4">{employee.department ?? ""}</td>
+                  <td className="px-6 py-4">{employee.clockIn ?? ""}</td>
+                  <td className="px-6 py-4">{employee.clockOut ?? ""}</td>
+                  <td className="px-6 py-4">{employee.totalHour ?? ""}</td>
+                  <td className="px-6 py-4">{employee.officeHour ?? ""}</td>
+                  <td className="px-6 py-4">{employee.activeHour ?? ""}</td>
+                  <td className="px-6 py-4">{employee.productive ?? ""}</td>
+                  <td className="px-6 py-4">{employee.unproductive ?? ""}</td>
+                  <td className="px-6 py-4">{employee.neutral ?? ""}</td>
+                  <td className="px-6 py-4">{employee.idle ?? ""}</td>
+                  <td className="px-6 py-4">{employee.offlineHours ?? ""}</td>
+                  <td className="px-6 py-4">{employee.break ?? ""}</td>
+                  <td className="px-6 py-4">{employee.productivity ?? ""}</td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <th scope="col" class="px-6 py-3">
-                  Full Name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Email-id
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Employee Code
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Location
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Department
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Clock-in
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Clock-out
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Total Hour
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Office Hour
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Active Hour
-                </th>
-                <th scope="col" class="px-6 py-3 text-[#35A745]">
-                  Productive
-                </th>
-                <th scope="col" class="px-6 py-3 text-red-500">
-                  Unproductive
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Neutral
-                </th>
-                <th scope="col" class="px-6 py-3 text-yellow-300">
-                  Idle
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Offline Hours
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Break
-                </th>
-                <th scope="col" class="px-6 py-3 text-blue-400">
-                  Productivity
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Abhay
-                </th>
-                <td class="px-6 py-4">abhi123@gmail.com</td>
-                <td class="px-6 py-4">102</td>
-                <td class="px-6 py-4">Delhi</td>
-                <td class="px-6 py-4">Technical Lead</td>
-                <td class="px-6 py-4">7:00 AM</td>
-                <td class="px-6 py-4">8:00 PM</td>
-                <td class="px-6 py-4">10</td>
-                <td class="px-6 py-4">2</td>
-                <td class="px-6 py-4">8</td>
                 <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  colSpan="17"
+                  className="px-6 py-4 text-center text-gray-500"
                 >
-                  Ajay
-                </th>
-                <td class="px-6 py-4">Ajay123@gmail.com</td>
-                <td class="px-6 py-4">104</td>
-                <td class="px-6 py-4">Noida</td>
-                <td class="px-6 py-4">IT</td>
-                <td class="px-6 py-4">6:00 AM</td>
-                <td class="px-6 py-4">4:00 PM</td>
-                <td class="px-6 py-4">8</td>
-                <td class="px-6 py-4">2</td>
-                <td class="px-6 py-4">10</td>
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
+                  No data available
+                </td>
               </tr>
-              <tr class="bg-white dark:bg-gray-800">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Abhi
-                </th>
-                <td class="px-6 py-4">Abhi123@gmail.com</td>
-                <td class="px-6 py-4">109</td>
-                <td class="px-6 py-4">Gurugram</td>
-                <td class="px-6 py-4">IT</td>
-                <td class="px-6 py-4">11:00 AM</td>
-                <td class="px-6 py-4">2:00 PM</td>
-                <td class="px-6 py-4">7</td>
-                <td class="px-6 py-4">2</td>
-                <td class="px-6 py-4">1</td>
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            )}
+          </tbody>
+        </table>
       </div>
     </>
   );

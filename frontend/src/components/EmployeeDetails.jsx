@@ -8,14 +8,102 @@ import { IoEyeSharp } from "react-icons/io5";
 import { IoIosSettings } from "react-icons/io";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import EmployeeTable from "./EmployeeTable";
 
 const EmployeeDetails = () => {
   const [registerModal, setRegisterModal] = useState(false);
   const [bulkRegisterModal, setBulkRegisterModal] = useState(false);
   const [bulkUpdateModel, setBulkUpdateModel] = useState(false);
   const [value, setValue] = useState();
+  //from fields
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [employeeCode, setEmployeeCode] = useState("");
+  const [location, setLocation] = useState("");
+  const [role, setRole] = useState("");
+  const [department, setDepartment] = useState("");
+  const [date, setDate] = useState("");
+  const [timezone, setTimezone] = useState("");
+  const [shift, setShift] = useState("");
+  const [employee, setEmployee] = useState("");
+  const [user, setUser] = useState(null);
+  const [allUser,setAllUser] = useState("")
+  //form data as a object
+  const userData = {
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+    phone,
+    employeeCode,
+    location,
+    role,
+    department,
+    date,
+    timezone,
+    employee,
+    shift,
+  };
+
+  //form handler
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    //call the api
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/user/employee/register`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setEmployee(response.data);
+      console.log(response.data.data.date);
+
+      // Store user data in local storage
+      localStorage.setItem("user", JSON.stringify(response.data));
+      //handle the response
+      toast.success("User registered successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error("User  does not register", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser.data);
+        // console.log(parsedUser.data);
+      } catch (error) {
+        console.error("Error parsing user data from local storage:", error);
+      }
+    }
+  }, []);
+
+
   return (
     <>
+      <ToastContainer />
       <MainDashboard />
       <div>
         <div className="w-[100vw]">
@@ -31,7 +119,7 @@ const EmployeeDetails = () => {
             >
               <Modal.Body>
                 <div class="max-w-2xl mx-auto bg-white p-16">
-                  <form>
+                  <form onSubmit={submitHandler}>
                     <div class="grid gap-6 mb-6 lg:grid-cols-2">
                       <div>
                         <label
@@ -46,6 +134,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter first name"
                           required
+                          onChange={(e) => setFirstName(e.target.value)}
                         />
                       </div>
                       <div>
@@ -61,6 +150,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter last name"
                           required
+                          onChange={(e) => setLastName(e.target.value)}
                         />
                       </div>
                       <div>
@@ -76,6 +166,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter your email"
                           required
+                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </div>
                       <div>
@@ -90,8 +181,8 @@ const EmployeeDetails = () => {
                           id="phone"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter your password"
-                          pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                           required
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
                       <div>
@@ -107,6 +198,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter confirm password"
                           required
+                          onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                       </div>
                       <div>
@@ -136,6 +228,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter employee code"
                           required
+                          onChange={(e) => setEmployeeCode(e.target.value)}
                         />
                       </div>
                       <div>
@@ -151,6 +244,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter your location"
                           required
+                          onChange={(e) => setLocation(e.target.value)}
                         />
                       </div>
                       <div>
@@ -166,6 +260,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter your role"
                           required
+                          onChange={(e) => setRole(e.target.value)}
                         />
                       </div>
                       <div>
@@ -181,6 +276,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter your department"
                           required
+                          onChange={(e) => setDepartment(e.target.value)}
                         />
                       </div>
                       <div>
@@ -196,6 +292,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter date of joining"
                           required
+                          onChange={(e) => setDate(e.target.value)}
                         />
                       </div>
                       <div>
@@ -211,6 +308,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Timezone"
                           required
+                          onChange={(e) => setTimezone(e.target.value)}
                         />
                       </div>
                       <div>
@@ -242,6 +340,7 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Select shift"
                           required
+                          onChange={(e) => setShift(e.target.value)}
                         />
                       </div>
                     </div>
@@ -318,124 +417,7 @@ const EmployeeDetails = () => {
             </Modal>
             {/*table*/}
           </div>
-          <div class="relative overflow-x-auto ml-[5rem] pt-10">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" class="px-6 py-3">
-                    Full Name
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Email-id
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    location
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Department
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Role
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Emp-code
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Os
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Computer Name
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Version
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Details
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Abhay
-                  </th>
-                  <td class="px-6 py-4">abhi123@gmail.com</td>
-                  <td class="px-6 py-4">Delhi</td>
-                  <td class="px-6 py-4">IT</td>
-                  <td class="px-6 py-4">Technical Lead</td>
-                  <td class="px-6 py-4">404</td>
-                  <td class="px-6 py-4">404</td>
-                  <td class="px-6 py-4">dell</td>
-                  <td class="px-6 py-4">2</td>
-                  <td class="px-6 py-4">none</td>
-                  <td
-                    class="px-6 py-4"
-                    className="flex justify-center gap-1 items-center py-8"
-                  >
-                    <IoIosSettings className="text-blue-400" />
-                    <RiDeleteBin6Line className="text-red-500" />
-                    <IoEyeSharp className="text-blue-400" />
-                  </td>
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Ajay
-                  </th>
-                  <td class="px-6 py-4">Ajay123@gmail.com</td>
-                  <td class="px-6 py-4">Delhi</td>
-                  <td class="px-6 py-4">IT</td>
-                  <td class="px-6 py-4">CTO</td>
-                  <td class="px-6 py-4">505</td>
-                  <td class="px-6 py-4">404</td>
-                  <td class="px-6 py-4">dell</td>
-                  <td class="px-6 py-4">2</td>
-                  <td class="px-6 py-4">none</td>
-                  <td
-                    class="px-6 py-4"
-                    className="flex justify-center gap-1 items-center py-8"
-                  >
-                    <IoIosSettings className="text-blue-400" />
-                    <RiDeleteBin6Line className="text-red-500" />
-                    <IoEyeSharp className="text-blue-400" />
-                  </td>
-                </tr>
-                <tr class="bg-white dark:bg-gray-800">
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Abhi
-                  </th>
-                  <td class="px-6 py-4">Abhi123@gmail.com</td>
-                  <td class="px-6 py-4">Gurugram</td>
-                  <td class="px-6 py-4">IT</td>
-                  <td class="px-6 py-4">none</td>
-                  <td class="px-6 py-4">504</td>
-                  <td class="px-6 py-4">404</td>
-                  <td class="px-6 py-4">dell</td>
-                  <td class="px-6 py-4">2</td>
-                  <td class="px-6 py-4">none</td>
-                  <td
-                    class="px-6 py-4"
-                    className="flex justify-center gap-1 items-center py-8"
-                  >
-                    <IoIosSettings className="text-blue-400" />
-                    <RiDeleteBin6Line className="text-red-500" />
-                    <IoEyeSharp className="text-blue-400" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <EmployeeTable/>
         </div>
       </div>
     </>

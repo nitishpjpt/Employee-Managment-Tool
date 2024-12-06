@@ -27,6 +27,7 @@ import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiListSettingsLine } from "react-icons/ri";
 import { IoMdSettings } from "react-icons/io";
 import { MdPerson } from "react-icons/md";
+import { useState, useEffect } from "react";
 
 const drawerWidth = 240;
 
@@ -112,6 +113,21 @@ export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser.data.date);
+        console.log(parsedUser.data.date);
+      } catch (error) {
+        console.error("Error parsing user data from local storage:", error);
+      }
+    }
+  }, []);
+
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -154,6 +170,7 @@ export default function Dashboard() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
+            ~~~
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
@@ -249,7 +266,7 @@ export default function Dashboard() {
           <div class="grid  grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 p-4 gap-4">
             <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">65</p>
+                <p class="text-xl">{user}</p>
                 <p>Total Enrollments</p>
               </div>
             </div>

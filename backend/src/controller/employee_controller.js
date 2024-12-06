@@ -1,5 +1,8 @@
-import { Employee } from "../modules/employee_modules";
-import ApiError from "../utlis/ApiError";
+import { Employee } from "../modules/employee_modules.js";
+import ApiError from "../utlis/ApiError.js";
+import uploadOnCloudinary from "../utlis/Cloudinay.js";
+import ApiResponse from "../utlis/ApiResponse.js";
+
 
 const employeeRegister = async (req, res) => {
   console.log("Request Body:", req.body);
@@ -17,7 +20,6 @@ const employeeRegister = async (req, res) => {
     department,
     date,
     timezone,
-    avtar,
     shift,
   } = req.body;
 
@@ -26,9 +28,18 @@ const employeeRegister = async (req, res) => {
     $or: [{ email, password, phnNumber }],
   });
 
-  if (!existingUser) {
+  if (existingUser) {
     throw new ApiError(409, "employee with these details are already register");
   }
+
+  // const avatarLocalPath = req.files;
+  // console.log(avatarLocalPath);
+
+  // const avtarImg = await uploadOnCloudinary(avatarLocalPath);
+  // // if you can does not register user without the avtar
+  // if (!avtarImg) {
+  //   throw new ApiError(400, "Avatar is required on Cloudinary");
+  // }
 
   // create a new user in the database
   const employee = await Employee.create({
@@ -44,7 +55,6 @@ const employeeRegister = async (req, res) => {
     department,
     date,
     timezone,
-    avtar,
     shift,
   });
 
@@ -56,8 +66,7 @@ const employeeRegister = async (req, res) => {
   // remove some sensitive information like password and confirmPassword
 
   const createdUser = await Employee.findById(employee._id).select(
-    "-password",
-    "confirmPassword"
+    "-password -refreshToken -confirmPassword "
   );
 
   if (!createdUser) {
@@ -71,4 +80,25 @@ const employeeRegister = async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User Registered Successfully"));
 };
 
-export default employeeRegister;
+
+const getAllUser = async (req, res) => {
+  const user = await Employee.find().lean();
+
+  if (!user) {
+    throw new ApiError(401, "User data does not get");
+  }
+
+  res.status(200).json(
+    new ApiResponse(
+      201,
+      {
+        user,
+      },
+      "all registered user"
+    )
+  );
+};
+
+
+
+export  {employeeRegister,getAllUser};
