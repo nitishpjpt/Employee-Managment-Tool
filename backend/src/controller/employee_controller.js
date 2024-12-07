@@ -3,7 +3,6 @@ import ApiError from "../utlis/ApiError.js";
 import uploadOnCloudinary from "../utlis/Cloudinay.js";
 import ApiResponse from "../utlis/ApiResponse.js";
 
-
 const employeeRegister = async (req, res) => {
   console.log("Request Body:", req.body);
 
@@ -80,7 +79,6 @@ const employeeRegister = async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User Registered Successfully"));
 };
 
-
 const getAllUser = async (req, res) => {
   const user = await Employee.find().lean();
 
@@ -88,17 +86,20 @@ const getAllUser = async (req, res) => {
     throw new ApiError(401, "User data does not get");
   }
 
+  // count the total number of registration
+  const totalEmployees = await user.length;
+  console.log(totalEmployees);
+
   res.status(200).json(
     new ApiResponse(
       201,
       {
         user,
+        totalEmployees,
       },
       "all registered user"
     )
   );
 };
 
-
-
-export  {employeeRegister,getAllUser};
+export { employeeRegister, getAllUser };

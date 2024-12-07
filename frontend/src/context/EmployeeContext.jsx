@@ -7,7 +7,7 @@ export const EmployeeContext = createContext();
 // Create the provider component
 export const EmployeeProvider = ({ children }) => {
   const [employees, setEmployees] = useState([]);
- 
+  const [totalEmployee, setTotalEmployee] = useState("");
 
   // Function to fetch employee data
   const fetchEmployees = async () => {
@@ -15,7 +15,9 @@ export const EmployeeProvider = ({ children }) => {
       const response = await axios.post(
         `http://localhost:8000/api/v1/user/employee/all/registerDetails`
       );
-      setEmployees(response.data.data.user || []); // Assuming `user` contains the array of employee details
+      setEmployees(response.data.data.user || []);
+      setTotalEmployee(response.data.data.totalEmployees);
+      
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -26,7 +28,7 @@ export const EmployeeProvider = ({ children }) => {
   }, []);
 
   return (
-    <EmployeeContext.Provider value={{ employees, fetchEmployees }}>
+    <EmployeeContext.Provider value={{ employees, fetchEmployees ,totalEmployee}}>
       {children}
     </EmployeeContext.Provider>
   );

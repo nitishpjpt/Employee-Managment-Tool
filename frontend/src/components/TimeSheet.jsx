@@ -2,25 +2,65 @@ import React from "react";
 import MainDashboard from "../pages/MainDashboard";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
+import * as XLSX from "xlsx";
+import Button from "@mui/material/Button";
 
 const TimeSheet = () => {
   const { employees } = useContext(EmployeeContext);
 
+  // Function to export table data to Excel
+  const exportToExcel = () => {
+    if (employees.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    // Map employee data for Excel
+    const formattedData = employees.map((employee) => ({
+      Name: employee.firstName || "",
+      Email: employee.email || "",
+      "Employee Code": employee.employeeCode || "",
+      Location: employee.location || "",
+      Department: employee.department || "",
+      "Clock-In": employee.clockIn || "",
+      "Clock-Out": employee.clockOut || "",
+      "Total Hour": employee.totalHour || "",
+      "Office Hour": employee.officeHour || "",
+      "Active Hour": employee.activeHour || "",
+      Productive: employee.productive || "",
+      Unproductive: employee.unproductive || "",
+      Neutral: employee.neutral || "",
+      Idle: employee.idle || "",
+      "Offline Hours": employee.offlineHours || "",
+      Break: employee.break || "",
+      Productivity: employee.productivity || "",
+    }));
+
+    // Create a worksheet and a workbook
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "TimeSheet Data");
+
+    // Download the Excel file
+    XLSX.writeFile(workbook, "TimeSheetData.xlsx");
+  };
+
   return (
     <>
       <MainDashboard />
-      {/*select options*/}
-      <div className="shadow-lg flex ">
-        <form class="max-w-sm lg:mx-[15rem] md:mx-auto flex lg:flex-row md:flex-col sm:flex-col lg:gap-10">
+
+      {/* Select Options */}
+      <div className="shadow-lg ">
+        <form className="max-w-sm lg:mx-[15rem] md:mx-auto flex lg:flex-row md:flex-col sm:flex-col lg:gap-10">
           <label
-            for="small"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            htmlFor="small"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Location
           </label>
           <select
             id="small"
-            class="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option selected>Choose a Location</option>
             <option value="US">Delhi</option>
@@ -28,15 +68,16 @@ const TimeSheet = () => {
             <option value="FR">Gurugram</option>
             <option value="DE">Noida</option>
           </select>
+
           <label
-            for="default"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            htmlFor="default"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Department
           </label>
           <select
             id="default"
-            class="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option selected>Choose a department</option>
             <option value="US">IT Manager</option>
@@ -44,25 +85,15 @@ const TimeSheet = () => {
             <option value="FR">CTO</option>
             <option value="DE">CIO</option>
           </select>
-          <label
-            for="large"
-            class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-          >
-            Employee
-          </label>
-          <select
-            id="large"
-            class="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected>Choose a employee</option>
-            <option value="US">Deepak</option>
-            <option value="CA">Ajay</option>
-            <option value="FR">Ayush</option>
-            <option value="DE">Abhi</option>
-          </select>
+          {/* Export Button */}
+        <Button onClick={exportToExcel} variant="contained">
+          Export
+        </Button>
         </form>
+        {/* Export Button */}
       </div>
-      {/*--------Table-------------*/}
+
+      {/* Table */}
       <div className="relative overflow-x-auto ml-[5rem] pt-10">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

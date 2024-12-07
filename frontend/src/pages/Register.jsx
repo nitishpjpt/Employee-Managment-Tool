@@ -57,7 +57,7 @@ const Register = () => {
       console.log(response.data);
 
       // Store user data in local storage
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("registerUser", JSON.stringify(response.data));
 
       toast.success("User registered successfully!", {
         position: "top-right",
@@ -78,7 +78,7 @@ const Register = () => {
     <>
       <ToastContainer />
       <div className="text-center pt-8">
-        <h1 className="text-4xl font-semibold">EMP Monitor</h1>
+        <h1 className="text-4xl font-semibold">Deepnap Softech</h1>
       </div>
       <div className="max-w-[100vw] p-4">
         <form

@@ -3,9 +3,6 @@ import MainDashboard from "../pages/MainDashboard";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import { Modal } from "flowbite-react";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { IoEyeSharp } from "react-icons/io5";
-import { IoIosSettings } from "react-icons/io";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import axios from "axios";
@@ -126,7 +123,7 @@ const EmployeeDetails = () => {
                           for="first_name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          First name
+                          First name <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -142,7 +139,7 @@ const EmployeeDetails = () => {
                           for="last_name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Last name
+                          Last name <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -158,7 +155,7 @@ const EmployeeDetails = () => {
                           for="company"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Email
+                          Email <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="email"
@@ -174,7 +171,7 @@ const EmployeeDetails = () => {
                           for="phone"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Password
+                          Password <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="password"
@@ -190,7 +187,7 @@ const EmployeeDetails = () => {
                           for="website"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Confirm Password
+                          Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="password"
@@ -206,7 +203,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Mobile number
+                          Mobile number <span className="text-red-500">*</span>
                         </label>
                         <PhoneInput
                           placeholder="Enter phone number"
@@ -220,7 +217,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Employee code
+                          Employee code <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="number"
@@ -236,7 +233,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Location
+                          Location <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -252,7 +249,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Role
+                          Role <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -268,7 +265,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Department
+                          Department <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -284,7 +281,7 @@ const EmployeeDetails = () => {
                           for="visitors"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Date of Joinig
+                          Date of Joinig <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="date"

@@ -31,6 +31,9 @@ const login = () => {
       );
       console.log(response.data);
 
+   // Store user data in local storage
+   localStorage.setItem("userLogin", JSON.stringify(response.data));
+
       toast.success("User Login successfully!", {
         position: "top-right",
         autoClose: 3000,
