@@ -2,14 +2,70 @@ import React, { useState } from "react";
 import MainDashboard from "../pages/MainDashboard";
 import Button from "@mui/material/Button";
 import { Modal } from "flowbite-react";
-
+import axios from "axios";
+import { useContext } from "react";
+import { ProjectContext } from "../context/ProjectContext";
+import { IoEyeSharp } from "react-icons/io5";
+import { IoIosSettings } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Projects = () => {
   //project modal for opeinig modals
   const [projectModal, setProjectModal] = useState(false);
+  //state for handle the form filed
+  const [projectName, setProjectName] = useState("");
+  const [managerName, setManagerName] = useState("");
+  const [selectMember, setSelectMember] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [description, setDescription] = useState("");
+  //state for stored the response
+  const [project, setProject] = useState("");
+  //useContext
+  const { projectDetails } = useContext(ProjectContext);
+  const projectObj = {
+    projectName,
+    managerName,
+    selectMember,
+    startDate,
+    endDate,
+    description,
+  };
+
+  // function for handle the form
+  const submitHanlder = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/user/projectDetails`,
+        projectObj,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setProject(response.data.data.project);
+      // console.log(response.data.data.project);
+      //handle the response
+      toast.success("Project Added Successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error("Project does not creatd", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <>
+      <ToastContainer />
       <MainDashboard />
       {/*------select----options-----------*/}
       <div className="mx-[10rem] px-6 flex justify-end items-center gap-4 text-center shadow-lg rounded-lg">
@@ -36,8 +92,9 @@ const Projects = () => {
           </select>
         </form>
         <Button variant="contained" onClick={() => setProjectModal(true)}>
-          Add Project Details 
+          Add Project Details
         </Button>
+
         {/*----Register Employeee--Modal-------*/}
         <Modal
           className="pt-14"
@@ -46,7 +103,7 @@ const Projects = () => {
         >
           <Modal.Body>
             <div class=" max-w-4xl mx-auto bg-white p-16">
-              <form>
+              <form onSubmit={submitHanlder}>
                 <div className="pb-5">
                   <label
                     for="first_name"
@@ -60,6 +117,7 @@ const Projects = () => {
                     class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Enter Project Name"
                     required
+                    onChange={(e) => setProjectName(e.target.value)}
                   />
                 </div>
                 <div class="grid gap-8 mb-6 lg:grid-cols-2">
@@ -76,6 +134,7 @@ const Projects = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Enter manager name"
                       required
+                      onChange={(e) => setManagerName(e.target.value)}
                     />
                   </div>
                   <div>
@@ -91,6 +150,7 @@ const Projects = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Enter number of members"
                       required
+                      onChange={(e) => setSelectMember(e.target.value)}
                     />
                   </div>
 
@@ -107,6 +167,7 @@ const Projects = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Enter employee code"
                       required
+                      onChange={(e) => setStartDate(e.target.value)}
                     />
                   </div>
 
@@ -123,12 +184,25 @@ const Projects = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Select shift"
                       required
+                      onChange={(e) => setEndDate(e.target.value)}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <textarea className="border rounded-lg" cols={53} rows={4}></textarea>
+                  <label
+                    for="description"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Project Description
+                  </label>
+                  <textarea
+                    className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500border rounded-lg"
+                    cols={53}
+                    rows={4}
+                    placeholder="Write Description Here..."
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></textarea>
                 </div>
 
                 <button
@@ -160,9 +234,7 @@ const Projects = () => {
                 <th scope="col" class="px-6 py-3">
                   Modules
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Task
-                </th>
+
                 <th scope="col" class="px-6 py-3">
                   Start Date
                 </th>
@@ -183,68 +255,40 @@ const Projects = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Abhay
-                </th>
-                <td class="px-6 py-4">05/05/2024</td>
-                <td class="px-6 py-4">10:00 AM</td>
-                <td class="px-6 py-4">6:00 PM</td>
-                <td class="px-6 py-4">fight</td>
-                <td class="px-6 py-4">nikhil</td>
-                <td class="px-6 py-4">404</td>
-                <td class="px-6 py-4">nothing</td>
+            {projectDetails.length > 0 ? (
+              projectDetails.map((item, index) => (
+                <tbody key={index}>
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th
+                      scope="row"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {item.projectName}
+                    </th>
+                    <td class="px-6 py-4">{item.selectMember}</td>
+                    <td class="px-6 py-4">{item.managerName}</td>
+                    <td class="px-6 py-4">{item.startDate || "not found"} </td>
+                    <td class="px-6 py-4">{item.startDate || "not found"}</td>
+                    <td class="px-6 py-4">404</td>
+                    <td class="px-6 py-4">nothing</td>
+                    <td class="px-6 py-4">nothing</td>
 
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Ajay
-                </th>
-                <td class="px-6 py-4">10/09/2024</td>
-                <td class="px-6 py-4">12:00 AM</td>
-                <td class="px-6 py-4">6:00 PM</td>
-                <td class="px-6 py-4">fight</td>
-                <td class="px-6 py-4">ankit</td>
-                <td class="px-6 py-4">406</td>
-                <td class="px-6 py-4">nothing</td>
+                    <td className=" text-center flex justify-center gap-1 items-center">
+                      <IoIosSettings className="text-blue-400" />
+                      <RiDeleteBin6Line className="text-red-500" />
+                      <IoEyeSharp className="text-blue-400" />
+                    </td>
 
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
-              <tr class="bg-white dark:bg-gray-800">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Abhi
-                </th>
-                <td class="px-6 py-4">12/10/2024</td>
-                <td class="px-6 py-4">9:00 AM</td>
-                <td class="px-6 py-4">4:00 PM</td>
-                <td class="px-6 py-4">fight</td>
-                <td class="px-6 py-4">nikhil</td>
-                <td class="px-6 py-4">404</td>
-                <td class="px-6 py-4">approve</td>
-
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
-            </tbody>
+                    <td
+                      class="px-6 py-4"
+                      className="flex justify-center gap-1 items-center py-8"
+                    ></td>
+                  </tr>
+                </tbody>
+              ))
+            ) : (
+              <p>Data not found</p>
+            )}
           </table>
         </div>
       </div>

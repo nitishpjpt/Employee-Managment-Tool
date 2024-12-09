@@ -5,6 +5,7 @@ const Setting = () => {
   return (
     <>
       <MainDashboard />
+      <h1>Setting</h1>
     </>
   );
 };

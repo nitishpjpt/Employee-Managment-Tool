@@ -88,7 +88,7 @@ const getAllUser = async (req, res) => {
 
   // count the total number of registration
   const totalEmployees = await user.length;
-  console.log(totalEmployees);
+  // console.log(totalEmployees);
 
   res.status(200).json(
     new ApiResponse(

@@ -16,6 +16,7 @@ export const EmployeeProvider = ({ children }) => {
         `http://localhost:8000/api/v1/user/employee/all/registerDetails`
       );
       setEmployees(response.data.data.user || []);
+      // state to get total numbers of employee
       setTotalEmployee(response.data.data.totalEmployees);
       
     } catch (error) {

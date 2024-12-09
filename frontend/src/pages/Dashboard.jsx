@@ -28,6 +28,8 @@ import { RiListSettingsLine } from "react-icons/ri";
 import { IoMdSettings } from "react-icons/io";
 import { MdPerson } from "react-icons/md";
 import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { EmployeeContext } from "../context/EmployeeContext";
 
 const drawerWidth = 240;
 
@@ -113,6 +115,8 @@ export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // state for context
+  const { totalEmployee } = useContext(EmployeeContext);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -351,7 +355,7 @@ export default function Dashboard() {
           <div class="grid  grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 p-4 gap-4">
             <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">nitish</p>
+                <p class="text-xl">{totalEmployee}</p>
                 <p>Total Enrollments</p>
               </div>
             </div>

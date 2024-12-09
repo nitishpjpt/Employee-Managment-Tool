@@ -31,7 +31,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
-
+import { FaLocationArrow } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -118,9 +118,7 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-
-
-  //context 
+  //context
 
   //toggle drop down
   const toggleDropdown = () => {
@@ -169,10 +167,73 @@ export default function Dashboard() {
     setUser(null);
   };
 
+  const [showSettingsOptions, setShowSettingsOptions] = useState(false);
+
+  const toggleSettingsOptions = () => {
+    setShowSettingsOptions((prev) => !prev);
+  };
   //context for total registered user
   const { totalEmployee } = useContext(EmployeeContext);
- 
-
+  const menuItems = [
+    {
+      text: "Dashboard",
+      icon: <FaHome className="text-3xl text-[#233D7A]" />,
+      path: "/dashboard",
+    },
+    {
+      text: "Employee",
+      icon: <BsPersonCircle className="text-3xl text-[#233D7A]" />,
+      path: "/employee-details",
+    },
+    {
+      text: "Timesheet",
+      icon: <SlCalender className="text-2xl text-[#233D7A]" />,
+      path: "/timesheet",
+    },
+    {
+      text: "Timeclaim",
+      icon: <IoMdTimer className="text-3xl text-[#233D7A]" />,
+      path: "/time-claim",
+    },
+    {
+      text: "Projects",
+      icon: <HiOutlineDocumentReport className="text-3xl text-[#233D7A]" />,
+      path: "/projects",
+    },
+    {
+      text: "Reports",
+      icon: <RiListSettingsLine className="text-3xl text-[#233D7A]" />,
+      path: "/reports",
+    },
+    {
+      text: "Behaviour",
+      icon: <MdPerson className="text-3xl text-[#233D7A]" />,
+      path: "/behavior",
+    },
+    {
+      text: "Settings",
+      icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
+      onClick: toggleSettingsOptions, // Toggle settings options
+    },
+  ];
+  // Additional icons for settings
+  const settingsOptions = [
+    {
+      text: "Profile Settings",
+      icon: <MdPerson className="text-3xl text-[#233D7A]" />,
+      path: "/profile-settings",
+    },
+    {
+      text: "System Settings",
+      icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
+      path: "/system-settings",
+    },
+    {
+      text: "Notifications",
+      icon: <RiListSettingsLine className="text-3xl text-[#233D7A]" />,
+      path: "/notifications",
+    },
+  ];
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -232,19 +293,25 @@ export default function Dashboard() {
                   aria-labelledby="avatarButton"
                 >
                   <li>
-                  <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
                       Dashboard
-                     </Link>
+                    </Link>
                   </li>
                   <li>
-                     <Link to="/employee/details" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <Link
+                      to="/employee/details"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
                       Employee
-                     </Link>
+                    </Link>
                   </li>
                   <li>
                     <a
                       href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      className="block py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Setting
                     </a>
@@ -256,7 +323,7 @@ export default function Dashboard() {
                       onClick={deleteItem}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                     LogOut
+                      LogOut
                     </button>
                   ) : (
                     ""
@@ -280,55 +347,7 @@ export default function Dashboard() {
         <Divider />
 
         <List>
-          {[
-            {
-              text: "Dashboard",
-              icon: <FaHome className="text-3xl text-[#233D7A]" />,
-              path: "/dashboard",
-            },
-            {
-              text: "Employee",
-              icon: <BsPersonCircle className="text-3xl text-[#233D7A]" />,
-              path: "/employee-details",
-            },
-            {
-              text: "Timesheet",
-              icon: <SlCalender className="text-2xl text-[#233D7A]" />,
-              path: "/timesheet",
-            },
-            {
-              text: "Projects",
-              icon: <IoMdTimer className="text-3xl text-[#233D7A]" />,
-              path: "/time-claim",
-            },
-            {
-              text: "Settings",
-              icon: <GoProject className="text-3xl text-[#233D7A]" />,
-              path: "/projects",
-            },
-            {
-              text: "Reports",
-              icon: (
-                <HiOutlineDocumentReport className="text-3xl text-[#233D7A]" />
-              ),
-              path: "/reports",
-            },
-            {
-              text: "DLP",
-              icon: <RiListSettingsLine className="text-3xl text-[#233D7A]" />,
-              path: "/dlp",
-            },
-            {
-              text: "Setting",
-              icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
-              path: "/setting",
-            },
-            {
-              text: "Behaviour",
-              icon: <MdPerson className="text-3xl text-[#233D7A]" />,
-              path: "/behavior",
-            },
-          ].map(({ text, icon, path }) => (
+          {menuItems.map(({ text, icon, path, onClick }) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[
@@ -337,7 +356,7 @@ export default function Dashboard() {
                     ? { justifyContent: "initial" }
                     : { justifyContent: "center" },
                 ]}
-                onClick={() => handleNavigation(path)}
+                onClick={onClick || (() => handleNavigation(path))}
               >
                 <ListItemIcon
                   sx={[
@@ -354,6 +373,35 @@ export default function Dashboard() {
               </ListItemButton>
             </ListItem>
           ))}
+
+          {/* Additional Settings Options */}
+          {showSettingsOptions &&
+            settingsOptions.map(({ text, icon, path }) => (
+              <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={[
+                    { minHeight: 48, px: 2.5 },
+                    open
+                      ? { justifyContent: "initial" }
+                      : { justifyContent: "center" },
+                  ]}
+                  onClick={() => handleNavigation(path)}
+                >
+                  <ListItemIcon
+                    sx={[
+                      { minWidth: 0, justifyContent: "center" },
+                      open ? { mr: 3 } : { mr: "auto" },
+                    ]}
+                  >
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={[open ? { opacity: 1 } : { opacity: 0 }]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
         </List>
 
         <Divider />
