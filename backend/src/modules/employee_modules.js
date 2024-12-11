@@ -1,5 +1,28 @@
 import mongoose from "mongoose";
 
+// background verification Schema
+const backgroundVerificationSchema = new mongoose.Schema({
+  addhar: { type: String, required: true },
+  pan: { type: String, required: true },
+  driving: { type: String, required: true },
+  voterCard: { type: String, required: true },
+  uan: { type: String, required: true },
+});
+
+const bankVerificationSchema = new mongoose.Schema({
+  accountName: {
+    type: String,
+  },
+  accountNumber: {
+    type: String,
+  },
+  ifscCode: {
+    type: String,
+  },
+  holderName: {
+    type: String,
+  },
+});
 
 const employeeSchema = new mongoose.Schema(
   {
@@ -15,7 +38,7 @@ const employeeSchema = new mongoose.Schema(
       unique: true,
     },
     password: {
-      type: Number,
+      type: String,
       required: [true, "Password is required"],
     },
     confirmPassword: {
@@ -50,6 +73,8 @@ const employeeSchema = new mongoose.Schema(
     shift: {
       type: String,
     },
+    backgroundVerification: backgroundVerificationSchema,
+    bankVerification: bankVerificationSchema,
   },
   { timestamps: true }
 );

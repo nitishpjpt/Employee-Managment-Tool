@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const Register = () => {
-  const [OTP, setOTP] = useState("");
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");

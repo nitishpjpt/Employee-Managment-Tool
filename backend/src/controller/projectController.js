@@ -1,9 +1,6 @@
-import mongoose from "mongoose";
 import { Project } from "../modules/project_modules.js";
 import ApiError from "../utlis/ApiError.js";
 import ApiResponse from "../utlis/ApiResponse.js";
-import { getAllUser } from "./employee_controller.js";
-
 
 // controller for assing the project
 const projectDetails = async (req, res) => {

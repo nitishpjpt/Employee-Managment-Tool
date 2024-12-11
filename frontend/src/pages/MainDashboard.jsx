@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
+import { ProjectContext } from "../context/ProjectContext";
 import { FaLocationArrow } from "react-icons/fa";
 
 const drawerWidth = 240;
@@ -172,13 +173,15 @@ export default function Dashboard() {
   const toggleSettingsOptions = () => {
     setShowSettingsOptions((prev) => !prev);
   };
+  // conext for total project
+  const { totalProject } = useContext(ProjectContext);
   //context for total registered user
   const { totalEmployee } = useContext(EmployeeContext);
   const menuItems = [
     {
       text: "Dashboard",
       icon: <FaHome className="text-3xl text-[#233D7A]" />,
-      path: "/dashboard",
+      path: "/",
     },
     {
       text: "Employee",
@@ -255,7 +258,7 @@ export default function Dashboard() {
           </IconButton>
           <div className="flex justify-between w-full items-center">
             <h1 className="text-xl font-semibold">
-              <Link to="/dashboard">Deepnap Softech</Link>
+              <Link to="/">Deepnap Softech</Link>
             </h1>
 
             {/* <!-- Dropdown menu --> */}
@@ -294,7 +297,7 @@ export default function Dashboard() {
                 >
                   <li>
                     <Link
-                      to="/dashboard"
+                      to="/"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Dashboard
@@ -419,8 +422,8 @@ export default function Dashboard() {
             </div>
             <div class="bg-[#E371B4] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
-                <p class="text-xl">35</p>
-                <p>Currently active</p>
+                <p class="text-xl">{totalProject}</p>
+                <p>Total Projects</p>
               </div>
             </div>
             <div class="bg-[#00DCCE] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">

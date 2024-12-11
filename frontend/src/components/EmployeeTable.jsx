@@ -60,7 +60,6 @@ const EmployeeTable = () => {
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
-             
             </tr>
           </thead>
           <tbody>
@@ -84,8 +83,7 @@ const EmployeeTable = () => {
                   <td className="px-6 py-4">{user.os || "N/A"}</td>
                   <td className="px-6 py-4">{user.computerName || "N/A"}</td>
                   <td className="px-6 py-4">{user.version || "N/A"}</td>
-                 
-                  
+
                   <td className="px-6 py-4 flex justify-center gap-1 items-center py-8">
                     <IoIosSettings className="text-blue-400" />
                     <RiDeleteBin6Line className="text-red-500" />

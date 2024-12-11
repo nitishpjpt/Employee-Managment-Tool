@@ -142,9 +142,9 @@ export default function Dashboard() {
     }
   }, []);
 
-   //funciton to delete login data from localstorage
+  //funciton to delete login data from localstorage
 
-   const deleteItem = () => {
+  const deleteItem = () => {
     localStorage.removeItem("userLogin");
     setUser(null);
   };
@@ -163,8 +163,6 @@ export default function Dashboard() {
   const handleNavigation = (path) => {
     navigate(path);
   };
-
-  
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -215,33 +213,41 @@ export default function Dashboard() {
               >
                 <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                   <div>{user ? user.name : <Link to="/login">Login</Link>}</div>
-                  <div className="font-medium truncate">{user ? user.email : ""}</div>
+                  <div className="font-medium truncate">
+                    {user ? user.email : ""}
+                  </div>
                 </div>
                 <ul
                   className="py-2 text-sm text-gray-700 dark:text-gray-200"
                   aria-labelledby="avatarButton"
                 >
                   <li>
-                  <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
                       Dashboard
-                     </Link>
+                    </Link>
                   </li>
                   <li>
-                  <Link to="/employee-details" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                    <Link
+                      to="/employee-details"
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    >
                       Employee
-                     </Link>
+                    </Link>
                   </li>
                   <li>
                     <a
                       href="#"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
-                     Setting
+                      Setting
                     </a>
                   </li>
                 </ul>
                 <div className="py-1">
-                {user ? (
+                  {user ? (
                     <button
                       onClick={deleteItem}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"

@@ -95,7 +95,7 @@ const Projects = () => {
           Add Project Details
         </Button>
 
-        {/*----Register Employeee--Modal-------*/}
+        {/*----Add Project--Modal-------*/}
         <Modal
           className="pt-14"
           show={projectModal}
@@ -219,6 +219,7 @@ const Projects = () => {
           </Modal.Footer>
         </Modal>
       </div>
+      
       {/*--------Table-------------*/}
       <div>
         <div class="relative overflow-x-auto ml-[5rem] pt-10">

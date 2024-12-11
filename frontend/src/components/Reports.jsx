@@ -2,9 +2,37 @@ import React from "react";
 import MainDashboard from "../pages/MainDashboard";
 import { useContext } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
+import * as XLSX from "xlsx";
+import { Button } from "@mui/material";
 
 const Reports = () => {
   const { employees } = useContext(EmployeeContext);
+
+  // Function to export table data to Excel
+  const exportToExcel = () => {
+    if (employees.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    // Map employee data for Excel
+    const formattedData = employees.map((employee) => ({
+      Name: employee.firstName || "",
+      Email: employee.email || "",
+      Location: employee.location || "",
+      Department: employee.department || "",
+      Role: employee.role || "",
+      Report: employee.role || "",
+    }));
+
+    // Create a worksheet and a workbook
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "TimeSheet Data");
+
+    // Download the Excel file
+    XLSX.writeFile(workbook, "TimeSheetData.xlsx");
+  };
 
   return (
     <>
@@ -32,7 +60,10 @@ const Reports = () => {
                     Role
                   </th>
                   <th scope="col" class="px-6 py-3">
-                    View Reports
+                               {/* Export Button */}
+            <Button onClick={exportToExcel} variant="contained">
+              Export
+            </Button>
                   </th>
                 </tr>
               </thead>

@@ -7,7 +7,7 @@ const app = express();
 
 app.use(cors({
     origin: 'http://localhost:5173', // React frontend URL
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST','PUT'],
     allowedHeaders: ['Content-Type'],
   }));
 app.use(express.json());

@@ -18,7 +18,6 @@ export const EmployeeProvider = ({ children }) => {
       setEmployees(response.data.data.user || []);
       // state to get total numbers of employee
       setTotalEmployee(response.data.data.totalEmployees);
-      
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -29,7 +28,9 @@ export const EmployeeProvider = ({ children }) => {
   }, []);
 
   return (
-    <EmployeeContext.Provider value={{ employees, fetchEmployees ,totalEmployee}}>
+    <EmployeeContext.Provider
+      value={{ employees, fetchEmployees, totalEmployee }}
+    >
       {children}
     </EmployeeContext.Provider>
   );
