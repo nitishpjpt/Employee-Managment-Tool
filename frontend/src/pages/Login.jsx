@@ -56,7 +56,7 @@ const login = () => {
       <div className="pt-[10rem] h-[100vh] bg-[#8194DC] ">
         <div className="max-w-md  mx-auto p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-center p-4 font-bold text-2xl">
-            Login into your account
+            Admin Login
           </h1>
           <form onSubmit={submitHandler} className="p-2">
             <label for="username" className="font-semibold">

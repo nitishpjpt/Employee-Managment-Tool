@@ -2,6 +2,8 @@ import { Employee } from "../modules/employee_modules.js";
 import ApiError from "../utlis/ApiError.js";
 import uploadOnCloudinary from "../utlis/Cloudinay.js";
 import ApiResponse from "../utlis/ApiResponse.js";
+import moment from "moment";
+import axios from "axios";
 
 const employeeRegister = async (req, res) => {
   console.log("Request Body:", req.body);
@@ -79,6 +81,78 @@ const employeeRegister = async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User Registered Successfully"));
 };
 
+// emplooyee login controller
+const employeeLogin = async (req, res) => {
+  try {
+    // Extract employee details and location from the req.body
+    const { email, password, location } = req.body;
+
+    // Find the user with their username or email
+    const existingUser = await Employee.findOne({ email });
+
+    // If the user is not found, throw an error
+    if (!existingUser) {
+      throw new ApiError(
+        401,
+        "Employee not found. Please check your employee email."
+      );
+    }
+
+    // Check if the password matches
+    const isValidPassword = await existingUser.isPasswordCorrect(password);
+
+    // If the password does not match, throw an error
+    if (!isValidPassword) {
+      throw new ApiError(401, "Invalid password. Please try again.");
+    }
+
+    // Capture current date and time
+    const loginDate = moment().format("YYYY-MM-DD");
+    const loginTime = moment().format("HH:mm:ss");
+    existingUser.loginDate = loginDate;
+    existingUser.loginTime = loginTime;
+
+    // If location is provided, reverse geocode it to get the address
+    let address = "";
+    if (location && location.latitude && location.longitude) {
+      try {
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/reverse`,
+          {
+            params: {
+              lat: location.latitude,
+              lon: location.longitude,
+              format: "json",
+            },
+          }
+        );
+        address = response.data.display_name || "Location not available";
+      } catch (error) {
+        console.error("Error fetching address from coordinates:", error);
+        address = "Unable to fetch address";
+      }
+    }
+
+    // Update the user's location in the database
+    if (address) {
+      existingUser.location = address;
+    }
+
+    // Save the login time and location in the database
+    await existingUser.save();
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, existingUser, "User logged in successfully"));
+  } catch (error) {
+    console.error("Error during employee login:", error);
+    res
+      .status(error.statusCode || 500)
+      .json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+// get all user
 const getAllUser = async (req, res) => {
   const user = await Employee.find().lean();
 
@@ -102,4 +176,4 @@ const getAllUser = async (req, res) => {
   );
 };
 
-export { employeeRegister, getAllUser };
+export { employeeRegister, getAllUser, employeeLogin };

@@ -131,7 +131,7 @@ const TimeSheet = () => {
                   <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
                   <td className="px-6 py-4">{employee.location ?? ""}</td>
                   <td className="px-6 py-4">{employee.department ?? ""}</td>
-                  <td className="px-6 py-4">{employee.clockIn ?? ""}</td>
+                  <td className="px-6 py-4">{employee.loginTime ?? ""}</td>
                   <td className="px-6 py-4">{employee.clockOut ?? ""}</td>
                   <td className="px-6 py-4">{employee.totalHour ?? ""}</td>
                   <td className="px-6 py-4">{employee.officeHour ?? ""}</td>

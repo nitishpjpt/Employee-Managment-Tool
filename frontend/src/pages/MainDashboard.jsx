@@ -32,7 +32,6 @@ import { useEffect } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
 import { ProjectContext } from "../context/ProjectContext";
-import { FaLocationArrow } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -177,6 +176,7 @@ export default function Dashboard() {
   const { totalProject } = useContext(ProjectContext);
   //context for total registered user
   const { totalEmployee } = useContext(EmployeeContext);
+
   const menuItems = [
     {
       text: "Dashboard",

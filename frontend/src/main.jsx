@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import { EmployeeProvider } from "./context/EmployeeContext.jsx";
 import { ProjectProvider } from "./context/ProjectContext.jsx";
 
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <EmployeeProvider>

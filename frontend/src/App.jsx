@@ -15,6 +15,10 @@ import Behaviour from "./components/Behaviour";
 import SalaryPage from "./components/salaryPage";
 import FrontPage from "./components/FrontPage";
 import EmployeeLogin from "./pages/EmployeeLogin";
+import EmpDashboard from "./pages/EmpDashboard";
+import EmpAttendence from "./components/EmpAttendence";
+import EmpDocuments from "./components/EmpDocuments";
+import EmpRequest from "./components/EmpRequest";
 
 const App = () => {
   return (
@@ -22,8 +26,16 @@ const App = () => {
       <Routes>
         // admin register page
         <Route path="/register" element={<Register />}></Route>
-        // employee register page
+        // employee login page
         <Route path="/employee/login" element={<EmployeeLogin />}></Route>
+        // employee dashboard page
+        <Route path="/employee/dashboard" element={<EmpDashboard />}></Route>
+        // employee attendence
+        <Route path="/employee/attendence" element={<EmpAttendence />}></Route>
+        // employee documents
+        <Route path="/employee/documents" element={<EmpDocuments />}></Route>
+        //employee request
+        <Route path="/employee/request/leave" element={<EmpRequest/>}></Route>
         <Route path="/" element={<FrontPage />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>

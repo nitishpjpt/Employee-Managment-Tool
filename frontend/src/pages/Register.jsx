@@ -4,16 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-
 const Register = () => {
   const navigate = useNavigate();
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [couponCode, setCouponCode] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
-  const [organizationSize, setOrganizationSize] = useState("");
   const [phnNumber, setPhnNumber] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -36,9 +32,6 @@ const Register = () => {
       email,
       password,
       confirmPassword,
-      couponCode,
-      organizationName,
-      organizationSize,
       phnNumber,
       contactId,
     };
@@ -92,40 +85,6 @@ const Register = () => {
           </div>
 
           <div className="border p-8 space-y-4">
-            <div className="mb-4">
-              <label className="font-semibold">Enter coupon code</label>
-              <input
-                className="border p-1 w-full sm:w-auto"
-                required
-                type="text"
-                name="couponCode"
-                placeholder="Enter coupon code"
-                onChange={(e) => setCouponCode(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="font-semibold">Organization Name</label>
-              <input
-                className="border p-1 w-full sm:w-auto"
-                required
-                type="text"
-                placeholder="Organization Name"
-                name="organizationName"
-                onChange={(e) => setOrganizationName(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="font-semibold">Organization/Team Size</label>
-              <input
-                className="border p-1 w-full sm:w-auto"
-                required
-                type="number"
-                placeholder="Organization/Team Size"
-                name="organizationSize"
-                onChange={(e) => setOrganizationSize(e.target.value)}
-              />
-            </div>
             <div className="mb-4 flex flex-col sm:flex-row gap-4">
               <label className="font-semibold">First & Last Name</label>
               <div className="flex gap-4 w-full sm:w-auto">

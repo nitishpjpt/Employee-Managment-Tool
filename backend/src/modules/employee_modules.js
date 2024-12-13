@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 // background verification Schema
 const backgroundVerificationSchema = new mongoose.Schema({
@@ -20,6 +21,21 @@ const bankVerificationSchema = new mongoose.Schema({
     type: String,
   },
   holderName: {
+    type: String,
+  },
+});
+
+const requestLeaveSchema = new mongoose.Schema({
+  fromDate: {
+    type: String,
+  },
+  toDate: {
+    type: String,
+  },
+  halfLeave: {
+    type: String,
+  },
+  fullLeave: {
     type: String,
   },
 });
@@ -73,23 +89,27 @@ const employeeSchema = new mongoose.Schema(
     shift: {
       type: String,
     },
+    loginDate: { type: String }, // Store the last login date
+    loginTime: { type: String },
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
+    requestLeave: requestLeaveSchema,
+    location: { type: String },
   },
   { timestamps: true }
 );
 
-///function to bcrypt the password
-// employeeSchema.pre("save", async function (next) {
-//   if (!this.isModified("password")) return next();
+// bcrypt the employee password and confirm password
+employeeSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
 
-//   this.password = await bcrypt.hash(this.password, 10);
-//   return next();
-// });
+  this.password = await bcrypt.hash(this.password, 10);
+  return next();
+});
 
-// // function to compare the password
-// employeeSchema.methods.isPasswordCorrect = async function (password) {
-//   return await bcrypt.compare(password, this.password);
-// };
+// function to compare the password
+employeeSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 export const Employee = mongoose.model("Employee", employeeSchema);

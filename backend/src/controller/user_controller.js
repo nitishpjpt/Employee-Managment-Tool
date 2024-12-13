@@ -5,24 +5,10 @@ import ApiResponse from "../utlis/ApiResponse.js";
 // new user register controller
 const userRegister = async (req, res) => {
   console.log("Request Body:", req.body);
-  const {
-    username,
-    email,
-    password,
-    organizationName,
-    organizationSize,
-    firstName,
-    contactId,
-  } = req.body;
+  const { username, email, password, firstName, lastName, contactId } =
+    req.body;
 
-  console.log(
-    username,
-    email,
-    password,
-    organizationName,
-    organizationSize,
-    contactId
-  );
+  console.log(username, email, password, firstName, lastName, contactId);
 
   // Check if all required fields are provided and valid
   if (
@@ -49,9 +35,9 @@ const userRegister = async (req, res) => {
     username,
     email,
     password,
-    organizationSize,
     contactId,
     firstName,
+    lastName,
   });
 
   if (!user) {

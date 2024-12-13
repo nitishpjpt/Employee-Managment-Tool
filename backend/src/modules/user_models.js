@@ -21,18 +21,18 @@ const userSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    no_of_user: {
-      type: Number,
-    },
+    // no_of_user: {
+    //   type: Number,
+    // },
     // organization_name: {
     //   type: String,
     //   unique: true,
     //   sparse: true
     // },
-    organization_teamSize: {
-      type: Number,
-    },
-    contact_id: {
+    // organization_teamSize: {
+    //   type: Number,
+    // },
+    contactId: {
       type: String,
       unique: true,
     },
