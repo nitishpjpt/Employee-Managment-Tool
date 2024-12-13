@@ -1,10 +1,10 @@
 import React from "react";
-import MainDashboard from "../pages/EmpDashboard";
+import EmpDashboard from "../pages/EmpDashboard";
 
 const EmpAttendence = () => {
   return (
     <div>
-      <MainDashboard />
+      <EmpDashboard />
       <h1>Attendence</h1>
     </div>
   );
