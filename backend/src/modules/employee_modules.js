@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import moment from "moment";
 
-// background verification Schema
+// Background Verification Schema
 const backgroundVerificationSchema = new mongoose.Schema({
   addhar: { type: String, required: true },
   pan: { type: String, required: true },
@@ -10,6 +11,7 @@ const backgroundVerificationSchema = new mongoose.Schema({
   uan: { type: String, required: true },
 });
 
+// Bank Verification Schema
 const bankVerificationSchema = new mongoose.Schema({
   accountName: {
     type: String,
@@ -25,6 +27,7 @@ const bankVerificationSchema = new mongoose.Schema({
   },
 });
 
+// Request Leave Schema
 const requestLeaveSchema = new mongoose.Schema({
   fromDate: {
     type: String,
@@ -40,6 +43,12 @@ const requestLeaveSchema = new mongoose.Schema({
   },
 });
 
+// Attendance Schema
+const attendanceSchema = new mongoose.Schema({
+  date: { type: String, required: true }, // Format: YYYY-MM-DD
+  status: { type: String, enum: ["Present", "Absent"], default: "Absent" }, // Status: Present or Absent
+});
+
 const employeeSchema = new mongoose.Schema(
   {
     firstName: {
@@ -50,7 +59,6 @@ const employeeSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-
       unique: true,
     },
     password: {
@@ -63,7 +71,6 @@ const employeeSchema = new mongoose.Schema(
     },
     phnNumber: {
       type: String,
-      requied: true,
     },
     employeeCode: {
       type: String,
@@ -93,8 +100,11 @@ const employeeSchema = new mongoose.Schema(
     loginTime: { type: String },
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
-    requestLeave: requestLeaveSchema,
+    requestLeave: [requestLeaveSchema],
     location: { type: String },
+    fullDayLeavesThisMonth: { type: Number, default: 0 }, // Track full-day leaves for the current month
+    halfDayLeavesThisMonth: { type: Number, default: 0 }, // Track half-day leaves for the current month
+    attendance: [attendanceSchema], // Add the attendance array to track the attendance history
   },
   { timestamps: true }
 );
@@ -107,9 +117,23 @@ employeeSchema.pre("save", async function (next) {
   return next();
 });
 
-// function to compare the password
+// Function to compare the password
 employeeSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
+};
+
+// Function to mark attendance as 'Present' for the current day
+employeeSchema.methods.markAttendance = async function () {
+  const today = moment().format("YYYY-MM-DD");
+
+  // Check if attendance is already marked for today
+  const existingAttendance = this.attendance.find((att) => att.date === today);
+
+  if (!existingAttendance) {
+    // Mark attendance as 'Present' if not already done
+    this.attendance.push({ date: today, status: "Present" });
+    await this.save();
+  }
 };
 
 export const Employee = mongoose.model("Employee", employeeSchema);

@@ -16,13 +16,45 @@ const addRequestLeave = async (req, res) => {
       throw new ApiError(404, "Employee not found");
     }
 
-    // Push the request leave data to the employee's requestLeave array
-    employee.requestLeave = {
+    // get the
+    // Get the current date and month for tracking monthly leaves
+    const currentMonth = new Date().getMonth();
+
+    // Check if this is a new month to reset the leave counts
+    const lastUpdatedMonth = employee.updatedAt.getMonth();
+    if (lastUpdatedMonth !== currentMonth) {
+      employee.fullDayLeavesThisMonth = 0;
+      employee.halfDayLeavesThisMonth = 0;
+    }
+
+    // Validate the leave request
+    if (halfLeave) {
+      // Half-day leave logic: Limit to 5 per month
+      if (employee.halfDayLeavesThisMonth >= 5) {
+        return res.status(400).json({
+          message: "You have exhausted your 5 half-day leaves for this month.",
+        });
+      }
+      employee.halfDayLeavesThisMonth += 1;
+    } else if (fullLeave) {
+      // Full-day leave logic: Limit to 3 per month
+      if (employee.fullDayLeavesThisMonth >= 3) {
+        return res.status(400).json({
+          message: "You have exhausted your 3 full-day leaves for this month.",
+        });
+      }
+      employee.fullDayLeavesThisMonth += 1;
+    } else {
+      return res.status(400).json({ message: "Invalid leave type." });
+    }
+
+    // Append the new leave request to the requestLeave array
+    employee.requestLeave.push({
       fromDate,
       toDate,
       halfLeave,
       fullLeave,
-    };
+    });
 
     // Save updated employee data
     const updatedEmployee = await employee.save();

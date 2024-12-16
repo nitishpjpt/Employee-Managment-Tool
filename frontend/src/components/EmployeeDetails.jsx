@@ -663,7 +663,7 @@ const EmployeeDetails = () => {
                           pattern="\d{9,18}"
                           title="Account Number must be between 9 to 18 digits"
                           required
-                          onChange={(e) => setAccountName(e.target.value)}
+                          onChange={(e) => setAccountNumber(e.target.value)}
                         />
                       </div>
 
@@ -696,7 +696,6 @@ const EmployeeDetails = () => {
                           id="ifsc_code"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter IFSC Code"
-                          pattern="[A-Z]{4}0[A-Z0-9]{6}"
                           title="IFSC Code must be in the format: ABCD0XXXXXX"
                           required
                           onChange={(e) => setIfscCode(e.target.value)}

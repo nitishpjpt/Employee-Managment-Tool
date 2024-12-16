@@ -57,6 +57,7 @@ function EmpDashboard() {
     localStorage.removeItem("employeeLogin");
     setUser(null);
   };
+
   return (
     <div>
       <AppBar position="static">
@@ -149,7 +150,7 @@ function EmpDashboard() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-            {username ? username : ""}{" "}
+              {username ? username : ""}{" "}
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -171,7 +172,6 @@ function EmpDashboard() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-               
                 <div className="border-b-2">
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography sx={{ textAlign: "center" }}>

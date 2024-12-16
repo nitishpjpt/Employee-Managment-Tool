@@ -81,16 +81,13 @@ const employeeRegister = async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User Registered Successfully"));
 };
 
-// emplooyee login controller
 const employeeLogin = async (req, res) => {
   try {
-    // Extract employee details and location from the req.body
     const { email, password, location } = req.body;
 
-    // Find the user with their username or email
+    // Find the employee by email
     const existingUser = await Employee.findOne({ email });
 
-    // If the user is not found, throw an error
     if (!existingUser) {
       throw new ApiError(
         401,
@@ -100,11 +97,12 @@ const employeeLogin = async (req, res) => {
 
     // Check if the password matches
     const isValidPassword = await existingUser.isPasswordCorrect(password);
-
-    // If the password does not match, throw an error
     if (!isValidPassword) {
       throw new ApiError(401, "Invalid password. Please try again.");
     }
+
+    // Mark attendance as 'Present' for today
+    await existingUser.markAttendance();
 
     // Capture current date and time
     const loginDate = moment().format("YYYY-MM-DD");

@@ -23,7 +23,6 @@ const EmpRequest = () => {
       try {
         var parsedUser = JSON.parse(storedUser);
         console.log(parsedUser.data._id);
-        console.log(parsedUser.data.firstName);
         setUserName(parsedUser.data.firstName);
         setEmployeeId(parsedUser.data._id);
       } catch (error) {
@@ -55,6 +54,9 @@ const EmpRequest = () => {
           },
         }
       );
+      // Store user data in local storage
+      localStorage.setItem("reqLeave", JSON.stringify(response.data));
+
       console.log(response.data);
       toast.success("Request leave submitted successfully", {
         position: "top-right",
@@ -68,6 +70,8 @@ const EmpRequest = () => {
       });
     }
   };
+
+  // local storage
 
   return (
     <>
@@ -106,7 +110,6 @@ const EmpRequest = () => {
                 type="date"
                 id="toDate"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
                 onChange={(e) => setToDate(e.target.value)}
               />
             </div>
@@ -116,7 +119,10 @@ const EmpRequest = () => {
                 htmlFor="halfLeave"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Request leave for half day
+                Request leave for half day <br></br>{" "}
+                <span className="text-gray-400">
+                  You can get only 5 half days
+                </span>
               </label>
               <input
                 type="checkbox"
