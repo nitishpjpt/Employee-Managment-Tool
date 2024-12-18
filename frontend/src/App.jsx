@@ -19,6 +19,7 @@ import EmpDashboard from "./pages/EmpDashboard";
 import EmpAttendence from "./components/EmpAttendence";
 import EmpDocuments from "./components/EmpDocuments";
 import EmpRequest from "./components/EmpRequest";
+import EmpHome from "./components/EmpHome";
 
 const App = () => {
   return (
@@ -29,7 +30,7 @@ const App = () => {
         // employee login page
         <Route path="/employee/login" element={<EmployeeLogin />}></Route>
         // employee dashboard page
-        <Route path="/employee/dashboard" element={<EmpDashboard />}></Route>
+        <Route path="/employee/home" element={<EmpHome/>}></Route>
         // employee attendence
         <Route path="/employee/attendence" element={<EmpAttendence />}></Route>
         // employee documents

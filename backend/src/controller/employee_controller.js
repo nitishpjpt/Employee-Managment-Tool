@@ -101,11 +101,23 @@ const employeeLogin = async (req, res) => {
       throw new ApiError(401, "Invalid password. Please try again.");
     }
 
+    // Check if the user has already logged in today
+    const today = moment().format("YYYY-MM-DD");
+    if (existingUser.loginDate === today) {
+      // If already logged in today, do not update the login time or date
+      return res.status(200).json(new ApiResponse(200, existingUser, "User already logged in today"));
+    }
+
     // Mark attendance as 'Present' for today
-    await existingUser.markAttendance();
+    try {
+      await existingUser.markAttendance();
+    } catch (error) {
+      console.error("Error marking attendance:", error);
+      throw new ApiError(500, "Failed to mark attendance. Please try again.");
+    }
 
     // Capture current date and time
-    const loginDate = moment().format("YYYY-MM-DD");
+    const loginDate = today;
     const loginTime = moment().format("HH:mm:ss");
     existingUser.loginDate = loginDate;
     existingUser.loginTime = loginTime;
@@ -136,7 +148,7 @@ const employeeLogin = async (req, res) => {
       existingUser.location = address;
     }
 
-    // Save the login time and location in the database
+    // Save the login time, login date, and location in the database
     await existingUser.save();
 
     res

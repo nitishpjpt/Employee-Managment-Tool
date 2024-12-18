@@ -68,7 +68,7 @@ function EmpDashboard() {
               variant="h6"
               noWrap
               component="a"
-              href="/employee/dashboard"
+              href="/employee/home"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -135,7 +135,7 @@ function EmpDashboard() {
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              <Link to="/employee/dashboard" className="block px-4 py-2">
+              <Link to="/employee/home" className="block px-4 py-2">
                 Home
               </Link>
               <Link to="/employee/attendence" className="block px-4 py-2">

@@ -13,6 +13,8 @@ import {
 import { addBackgroundVerification } from "../controller/bgVerificationController.js";
 import { addBankVerification } from "../controller/bankVerification_controller.js";
 import { addRequestLeave } from "../controller/empLeave_controller.js";
+import markAttendance from "../controller/empAttendence_Controller.js";
+
 
 const userRouter = Router();
 
@@ -28,5 +30,7 @@ userRouter.route("/all/projectDetails").post(getAllProject);
 userRouter.route("/:employeeId/verify").post(addBackgroundVerification);
 userRouter.route("/:employeeId/bankDetails/verify").post(addBankVerification);
 userRouter.route("/:employeeId/request/leave").post(addRequestLeave);
+userRouter.route("/:employeeId/attendence/details").post(markAttendance);
+
 
 export default userRouter;

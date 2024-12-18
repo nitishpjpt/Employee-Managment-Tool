@@ -16,7 +16,7 @@ const addRequestLeave = async (req, res) => {
       throw new ApiError(404, "Employee not found");
     }
 
-    // get the
+    
     // Get the current date and month for tracking monthly leaves
     const currentMonth = new Date().getMonth();
 
