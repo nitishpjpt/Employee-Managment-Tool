@@ -80,7 +80,7 @@ const EmployeeLogin = () => {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
-          navigate("/employee/dashboard");
+          navigate("/employee/home");
         },
       });
     } catch (error) {

@@ -5,37 +5,65 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EmpRequest = () => {
-  // State for the request leave page
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [halfLeave, setHalfLeave] = useState("");
   const [fullLeave, setFullLeave] = useState("");
-  const [leaveType, setLeaveType] = useState(""); // State for leave type
+  const [leaveType, setLeaveType] = useState("");
   const [username, setUserName] = useState("");
-
-  // State to store employee id
   const [employeeId, setEmployeeId] = useState("");
+  const [leaveLimits, setLeaveLimits] = useState({
+    halfDayLeaves: 0,
+    fullDayLeaves: 0,
+  });
 
-  // useEffect to get employee id from the localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
-      try {
-        var parsedUser = JSON.parse(storedUser);
-        console.log(parsedUser.data._id);
-        setUserName(parsedUser.data.firstName);
-        setEmployeeId(parsedUser.data._id);
-      } catch (error) {
-        console.error("Error parsing user data from local storage:", error);
-      }
+      const parsedUser = JSON.parse(storedUser);
+      setUserName(parsedUser.data.firstName);
+      setEmployeeId(parsedUser.data._id);
     }
-  }, []);
 
-  // Function for form handler
+    // Fetch the current leave status (half and full days taken) for the employee
+    const fetchLeaveStatus = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/user/${employeeId}/leaveStatus`
+        );
+        setLeaveLimits(response.data); // Assume response includes { halfDayLeaves, fullDayLeaves }
+      } catch (error) {
+        console.error("Error fetching leave status:", error);
+        toast.error("Failed to fetch leave status", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    };
+
+    if (employeeId) fetchLeaveStatus();
+  }, [employeeId]);
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // Create the leaveObj inline
+    // Check if half or full-day leaves exceed the limit
+    if (halfLeave && leaveLimits.halfDayLeaves >= 5) {
+      toast.error("You have exhausted your 5 half-day leaves for this month.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    if (fullLeave && leaveLimits.fullDayLeaves >= 3) {
+      toast.error("You have exhausted your 3 full-day leaves for this month.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     const leaveObj = {
       fromDate,
       toDate,
@@ -54,10 +82,8 @@ const EmpRequest = () => {
           },
         }
       );
-      // Store user data in local storage
-      localStorage.setItem("reqLeave", JSON.stringify(response.data));
 
-      console.log(response.data);
+      localStorage.setItem("reqLeave", JSON.stringify(response.data));
       toast.success("Request leave submitted successfully", {
         position: "top-right",
         autoClose: 3000,
@@ -70,8 +96,6 @@ const EmpRequest = () => {
       });
     }
   };
-
-  // local storage
 
   return (
     <>
@@ -171,6 +195,7 @@ const EmpRequest = () => {
               rows={4}
               placeholder="Write Reason Here..."
               onChange={(e) => setFullLeave(e.target.value)}
+            
             ></textarea>
           </div>
 

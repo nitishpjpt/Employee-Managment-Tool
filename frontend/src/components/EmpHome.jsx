@@ -1,60 +1,128 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import EmpDashboard from "../pages/EmpDashboard";
 import { FaCheckCircle } from "react-icons/fa";
+import axios from "axios";
 
 const EmpHome = () => {
+  const [presentDates, setPresentDates] = useState([]);
+  const [fullLeave, setFullLeave] = useState("");
+  const [halfLeave, setHalfLeave] = useState("");
+  const [reqLeave, setRequestLeave] = useState([]);
+  const [reson,setReason] = useState("");
+
+  // Get employee data from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("reqLeave");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        const attendanceData = parsedUser.data.attendance; // Ensure this is an array
+        setPresentDates(attendanceData || []); // Fallback to an empty array if undefined
+        setFullLeave(parsedUser.data.fullDayLeavesThisMonth);
+        setHalfLeave(parsedUser.data.halfDayLeavesThisMonth);
+        setRequestLeave(parsedUser.data.requestLeave || []);
+        setReason(parsedUser.data.requestLeave[0].fullLeave);
+        console.log(parsedUser.data.requestLeave[0].fullLeave)
+      } catch (error) {
+        console.error("Error parsing user data from local storage:", error);
+      }
+    }
+  }, []);
+
+  // Function to format dates
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Formats the date to a readable string
+  };
+
   return (
     <>
       <EmpDashboard />
-      {/*--------Table-------------*/}
+      {/* Table Section */}
       <div>
-        <div class="relative overflow-x-auto  pt-10">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <div className="relative overflow-x-auto pt-10">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" className="px-6 py-3">
                   Name
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" className="px-6 py-3">
                   Present Dates
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" className="px-6 py-3">
                   Absent Dates
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Request Leave Half Day
+                <th scope="col" className="px-6 py-3">
+                  Request Leave Half Day{" "}
+                  <span className="text-red-500">{halfLeave}</span>
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Request Leave Full Day
+                <th scope="col" className="px-6 py-3">
+                  Request Leave Full Day{" "}
+                  <span className="text-red-500">{fullLeave}</span>
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" className="px-6 py-3">
                   Reason For Leave Request
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" className="px-6 py-3">
                   Leave Approve Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Nitish
-                </th>
-                <td class="px-6 py-4">15/05/2024</td>
-                <td class="px-6 py-4">N/A</td>
-                <td class="px-6 py-4">Request</td>
-                <td class="px-6 py-4">N/A</td>
-                <td class="px-6 py-4">Fever</td>
-                <td className="px-6 py-4">Approve <FaCheckCircle className="text--500"/></td>
+              {presentDates.length > 0 ? (
+                presentDates.map((item, index) => {
+                  // Get the leave request for the employee based on the present date
+                  const leaveRequest = reqLeave.find(
+                    (leave) =>
+                      new Date(leave.fromDate).toLocaleDateString() ===
+                      new Date(item.date).toLocaleDateString()
+                  );
 
-                <td
-                  class="px-6 py-4"
-                  className="flex justify-center gap-1 items-center py-8"
-                ></td>
-              </tr>
+                  return (
+                    <tr
+                      key={index}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        Nitish
+                      </th>
+                      <td className="px-6 py-4">{item.date}</td>
+                      <td className="px-6 py-4">
+                        {item.status === "Absent" ? "Yes" : "No"}
+                      </td>
+
+                      {/* Display Half Day Leave */}
+                      <td className="px-6 py-4">
+                        {leaveRequest && !leaveRequest.toDate
+                          ? formatDate(leaveRequest.fromDate)
+                          : "N/A"}
+                      </td>
+
+                      {/* Display Full Day Leave with only fromDate */}
+                      <td className="px-6 py-4">
+                        {leaveRequest && leaveRequest.fromDate
+                          ? formatDate(leaveRequest.fromDate)
+                          : "N/A"}
+                      </td>
+
+                      <td className="px-6 py-4">{leaveRequest?.fullLeave || "N/A"}</td>
+                      <td className="px-6 py-4 flex justify-center items-center gap-1">
+                        Approve <FaCheckCircle className="text-green-500" />
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="7" className="px-6 py-4 text-center">
+                    Data not found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

@@ -14,6 +14,7 @@ import { addBackgroundVerification } from "../controller/bgVerificationControlle
 import { addBankVerification } from "../controller/bankVerification_controller.js";
 import { addRequestLeave } from "../controller/empLeave_controller.js";
 import markAttendance from "../controller/empAttendence_Controller.js";
+import { getLeaveStatus } from "../controller/leave_controller.js";
 
 
 const userRouter = Router();
@@ -22,6 +23,7 @@ userRouter.route("/Register").post(userRegister);
 // admin user login
 userRouter.route("/Login").post(userLogin);
 // employee login
+userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus)
 userRouter.route("/employee/login").post(employeeLogin);
 userRouter.route("/employee/register").post(employeeRegister);
 userRouter.route("/employee/all/registerDetails").post(getAllUser);
