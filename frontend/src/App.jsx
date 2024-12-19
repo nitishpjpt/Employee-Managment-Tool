@@ -20,6 +20,7 @@ import EmpAttendence from "./components/EmpAttendence";
 import EmpDocuments from "./components/EmpDocuments";
 import EmpRequest from "./components/EmpRequest";
 import EmpHome from "./components/EmpHome";
+import LeaveRequest from './components/LeaveRequest';
 
 const App = () => {
   return (
@@ -41,8 +42,8 @@ const App = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/employee-details" element={<EmployeeDetails />}></Route>
-        <Route path="timesheet" element={<TimeSheet />}></Route>
-        <Route path="time-claim" element={<TimeClaim />}></Route>
+        <Route path="/timesheet" element={<TimeSheet />}></Route>
+        <Route path="/employee/request/leave/approval" element={<LeaveRequest/>}></Route>
         <Route path="/projects" element={<Projects />}></Route>
         <Route path="/reports" element={<Reports />}></Route>
         <Route path="/dlp" element={<Dlp />}></Route>

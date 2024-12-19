@@ -25,7 +25,7 @@ userRouter.route("/Register").post(userRegister);
 userRouter.route("/Login").post(userLogin);
 userRouter.route("/:employeeId/logout").post(employeeLogout);
 // employee login
-userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus)
+userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);
 userRouter.route("/employee/register").post(employeeRegister);
 userRouter.route("/employee/all/registerDetails").post(getAllUser);

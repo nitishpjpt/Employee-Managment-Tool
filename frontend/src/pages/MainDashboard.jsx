@@ -32,6 +32,8 @@ import { useEffect } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
 import { ProjectContext } from "../context/ProjectContext";
+import { FcLeave } from "react-icons/fc";
+import { FcOvertime } from "react-icons/fc";
 
 const drawerWidth = 240;
 
@@ -194,9 +196,9 @@ export default function Dashboard() {
       path: "/timesheet",
     },
     {
-      text: "Timeclaim",
-      icon: <IoMdTimer className="text-3xl text-[#233D7A]" />,
-      path: "/time-claim",
+      text: "Request Leave",
+      icon: <FcLeave  className="text-3xl text-[#233D7A]" />,
+      path: "/employee/request/leave/approval",
     },
     {
       text: "Projects",

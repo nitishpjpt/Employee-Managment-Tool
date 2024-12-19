@@ -25,13 +25,15 @@ const EmpRequest = () => {
       setEmployeeId(parsedUser.data._id);
     }
 
-    // Fetch the current leave status (half and full days taken) for the employee
+// Fetch the current Leave status (half and full days taken) for the employee
+
     const fetchLeaveStatus = async () => {
       try {
         const response = await axios.get(
           `http://localhost:8000/api/v1/user/${employeeId}/leaveStatus`
         );
         setLeaveLimits(response.data); // Assume response includes { halfDayLeaves, fullDayLeaves }
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching leave status:", error);
         toast.error("Failed to fetch leave status", {
