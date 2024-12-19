@@ -3,6 +3,7 @@ import { userRegister, userLogin } from "../controller/user_controller.js";
 
 import {
   employeeLogin,
+  employeeLogout,
   employeeRegister,
 } from "../controller/employee_controller.js";
 import { getAllUser } from "../controller/employee_controller.js";
@@ -22,6 +23,7 @@ const userRouter = Router();
 userRouter.route("/Register").post(userRegister);
 // admin user login
 userRouter.route("/Login").post(userLogin);
+userRouter.route("/:employeeId/logout").post(employeeLogout);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus)
 userRouter.route("/employee/login").post(employeeLogin);

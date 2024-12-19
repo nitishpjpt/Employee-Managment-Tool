@@ -719,13 +719,7 @@ const EmployeeDetails = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
-            {/*--Attendance Details---Update---modal----*/}
-            <Button
-              variant="contained"
-              onClick={() => setAttendenceModel(true)}
-            >
-              Attendance Details
-            </Button>
+           
             <Modal
               show={attendenceModel}
               onClose={() => setAttendenceModel(false)}
@@ -873,10 +867,7 @@ const EmployeeDetails = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
-            {/*--Salary Details---Update---modal----*/}
-            <Button variant="contained">
-              <Link to="/salary/details">Salary</Link>
-            </Button>
+          
             {/*table*/}
           </div>
           <EmployeeTable />

@@ -8,58 +8,69 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function EmpDashboard() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  //state for email or username
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  // local storage
+  const [employeeId, setEmployeeId] = useState("");
+
+  const navigate = useNavigate(); // to navigate after logout
+
+  // Menu open and close handlers
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+  const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  // Set user data from local storage or other source
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       try {
-        var parsedUser = JSON.parse(storedUser);
+        const parsedUser = JSON.parse(storedUser);
         setUsername(parsedUser.data.firstName);
         setEmail(parsedUser.data.email);
+        setEmployeeId(parsedUser.data._id);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
     }
   }, []);
 
-  //funciton to delete login data from localstorage
-
-  const deleteItem = () => {
-    localStorage.removeItem("employeeLogin");
-    setUser(null);
+  // In your frontend code (e.g., EmpDashboard.jsx)
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/user/${employeeId}/logout`
+      );
+      console.log(response.data);
+      toast.success("Employee logout successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        onClose: () => {
+          navigate("/employee/login");
+        },
+      });
+      // Perform any additional actions like redirecting or removing from localStorage
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
     <div>
+      <ToastContainer />
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -81,6 +92,7 @@ function EmpDashboard() {
               Deepnap Softech
             </Typography>
 
+            {/* Mobile Menu Button */}
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
@@ -115,7 +127,7 @@ function EmpDashboard() {
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Link to="/employee/attendence" className="block px-4 py-2">
-                    View Attendence
+                    View Attendance
                   </Link>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
@@ -134,12 +146,13 @@ function EmpDashboard() {
               </Menu>
             </Box>
 
+            {/* Desktop Menu */}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <Link to="/employee/home" className="block px-4 py-2">
                 Home
               </Link>
               <Link to="/employee/attendence" className="block px-4 py-2">
-                View Attendence
+                View Attendance
               </Link>
               <Link to="/employee/request/leave" className="block px-4 py-2">
                 Request Leave
@@ -149,6 +162,7 @@ function EmpDashboard() {
               </Link>
             </Box>
 
+            {/* User Menu */}
             <Box sx={{ flexGrow: 0 }}>
               {username ? username : ""}{" "}
               <Tooltip title="Open settings">
@@ -175,8 +189,7 @@ function EmpDashboard() {
                 <div className="border-b-2">
                   <MenuItem onClick={handleCloseUserMenu}>
                     <Typography sx={{ textAlign: "center" }}>
-                      {" "}
-                      {username ? username : ""}{" "}
+                      {username ? username : ""}
                     </Typography>
                   </MenuItem>
                   <MenuItem onClick={handleCloseUserMenu}>
@@ -191,7 +204,7 @@ function EmpDashboard() {
                   </Typography>
                 </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <button onClick={deleteItem}>
+                  <button onClick={handleLogout}>
                     <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                   </button>
                 </MenuItem>

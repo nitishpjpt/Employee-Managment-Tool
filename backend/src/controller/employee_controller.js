@@ -105,7 +105,11 @@ const employeeLogin = async (req, res) => {
     const today = moment().format("YYYY-MM-DD");
     if (existingUser.loginDate === today) {
       // If already logged in today, do not update the login time or date
-      return res.status(200).json(new ApiResponse(200, existingUser, "User already logged in today"));
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, existingUser, "User already logged in today")
+        );
     }
 
     // Mark attendance as 'Present' for today
@@ -161,6 +165,47 @@ const employeeLogin = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
+const employeeLogout = async (req, res) => {
+  try {
+    // Get employeeId from URL parameter
+    const { employeeId } = req.params;
+
+    // Find employee by ID
+    const employee = await Employee.findById(employeeId);
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found. Please check your employee email.",
+      });
+    }
+
+    // Capture the current time as logout time
+    const logoutTime = moment().format("HH:mm:ss");
+
+    // Set logout time in the employee record
+    employee.logoutTime = logoutTime;
+
+    // Save the updated employee record
+    await employee.save();
+
+    // Logic to handle logout (e.g., clear session or token)
+    // If you are using a token, invalidate it here or perform any necessary actions
+
+    return res.status(200).json({
+      success: true,
+      message: "Employee successfully logged out.",
+      logoutTime,
+    });
+  } catch (error) {
+    console.error("Error during employee logout:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+
 
 // get all user
 const getAllUser = async (req, res) => {
@@ -186,4 +231,4 @@ const getAllUser = async (req, res) => {
   );
 };
 
-export { employeeRegister, getAllUser, employeeLogin };
+export { employeeRegister, getAllUser, employeeLogin, employeeLogout };

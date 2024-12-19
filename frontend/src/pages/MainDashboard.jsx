@@ -413,7 +413,7 @@ export default function Dashboard() {
         <DrawerHeader />
         <Typography sx={{ marginBottom: 2 }}>
           {/* <!-- Statistics Cards --> */}
-          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 p-4 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 p-4 gap-4">
             <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
                 <p class="text-xl">{totalEmployee}</p>
@@ -426,28 +426,24 @@ export default function Dashboard() {
                 <p>Total Projects</p>
               </div>
             </div>
-            <div class="bg-[#00DCCE] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-xl">5</p>
-                <p>Currently idle</p>
-              </div>
-            </div>
-            <div class="bg-[#FF9A19] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-xl">10</p>
-                <p>Currently offline</p>
-              </div>
-            </div>
+         
+      
             <div class="bg-[#FC8188] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
                 <p class="text-2xl">5</p>
-                <p>Absent</p>
+                <p>Present</p>
               </div>
             </div>
             <div class="bg-[#51BAD6] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
               <div class="text-right">
                 <p class="text-2xl">2</p>
-                <p>Suspended</p>
+                <p>Absent</p>
+              </div>
+            </div>
+            <div class="bg-[#FFB62B] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+              <div class="text-right">
+                <p class="text-2xl">2</p>
+                <p>Suspend</p>
               </div>
             </div>
           </div>

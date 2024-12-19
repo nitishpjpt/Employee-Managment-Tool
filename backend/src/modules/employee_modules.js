@@ -47,6 +47,8 @@ const requestLeaveSchema = new mongoose.Schema({
 const attendanceSchema = new mongoose.Schema({
   date: { type: String, required: true }, // Format: YYYY-MM-DD
   status: { type: String, enum: ["Present", "Absent"], default: "Absent" }, // Status: Present or Absent
+  loginTime: { type: String }, // Store login time
+  logoutTime: { type: String }, // Store logout time
 });
 
 const employeeSchema = new mongoose.Schema(
@@ -98,6 +100,7 @@ const employeeSchema = new mongoose.Schema(
     },
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
+    logoutTime: { type: String },
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
     requestLeave: [requestLeaveSchema],
