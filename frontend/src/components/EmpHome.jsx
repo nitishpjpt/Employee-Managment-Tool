@@ -13,11 +13,25 @@ const EmpHome = () => {
   // Get employee data from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("reqLeave");
+    const presentUser = localStorage.getItem("employeeLogin");
+
+    if (presentUser) {
+      try {
+        const userData = JSON.parse(presentUser);
+        setPresentDates(userData.data.attendance || [])
+        console.log(userData.data.attendance || []);
+      } catch (error) {
+        console.log("user data does not get",error);
+      }
+    }
+
+
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         const attendanceData = parsedUser.data.attendance; // Ensure this is an array
-        setPresentDates(attendanceData || []); // Fallback to an empty array if undefined
+        // setPresentDates(attendanceData || []); // Fallback to an empty array if undefined
         setFullLeave(parsedUser.data.fullDayLeavesThisMonth);
         setHalfLeave(parsedUser.data.halfDayLeavesThisMonth);
         setRequestLeave(parsedUser.data.requestLeave || []);
@@ -70,60 +84,61 @@ const EmpHome = () => {
               </tr>
             </thead>
             <tbody>
-              {presentDates.length > 0 ? (
-                presentDates.map((item, index) => {
-                  // Get the leave request for the employee based on the present date
-                  const leaveRequest = reqLeave.find(
-                    (leave) =>
-                      new Date(leave.fromDate).toLocaleDateString() ===
-                      new Date(item.date).toLocaleDateString()
-                  );
+  {presentDates.length > 0 ? (
+    presentDates.map((item, index) => {
+      // Get the leave request for the employee based on the present date
+      const leaveRequest = reqLeave.find(
+        (leave) =>
+          new Date(leave.fromDate).toLocaleDateString() ===
+          new Date(item.date).toLocaleDateString()
+      );
 
-                  return (
-                    <tr
-                      key={index}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                    >
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        Nitish
-                      </th>
-                      <td className="px-6 py-4">{item.date}</td>
-                      <td className="px-6 py-4">
-                        {item.status === "Absent" ? "Yes" : "No"}
-                      </td>
+      return (
+        <tr
+          key={index}
+          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        >
+          <th
+            scope="row"
+            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            Nitish
+          </th>
+          <td className="px-6 py-4">{item.date}</td>
+          <td className="px-6 py-4">
+            {item.status === "Absent" ? "Yes" : "No"}
+          </td>
 
-                      {/* Display Half Day Leave */}
-                      <td className="px-6 py-4">
-                        {leaveRequest && !leaveRequest.toDate
-                          ? formatDate(leaveRequest.fromDate)
-                          : "N/A"}
-                      </td>
+          {/* Display Half Day Leave */}
+          <td className="px-6 py-4">
+            {leaveRequest && leaveRequest.halfLeave
+              ? formatDate(leaveRequest.fromDate)
+              : "N/A"}
+          </td>
 
-                      {/* Display Full Day Leave with only fromDate */}
-                      <td className="px-6 py-4">
-                        {leaveRequest && leaveRequest.fromDate
-                          ? formatDate(leaveRequest.fromDate)
-                          : "N/A"}
-                      </td>
+          {/* Display Full Day Leave */}
+          <td className="px-6 py-4">
+            {leaveRequest && leaveRequest.fullLeave
+              ? formatDate(leaveRequest.fromDate)
+              : "N/A"}
+          </td>
 
-                      <td className="px-6 py-4">{leaveRequest?.fullLeave || "N/A"}</td>
-                      <td className="px-6 py-4 flex justify-center items-center gap-1">
-                        Approve <FaCheckCircle className="text-green-500" />
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center">
-                    Data not found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+          <td className="px-6 py-4">{leaveRequest?.reason || "N/A"}</td>
+          <td className="px-6 py-4 flex justify-center items-center gap-1">
+            Approve <FaCheckCircle className="text-green-500" />
+          </td>
+        </tr>
+      );
+    })
+  ) : (
+    <tr>
+      <td colSpan="7" className="px-6 py-4 text-center">
+        Data not found
+      </td>
+    </tr>
+  )}
+</tbody>
+
           </table>
         </div>
       </div>

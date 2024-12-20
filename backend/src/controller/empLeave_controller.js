@@ -16,7 +16,6 @@ const addRequestLeave = async (req, res) => {
       throw new ApiError(404, "Employee not found");
     }
 
-    
     // Get the current date and month for tracking monthly leaves
     const currentMonth = new Date().getMonth();
 
@@ -76,4 +75,46 @@ const addRequestLeave = async (req, res) => {
   }
 };
 
-export { addRequestLeave };
+// add an request leave controller
+// Delete Request Leave Controller
+const deleteRequestLeave = async (req, res) => {
+  const { employeeId, leaveId } = req.params;
+
+  console.log(employeeId, leaveId);
+
+  try {
+    // Fetch the employee by ID
+    const employee = await Employee.findById(employeeId);
+    if (!employee) {
+      throw new ApiError(404, "Employee not found"); // Correctly set error message
+    }
+
+    // Find the leave request by ID
+    const leaveIndex = employee.requestLeave.findIndex(
+      (leave) => leave._id.toString() === leaveId
+    );
+    if (leaveIndex === -1) {
+      throw new ApiError(404, "Leave request not found"); // Correctly set error message
+    }
+
+    // Remove the leave request
+    employee.requestLeave.splice(leaveIndex, 1);
+
+    // Save the updated employee data
+    await employee.save();
+
+    res.status(200).json({
+      message: "Leave request deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting request leave", error);
+
+    // Ensure proper status codes and response structure
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export { addRequestLeave, deleteRequestLeave };
