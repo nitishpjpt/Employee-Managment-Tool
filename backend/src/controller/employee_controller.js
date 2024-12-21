@@ -5,6 +5,7 @@ import ApiResponse from "../utlis/ApiResponse.js";
 import moment from "moment";
 import axios from "axios";
 
+
 const employeeRegister = async (req, res) => {
   console.log("Request Body:", req.body);
 
@@ -154,6 +155,8 @@ const employeeLogin = async (req, res) => {
 
     // Save the login time, login date, and location in the database
     await existingUser.save();
+
+    
 
     res
       .status(200)

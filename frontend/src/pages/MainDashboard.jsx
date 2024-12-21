@@ -152,10 +152,10 @@ export default function Dashboard() {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser({
-          name: parsedUser.data.username || "Unknown User",
-          email: parsedUser.data.email || "unknown@example.com",
+          name: parsedUser.data.userResponse.username || "Unknown User",
+          email: parsedUser.data.userResponse.email || "unknown@example.com",
         });
-        console.log(parsedUser.data.username);
+        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -313,14 +313,7 @@ export default function Dashboard() {
                       Employee
                     </Link>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Setting
-                    </a>
-                  </li>
+             
                 </ul>
                 <div className="py-1">
                   {user ? (

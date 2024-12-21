@@ -38,7 +38,7 @@ const login = () => {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
-          navigate("/Dashboard");
+          navigate("/dashboard");
         },
       });
     } catch (error) {
