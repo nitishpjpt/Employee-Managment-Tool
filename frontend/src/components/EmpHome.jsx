@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import EmpDashboard from "../pages/EmpDashboard";
 import { FaCheckCircle } from "react-icons/fa";
-import axios from "axios";
+import { FaTimesCircle } from "react-icons/fa"; // For Rejected status
+import { useContext } from "react";
+import { EmployeeContext } from "../context/EmployeeContext";
 
 const EmpHome = () => {
   const [presentDates, setPresentDates] = useState([]);
   const [fullLeave, setFullLeave] = useState("");
   const [halfLeave, setHalfLeave] = useState("");
   const [reqLeave, setRequestLeave] = useState([]);
-  const [reson,setReason] = useState("");
+  const [reason, setReason] = useState("");
+
+  // Use EmployeeContext to get the employee data
+  const { employees } = useContext(EmployeeContext);
+  console.log(employees || []);
 
   // Get employee data from localStorage
   useEffect(() => {
@@ -18,25 +24,20 @@ const EmpHome = () => {
     if (presentUser) {
       try {
         const userData = JSON.parse(presentUser);
-        setPresentDates(userData.data.attendance || [])
+        setPresentDates(userData.data.attendance || []);
         console.log(userData.data.attendance || []);
       } catch (error) {
-        console.log("user data does not get",error);
+        console.log("User data not found", error);
       }
     }
-
-
 
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        const attendanceData = parsedUser.data.attendance; // Ensure this is an array
-        // setPresentDates(attendanceData || []); // Fallback to an empty array if undefined
         setFullLeave(parsedUser.data.fullDayLeavesThisMonth);
         setHalfLeave(parsedUser.data.halfDayLeavesThisMonth);
         setRequestLeave(parsedUser.data.requestLeave || []);
-        setReason(parsedUser.data.requestLeave[0].fullLeave);
-        console.log(parsedUser.data.requestLeave[0].fullLeave)
+        setReason(parsedUser.data.requestLeave[0]?.fullLeave);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -84,61 +85,82 @@ const EmpHome = () => {
               </tr>
             </thead>
             <tbody>
-  {presentDates.length > 0 ? (
-    presentDates.map((item, index) => {
-      // Get the leave request for the employee based on the present date
-      const leaveRequest = reqLeave.find(
-        (leave) =>
-          new Date(leave.fromDate).toLocaleDateString() ===
-          new Date(item.date).toLocaleDateString()
-      );
+              {presentDates.length > 0 ? (
+                presentDates.map((item, index) => {
+                  // Find the employee data from the context based on name or _id
+                  const employee = employees.find(
+                    (emp) => emp.firstName === "Nitish" && emp.lastName === "Prajapati"
+                  );
 
-      return (
-        <tr
-          key={index}
-          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-        >
-          <th
-            scope="row"
-            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-          >
-            Nitish
-          </th>
-          <td className="px-6 py-4">{item.date}</td>
-          <td className="px-6 py-4">
-            {item.status === "Absent" ? "Yes" : "No"}
-          </td>
+                  // Find the leave request for the employee based on the present date
+                  const leaveRequest = employee?.requestLeave?.find(
+                    (leave) =>
+                      new Date(leave.fromDate).toLocaleDateString() ===
+                      new Date(item.date).toLocaleDateString()
+                  );
 
-          {/* Display Half Day Leave */}
-          <td className="px-6 py-4">
-            {leaveRequest && leaveRequest.halfLeave
-              ? formatDate(leaveRequest.fromDate)
-              : "N/A"}
-          </td>
+                  return (
+                    <tr
+                      key={index}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        Nitish
+                      </th>
+                      <td className="px-6 py-4">{item.date}</td>
+                      <td className="px-6 py-4">
+                        {item.status === "Absent" ? "Yes" : "No"}
+                      </td>
 
-          {/* Display Full Day Leave */}
-          <td className="px-6 py-4">
-            {leaveRequest && leaveRequest.fullLeave
-              ? formatDate(leaveRequest.fromDate)
-              : "N/A"}
-          </td>
+                      {/* Display Half Day Leave */}
+                      <td className="px-6 py-4">
+                        {leaveRequest && leaveRequest.halfLeave
+                          ? formatDate(leaveRequest.fromDate)
+                          : "N/A"}
+                      </td>
 
-          <td className="px-6 py-4">{leaveRequest?.reason || "N/A"}</td>
-          <td className="px-6 py-4 flex justify-center items-center gap-1">
-            Approve <FaCheckCircle className="text-green-500" />
-          </td>
-        </tr>
-      );
-    })
-  ) : (
-    <tr>
-      <td colSpan="7" className="px-6 py-4 text-center">
-        Data not found
-      </td>
-    </tr>
-  )}
-</tbody>
+                      {/* Display Full Day Leave */}
+                      <td className="px-6 py-4">
+                        {leaveRequest && leaveRequest.fullLeave
+                          ? formatDate(leaveRequest.fromDate)
+                          : "N/A"}
+                      </td>
 
+                      <td className="px-6 py-4">
+                        {leaveRequest?.reason || "N/A"}
+                      </td>
+
+                      {/* Display Leave Approval Status from EmployeeContext */}
+                      <td className="px-6 py-4 flex justify-center items-center gap-1">
+                        {leaveRequest?.status === "Approved" && (
+                          <>
+                            <FaCheckCircle className="text-green-500" />{" "}
+                            Approved
+                          </>
+                        )}
+                        {leaveRequest?.status === "Rejected" && (
+                          <>
+                            <FaTimesCircle className="text-red-500" /> Rejected
+                          </>
+                        )}
+                        {(!leaveRequest || leaveRequest.status === "Pending") && (
+                          <span className="text-yellow-500">Pending</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="7" className="px-6 py-4 text-center">
+                    Data not found
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
       </div>

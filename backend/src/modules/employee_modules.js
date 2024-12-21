@@ -41,6 +41,11 @@ const requestLeaveSchema = new mongoose.Schema({
   fullLeave: {
     type: String,
   },
+  status: {
+    type: String,
+    enum: ['Pending', 'Approved', 'Rejected'],
+    default: 'Pending', // Default status when leave is requested
+  },
 });
 
 // Attendance Schema

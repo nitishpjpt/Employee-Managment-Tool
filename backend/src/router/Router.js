@@ -13,7 +13,7 @@ import {
 } from "../controller/projectController.js";
 import { addBackgroundVerification } from "../controller/bgVerificationController.js";
 import { addBankVerification } from "../controller/bankVerification_controller.js";
-import { addRequestLeave, deleteRequestLeave } from "../controller/empLeave_controller.js";
+import { addRequestLeave,  updateLeaveRequest } from "../controller/empLeave_controller.js";
 import markAttendance from "../controller/empAttendence_Controller.js";
 import { getLeaveStatus } from "../controller/leave_controller.js";
 
@@ -24,7 +24,7 @@ userRouter.route("/Register").post(userRegister);
 // admin user login
 userRouter.route("/Login").post(userLogin);
 userRouter.route("/:employeeId/logout").post(employeeLogout);
-userRouter.route("/employee/requestLeave/:userId/:leaveId").delete(deleteRequestLeave);
+userRouter.route("/employee/requestLeave/update").patch(updateLeaveRequest);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);

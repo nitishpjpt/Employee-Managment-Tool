@@ -77,44 +77,58 @@ const addRequestLeave = async (req, res) => {
 
 // add an request leave controller
 // Delete Request Leave Controller
-const deleteRequestLeave = async (req, res) => {
-  const { employeeId, leaveId } = req.params;
-
-  console.log(employeeId, leaveId);
-
+const updateLeaveRequest = async (req, res) => {
   try {
-    // Fetch the employee by ID
-    const employee = await Employee.findById(employeeId);
+    const { userId, leaveId, status } = req.body;
+
+    // Find the employee by ID
+    const employee = await Employee.findById(userId);
     if (!employee) {
-      throw new ApiError(404, "Employee not found"); // Correctly set error message
+      return res.status(404).json({
+        success: false,
+        message: 'Employee not found',
+      });
     }
 
     // Find the leave request by ID
-    const leaveIndex = employee.requestLeave.findIndex(
+    const leave = employee.requestLeave.find(
       (leave) => leave._id.toString() === leaveId
     );
-    if (leaveIndex === -1) {
-      throw new ApiError(404, "Leave request not found"); // Correctly set error message
+    if (!leave) {
+      return res.status(404).json({
+        success: false,
+        message: 'Leave request not found',
+      });
     }
 
-    // Remove the leave request
-    employee.requestLeave.splice(leaveIndex, 1);
+    // Update the leave status
+    leave.status = status;
 
-    // Save the updated employee data
+    // Save the updated employee document
     await employee.save();
 
     res.status(200).json({
-      message: "Leave request deleted successfully",
+      success: true,
+      message: `Leave request ${status.toLowerCase()} successfully.`,
+      updatedEmployee: employee, // Return updated employee data
     });
   } catch (error) {
-    console.error("Error deleting request leave", error);
-
-    // Ensure proper status codes and response structure
-    res.status(error.statusCode || 500).json({
-      message: error.message || "Internal Server Error",
+    console.error('Error updating leave request status:', error);
+    res.status(500).json({
       success: false,
+      message: 'Internal Server Error',
+      error: error.message,
     });
   }
+
+
+
 };
 
-export { addRequestLeave, deleteRequestLeave };
+
+
+
+
+
+
+export { addRequestLeave, updateLeaveRequest };

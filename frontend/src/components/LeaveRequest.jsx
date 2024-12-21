@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MainDashboard from "../pages/MainDashboard";
 import axios from "axios";
 import { IoEyeSharp } from "react-icons/io5";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { Button } from "@mui/material";
 
 const LeaveRequest = () => {
   const [allUsers, setAllUsers] = useState([]);
@@ -14,7 +14,6 @@ const LeaveRequest = () => {
         `http://localhost:8000/api/v1/user/employee/all/registerDetails`
       );
       setAllUsers(response.data.data.user);
-      console.log(response.data.data.user);
     } catch (error) {
       console.error("Error fetching registered users:", error);
       alert("Failed to fetch user data.");
@@ -33,31 +32,28 @@ const LeaveRequest = () => {
     );
   };
 
-  // Handle delete leave request
-  const handleDeleteLeave = async (userId, leaveId) => {
+  // Handle leave status update (Approve, Reject, Pending)
+  const handleLeaveStatusUpdate = async (userId, leaveId, status) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/api/v1/user/employee/requestLeave/${userId}/${leaveId}`
+      const response = await axios.patch(
+        `http://localhost:8000/api/v1/user/employee/requestLeave/update`,
+        { userId, leaveId, status }
       );
-      console.log(response.data.data);
 
-      // Update the state to remove the deleted leave request
+      const updatedEmployee = response.data.updatedEmployee;
+      console.log(updatedEmployee);
+
+      // Update the state with the updated employee data
       setAllUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user._id === userId
-            ? {
-                ...user,
-                requestLeave: user.requestLeave.filter(
-                  (leave) => leave._id !== leaveId
-                ),
-              }
-            : user
+          user._id === userId ? updatedEmployee : user
         )
       );
-      alert("Leave request deleted successfully.");
+
+      alert(`Leave request ${status.toLowerCase()} successfully.`);
     } catch (error) {
-      console.error("Error deleting leave request:", error);
-      alert("Failed to delete the leave request.");
+      console.error(`Error updating leave status to ${status}:`, error);
+      alert(`Failed to update leave status to ${status}.`);
     }
   };
 
@@ -80,6 +76,7 @@ const LeaveRequest = () => {
               <th className="px-6 py-3">From Date</th>
               <th className="px-6 py-3">To Date</th>
               <th className="px-6 py-3">Reason</th>
+              <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Action</th>
             </tr>
           </thead>
@@ -120,17 +117,41 @@ const LeaveRequest = () => {
                     <td className="px-6 py-4">
                       {latestLeave?.reason || "N/A"}
                     </td>
+                    <td className="px-6 py-4">
+                      {latestLeave?.status || "Pending"}
+                    </td>
                     <td className="px-6 py-4 flex justify-center gap-2 items-center">
-                      <button
+                      <Button
+                     variant="contained" color="success"
                         onClick={() =>
-                          handleDeleteLeave(user._id, latestLeave?._id)
+                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Approved")
+                        }
+                        className="text-green-500 hover:underline"
+                        disabled={!latestLeave || latestLeave.status === "Approved"}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                     variant="contained" color="error"
+                        onClick={() =>
+                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Rejected")
                         }
                         className="text-red-500 hover:underline"
-                        disabled={!latestLeave}
+                        disabled={!latestLeave || latestLeave.status === "Rejected"}
                       >
-                        <RiDeleteBin6Line />
-                      </button>
-                      <IoEyeSharp className="text-blue-400" />
+                        Reject
+                      </Button>
+                      <Button
+                      variant="contained"
+                        onClick={() =>
+                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Pending")
+                        }
+                        className="text-yellow-500 hover:underline"
+                        disabled={!latestLeave || latestLeave.status === "Pending"}
+                      >
+                        Pending
+                      </Button>
+                     
                     </td>
                   </tr>
                 );
@@ -138,7 +159,7 @@ const LeaveRequest = () => {
             ) : (
               <tr>
                 <td
-                  colSpan="10"
+                  colSpan="11"
                   className="px-6 py-4 text-center text-gray-500"
                 >
                   No data available
