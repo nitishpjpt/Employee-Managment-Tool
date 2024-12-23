@@ -138,4 +138,25 @@ const userLogin = async (req, res) => {
   }
 };
 
-export { userRegister, userLogin };
+// user logout controller
+// User Logout Controller
+const userLogout = async (req, res) => {
+  try {
+    // Clear the accessToken cookie
+    res
+      .status(200)
+      .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Ensure secure in production
+        sameSite: "Strict",
+      })
+      .json(new ApiResponse(200, null, "User logged out successfully"));
+  } catch (error) {
+    res
+      .status(500)
+      .json(new ApiResponse(500, null, "Failed to log out user."));
+  }
+};
+
+
+export { userRegister, userLogin ,userLogout };

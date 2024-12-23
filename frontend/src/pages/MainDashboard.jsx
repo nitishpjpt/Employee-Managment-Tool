@@ -32,6 +32,8 @@ import { useContext } from "react";
 import { ProjectContext } from "../context/ProjectContext";
 import { FcLeave } from "react-icons/fc";
 import FrontPage from "../components/FrontPage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const drawerWidth = 240;
 
@@ -161,10 +163,27 @@ export default function Dashboard() {
   }, []);
 
   //funciton to delete login data from localstorage
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/logout`,
+        {},
+        {
+          withCredentials: true, // Ensure cookies are sent
+        }
+      );
+      console.log(response); // "User logged out successfully"
 
-  const deleteItem = () => {
-    localStorage.removeItem("userLogin");
-    setUser(null);
+      toast.success("Admin logout successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        onClose: () => {
+          navigate("/");
+        },
+      });
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data?.message);
+    }
   };
 
   const [showSettingsOptions, setShowSettingsOptions] = useState(false);
@@ -195,7 +214,7 @@ export default function Dashboard() {
     },
     {
       text: "Request Leave",
-      icon: <FcLeave  className="text-3xl text-[#233D7A]" />,
+      icon: <FcLeave className="text-3xl text-[#233D7A]" />,
       path: "/employee/request/leave/approval",
     },
     {
@@ -238,141 +257,113 @@ export default function Dashboard() {
     },
   ];
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          <div className="flex justify-between w-full items-center">
-            <h1 className="text-xl font-semibold">
-              <Link to="/home">Deepnap Softech</Link>
-            </h1>
+    <>
+      <ToastContainer />
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={[
+                {
+                  marginRight: 5,
+                },
+                open && { display: "none" },
+              ]}
+            >
+              <MenuIcon />
+            </IconButton>
+            <div className="flex justify-between w-full items-center">
+              <h1 className="text-xl font-semibold">
+                <Link to="/home">Deepnap Softech</Link>
+              </h1>
 
-            {/* <!-- Dropdown menu --> */}
+              {/* <!-- Dropdown menu --> */}
 
-            <div className="relative">
-              {/* Avatar Button */}
-              <img
-                id="avatarButton"
-                onClick={toggleDropdown}
-                type="button"
-                data-dropdown-toggle="userDropdown"
-                data-dropdown-placement="bottom-start"
-                class="w-10 h-10 rounded-full cursor-pointer"
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAilBMVEX///8AAAD+/v77+/vz8/Pk5OT4+PipqanS0tIJCQn19fU6Ojru7u7d3d3r6+umpqbKysojIyMuLi5ZWVnf39/Q0NBgYGDDw8O4uLibm5uOjo5wcHB2dnaJiYmvr6+9vb2WlpZ9fX07OztRUVFGRkYaGhpnZ2eNjY0RERFKSkozMzMpKSkYGBggICBtlRmsAAAS5klEQVR4nO1d6bqqOgxtyyAi4qzgPG2Ow/b9X+8maUVwAhXZ9X6uH2fLoUAXSZN0Cox98cUXX3zxxRdffPHFF/8PCHHzxK0znwCRrL/wrHpzFkwrDURlGsyadctTp4X4SKZQZ6q1WQ/m0W7Dr2Gzi+ZB3ZPFP4ukrK3thFEbmbT7kzAYOF3f81yE6fldZxCEk746Pe/Zp8t0hzBIGnZzuIXK70eNpmXeKW5azcZoDyW3/5rIUsD1ZVX1SWD9rEoH6rwKHU/+1/WGJphSZODphCu4olOx1B30hFD05qB6tdDB30TsdhMT8pw674RL0Ni5tiRBvQwQRmWJovAfvlhy8lH4ywqotaGfsqKweiPQzalJdJ+5BZIyp6Cvo55u/LBu7nTHN6HPXvFv8jJ//st3U1snZYWKmUMQ30AUUim4ywAEOXS14CilZU44H9eh9TylneegNlgfA8d7fqYsIEMb5DeWxqWYdy6tsq84/mUcQDUxQs7/eYUH0Xg/D1QjNI5u6E8ADw6k/AqPRWRs5I94dfZXBElozpp36m99TH3Ft/W/6WdhA5zw3xl75ytGXkGVDw32BxGAYIMfvrDR8r3x4WTJFvzQLFtTwSuIMW87JVg6agwtvhDlilEw58DnZb1XEOSQ77slihGeNOeHemnNH5/jbHhYllEFO+6tqAWW8jj1UOaOed8t550KVq/yoOT+jQF9sylvdcto94LN+M6i3uubn5V+LvxTP/ABhQJvfBCG1v94/70PuQWwpitojM91PvMCqHX4v79wvwoLPmLvY4ixp7mGJvhn0T48uMJX9tsGV+G+/p73/lCCSHHAl+a7qiCYxXn9LwmiTWUO//He4hgFEqxab7jzY7UAZ8V//TdEG0SQW6W6+Rs1YV1+8N/REn3OPRoU/WNAFSx+KFpRwYr6oBsaDH1JWLxliiKjKhwzOVQtYRd2x9dggKLu7CKbInjCHe8yDVRUAvsafFukVTdYhztaze6hXxwV1hThPhPsTGjF0GCN4jqM2G+Zs7+Jtm8B2+ACehqFvHbU+UjLGegVt4qplclrOq4jEMz+3bsF3EfAq/J1mAQ6B8Vvo9eVy2BzUHc9IcBATF+PIx0+0VGCBMFG4KZfuoNh2LymlxVNwXA37ZdGpSGIwZeklSdMQhhSxV5gyGa8oZknTAKn9P5x55VWZPK1to1QQRzar+jYmFvaqqiEED3+9AQKBjNzfToUNyBQDE9RxDCmttecHsHknaeGbWhssvSJySeAfv+pEFwIU9OA+wzgMrat59YqTfSMRy+A9qLxzIU++tJPaIegZxF/eAhJoIkyP0FJmRxBfdhjCMPiw7dU5x3ACNx9UBp4jea+PgEhUB4PMrT4XIMR/LyQQnzsmjG3P0eGJMTwMSF6r3VKygZUtfPziEQEm/O/nkd7CMCwx2cPCFG41egjnH0Sy/UjWjfjzqcRZAF0hfNju/ugRkgQzOXj/MW7fPppSkqj/DlDN5qI8XQc5b4Lg9VBLrkEA9TAznwidqt8tgY7I7qOct9HyPPN7qNCf068loQP3cR8besRo6QVttt8DFFJP8zMEARr8Hz7iOb84wypBITfQa6Ctb6+MxX3AGL5HeUp6KO7/0SGoKYTnl1xHH08diuEcO1bMGQBrfQZl6Bkx6bQW67GB87VRAGEw3rUqIu/3Tt3CRNXoGRBtE66fIehTIqweO+2rsfR6meVENAMT/YoiyFg3WSGRqo64XZGZQR0s04z49kMq5yvLI1UdZZjHmqRMEc5ZIgI9RmVszL7fYKtV8ciGIJXAdkUI0MPMUIl+CKLoX0a6iaGm011aV1BrzL+SbRGV4s4D4fctlmFuskhK6mltVtle+OYYhv1NL5OznWJ0vcow8OGmR39AU84gHsMSS39mOM6sWJDJGfzjDKjAjSUWcOgIU8shsuQoUHDlFw21HGiKfqzQRMxazpdyjrzas3zo8ubGSXG+8RBkuG5IGTEZjBzq6QYsARDKdtZENb4tuGVGPp4vHL3PJjSTuIwwfBKFZWLsDuKoidiIwzBLaCFBwtyJ+VNtW7+ZRT4nSQOkjJ0O0mMhs049rbXUlHHsRBxkQMyJCfyQ6fKYSjORHQFXmpGPMnQvPCCQ1epqq/+I7HD88iQ4bIswJSez465EmRt5NVC1ux4fMxLlCxyLB8vKhEsUT5FkUW7+wwtPrvF8IrnH6g1bwE/NzYxQ8aa+LN6rOOxfqk/sexFyr+ovZQGO7/YiAswdm7G/lXvN3mH9x5gqCZewc/KQ/Mawy6dcqQMnGDa8+OOZX1Wafo0pW75CDzvYKoPqyuPWT0IusfX4EwrQVPm4JDlPWb3ZvUzjg3u3WU4SMTdIpshn0sRqAC2wi4ZCo9O4RJHYw7mFWxQx8d90kZY5dMB51tQ7gHaI762dijuARwP8Xjvkp1euajbc1618GVtLbjTNMITiybmQWvVk2LPdIhB4g2kGIrLdkhA7wPKtKKD7TWG8sIJEz7UH7pvNTgCaZlrLE8XdsmtwoMWBql0U0jBr8d1auIjmtDkNZf14WgnaF83Up/IvwlKAhrF/VXD0xTDbkKGxrr68/OzmVPmw8a/nWL4I/v5qiUaFwxxTkjW0kCBgClHjR4zqiz8GXGiTcygqjbmH1yCdtIx2Kc9aT9jGFisGYm6J5SthgDNk/dOSSXZzi5RSYQ0Al8I3Fj5Q59SAMaJyhQn1VuRqngaJUm0wyPDgdRqYvgjSD0W0l0CA2K4h1u1JFPJEOpCD+0iQ5CeLN043h/8go1/q2aiLdYzpiQa1ThwFWizerGWCuHtY41AKycrAWfp5vSuT67mguGCjVWBPtV9LlVX1tmSDPFBxGggb74R6riO0ST+91C+JSXDkWLIk9Ym7Q2uMGwljwRRVFoKAdr+xFDgCDO+P26RAR0rHpcMpXhDtsQ/29GoBZ1O7hLP2mi0wyNHMgTtZKT9Fclwx2KGBrN6Lg5WpxkKybCZYOhljAqfMYTrerhjRh0BxbhVQ0wqhSh7WyH9jic8Eu3QUpXYSaKqKuRfjqt8xEmGOylpYtiGE4qhzVxnGs4712WYnIXwZHRxE5XqWffKZs22YggW3t2cGAqpb2r8jowaj+cdEzKUBllaTcWQ1tpJLVWuvHlU+HZChgmGUj8tpaUsZmio13di6GasU5wmO0/MM6jByeaE21KZH5taOEFtiMs1czP6HY/lJWQ4ldJiE/xLYTHmngilyAUdGWcMVTtsn9rhTBZXDO0zGSb9g725P2Q6Tc3eNKNTsOTXvFQH4SgHJZaUDFORN0q6ZUujJfcp2WxokiNaSXMWWieGB/xhXjBcSGr/5J95muFPUu/s6iMMe4mdUx7fmckoFyfDiVVw2Q4TDKmubQpiyE1Ql99bSEcoH+aOlZa2VHzfZ7cYRvLPRFq5jgoJU4v27LtaKlIen5pQdBzwhait7R63TwvUXuURpYpIjV0cycv+oZCtMJSpXtydVFdmQRwGEYR6I37HV5YGfDUJ2lexRmxLu/J85JKl2QZT5fF9es7eTgam99uhSEVtsnojFcJjXNoCinGXRvWZDvJ0jQ4a8i7dSQedwGay6HSGTXacrBMN4Ljpbxc2JbDDXKe8sx2ZhmK4nqBgIwgqpmO8/mfiTX7wx7ghKUWyIY5VO4/GWH5hpkJv824n/xpDPoplCHpz0uGeGkwMpXzkgRojMWzaSq52zMf5+ASmhnYsQ/b44yPDiL2FW3dcSihko+YYtlB/QUqG5eA6BKNLuXtVO/Scun2WsCbLWwxSdslRjStmyJcDielx6AIH7yjvEOHKGs8rvTVxeS72h3eHreS7xn+OluayfJbH76Um4CTD3UmGlwhYwjU+v0kqtqXZoCaSYHiGbkZcmj4vGS7ZbYYLZpw6IY8uYk3gAYYsttVXGfYyJknTc/33esBVHH6SzkRI08+f3p+RiNpy3UAxvLooZpDRA3ZTk6hZffyGymkmbT36sScZmuR59q7v5xqTEx6538j0z5KRUAu9P4rBDrdGEy/7+JGlRs5cZVadp9dwTEPqV4dhmGtbr5DdcCx/RkdkjkSxdT8x+JtiuKydsNyO46TdtujL8VINlhVDBUa7jGqM29cZXk6vxF5orKYurNeH7gt4RbWsFx0mJ8KTDNm5xsuRWyb6/FlDCu/Ibzq2mgFxBr6kaDoITChAP/AzGBb+QAXGWGpQpyuMHraJrndWr+o8ox6pifCMuSfkaB2HpDrPNMI5j9a4vcoAE9ju8BENMAd8uayt4W6d2o4v29jDjqrQRhb0yIh3drQK3eQYK61SEYxcaHG/HvVkdzJz/tCeH83O/pmUPxZGRJQOqYsjZMaa7P9sJe+P7+9XPilSAS+EFh3474GFOfw5VrQfJJ+Kw5L1DIZmco3m0ePfqmB4MqzeM40IYkibpjLYaIhETOp/xwxBTzeSaRQKmc3XogfR/0Fh0zU6qRhNZDsLxnZx6h4ce9zgPL5rXsDrNsP1iV/ruTRnorfm6wFy2w1IQjQBPatG/Y4c/QGGhHG1vf/Fc702E8fOjnz0WRQ63me+6CieIj2uxahuquc4+27M2ntuyzdKIqBmEZF9sEkAs1pzMOimGEYhdTcwqqTejZKheynDXT9Dl2gVatygcq6nmRhPpsBzMcAaNShqo59UPamlBMlQYBkm2+Ea7Q19fefYDlPVdzNNOsrtlIUh15qofY89O4nd5f1/UdUTlPWpPz4sqfcVrE8MuaxUtBuNIoy2hLlsjSPqh7rEMC3DzDF9xmRk+ogMK4lJz0dh2ING4Eoj4gUVh4wO+Mi4gDmQzc4ZzGYz7PXgGHUloPl0I8CYw0knUmrwHCt7ViclyWTYuT+CXjByvMbOOrsMG/L45z2G1dVi5r4hBeVr4JPsMtDoj11IYV9b70XwbBqj1GnhJaKeuZoGYZSXGrxYwMtOrXe6jY72OWmuQyQXVt7F9LT256OAmTwqORiKHKtQ9URym0FGwX3GsiJt0dlnl2HIcJ6vvWoHk2f1fiUMYWUMjOuKac6BFIiFaqvsYhpiVcuXeU1gdOfrsTT9AaCFbOR25B7Pp9A6Ac1HZvf+hOj34/bnCWOTa2ueQvMD9zoPeP6vJkIvbZcv/NEJq90D45kYHbyWF7RkCEb5BvILRQgbZwa12c2UCajqOHPXWgoC+sHmBxkbITw+fNDBmRon172GSc6N6gksuPk5DMXjAhGGz7O2ZuiEyeN9WkFpEz8COAAJrfBxs2HiZkXtFVXOYoyf6+/NMyeqtABOUeXZpH7lSuO5Wc+ygXshNk+5blzk9glJTnDJ2eypyT0Q3/bwCWGNvek8aTBQv+e6GxuBRv/pVSC4s87SPA2tIeq0KvdZivbPUvOWKFh7/5I5bGLCBG0VFacb57z3ghBox4HW30YAHX0tDakQ4qdW9EfFC4Rw9+2X9/vXNe5GYbj28lgEzsk9kvq0TBTznRlc0PHktwfeDFHQt4IA7qatozkV4Mv2xXzND+xVX7/QRgj6Zlch1cL9P7pFb7jfjb67VszdcORtqpdXpFVUjeJeO+4YyV5NVSaK/f4hqcQSO/y6BOECl9+tiqwPfq66xXX6Dmmd14r+Dinzq7+eLi1RWLzlFvotWUZrxDcbU4e5DMNmPj+YhQchAmeRN54GTRHX4/++4cvcgige3vFB7Mfqgd8C/vGZ8Y5AUn5b/W/7UvRt9cI/WZ24u99+YftWAaDdqkv3XQEWSs9c456Uv1JUSsbRMcRz36/KBZsZ/YenIguDwJne8XsDD3x9/3j/r0Rob+NNnW97hsw0sLNYyTmSZeKsH44Zb9/dHceudRX7LaUaHMpQwPclDTYYzFvhPpkynb9g9ohHdlkBh8C5xaVVmk3FbC/1A2aDKE9toPdywBU6pWVDDHmt3OEwoGaMMDlcCY4DG/4Od4qUHWlAL3vD58abZzXQdrsL3n7pm79PP5zZE34YvFeMghLDzcVfBBlkZpw177x3iV9vyzule98UppwvvBc26N0C3BHanRXx1uAP9yjhWhaGCS2HduFmFUe/vAXnlbeHMBlAO+NOKB9tcZCUkF/47P7bouFDZRborwoZxkHxMWcEBgZfmxYMocF4IMfOoCiNsoM18dNmmJ1es9to8xam7r5IofHIffBKzB24Dmw9pJeC0YxAkIH9rGbRVV5ly/lYt0+fEChnmYcZ2aKZrf4nH89TMQ9TiG2nLit6tLcYqCp1hweoZaj2Et/6mpA4nVUFjN4Q3s4ytJQX0hZoTK0GpgzuhI50Ibc5xjkZe3NMstGfeuy9QWARUMOp7mCCdW6PK87dlcaG1WxEmGZqNe9RIj69viCVAbc572N64c2uP2kEzbrleaZrG7Zrep7lDIJw0aG8j7uo4dA3Ij6HmgJV2HOCYX93yoRW3Zx+/9ZG4axrpsp/DtJ5/Q3fqjdnwVQmIatMgxmK9Fj0E8WXwEdX/osvvvjiiy+++OKLL77Ii/8AaWvSkodVT7MAAAAASUVORK5CYII="
-                alt="User dropdown"
-              />
+              <div className="relative">
+                {/* Avatar Button */}
+                <img
+                  id="avatarButton"
+                  onClick={toggleDropdown}
+                  type="button"
+                  data-dropdown-toggle="userDropdown"
+                  data-dropdown-placement="bottom-start"
+                  class="w-10 h-10 rounded-full cursor-pointer"
+                  src="data:image/png;base64,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"
+                  alt="User dropdown"
+                />
 
-              {/* Dropdown */}
-              <div
-                id="userDropdown"
-                className={`absolute right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 transition-opacity duration-200 ${
-                  isDropdownOpen ? "block" : "hidden"
-                }`}
-              >
-                <div className="px-4 py-3 font-semibold text-sm text-gray-900 dark:text-white">
-                  <div className="font-semibold">
-                    {user ? user.name : <Link to="/login">Login</Link>}
-                  </div>
-                  <div className="font-medium truncate">
-                    {user ? user.email : ""}
-                  </div>
-                </div>
-                <ul
-                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="avatarButton"
+                {/* Dropdown */}
+                <div
+                  id="userDropdown"
+                  className={`absolute right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 transition-opacity duration-200 ${
+                    isDropdownOpen ? "block" : "hidden"
+                  }`}
                 >
-                  <li>
-                    <Link
-                      to="/"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/employee/details"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Employee
-                    </Link>
-                  </li>
-             
-                </ul>
-                <div className="py-1">
-                  {user ? (
-                    <button
-                      onClick={deleteItem}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      LogOut
-                    </button>
-                  ) : (
-                    ""
-                  )}
+                  <div className="px-4 py-3 font-semibold text-sm text-gray-900 dark:text-white">
+                    <div className="font-semibold">
+                      {user ? user.name : <Link to="/login">Login</Link>}
+                    </div>
+                    <div className="font-medium truncate">
+                      {user ? user.email : ""}
+                    </div>
+                  </div>
+                  <ul
+                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="avatarButton"
+                  >
+                    <li>
+                      <Link
+                        to="/"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/employee/details"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Employee
+                      </Link>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    {user ? (
+                      <button
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      >
+                        LogOut
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
 
-        <List>
-          {menuItems.map(({ text, icon, path, onClick }) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  { minHeight: 48, px: 2.5 },
-                  open
-                    ? { justifyContent: "initial" }
-                    : { justifyContent: "center" },
-                ]}
-                onClick={onClick || (() => handleNavigation(path))}
-              >
-                <ListItemIcon
-                  sx={[
-                    { minWidth: 0, justifyContent: "center" },
-                    open ? { mr: 3 } : { mr: "auto" },
-                  ]}
-                >
-                  {icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-
-          {/* Additional Settings Options */}
-          {showSettingsOptions &&
-            settingsOptions.map(({ text, icon, path }) => (
+          <List>
+            {menuItems.map(({ text, icon, path, onClick }) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
                   sx={[
@@ -381,7 +372,7 @@ export default function Dashboard() {
                       ? { justifyContent: "initial" }
                       : { justifyContent: "center" },
                   ]}
-                  onClick={() => handleNavigation(path)}
+                  onClick={onClick || (() => handleNavigation(path))}
                 >
                   <ListItemIcon
                     sx={[
@@ -398,52 +389,80 @@ export default function Dashboard() {
                 </ListItemButton>
               </ListItem>
             ))}
-        </List>
 
-        <Divider />
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <Typography sx={{ marginBottom: 2 }}>
-          {/* <!-- Statistics Cards --> */}
-          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 p-4 gap-4">
-            <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-xl">{totalEmployee}</p>
-                <p>Total Enrollments</p>
+            {/* Additional Settings Options */}
+            {showSettingsOptions &&
+              settingsOptions.map(({ text, icon, path }) => (
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    sx={[
+                      { minHeight: 48, px: 2.5 },
+                      open
+                        ? { justifyContent: "initial" }
+                        : { justifyContent: "center" },
+                    ]}
+                    onClick={() => handleNavigation(path)}
+                  >
+                    <ListItemIcon
+                      sx={[
+                        { minWidth: 0, justifyContent: "center" },
+                        open ? { mr: 3 } : { mr: "auto" },
+                      ]}
+                    >
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={[open ? { opacity: 1 } : { opacity: 0 }]}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+          </List>
+
+          <Divider />
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          <Typography sx={{ marginBottom: 2 }}>
+            {/* <!-- Statistics Cards --> */}
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 p-4 gap-4">
+              <div class="bg-[#848DFF] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+                <div class="text-right">
+                  <p class="text-xl">{totalEmployee}</p>
+                  <p>Total Enrollments</p>
+                </div>
+              </div>
+              <div class="bg-[#E371B4] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+                <div class="text-right">
+                  <p class="text-xl">{totalProject}</p>
+                  <p>Total Projects</p>
+                </div>
+              </div>
+
+              <div class="bg-[#FC8188] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+                <div class="text-right">
+                  <p class="text-2xl">5</p>
+                  <p>Present</p>
+                </div>
+              </div>
+              <div class="bg-[#51BAD6] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+                <div class="text-right">
+                  <p class="text-2xl">2</p>
+                  <p>Absent</p>
+                </div>
+              </div>
+              <div class="bg-[#FFB62B] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
+                <div class="text-right">
+                  <p class="text-2xl">2</p>
+                  <p>Suspend</p>
+                </div>
               </div>
             </div>
-            <div class="bg-[#E371B4] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-xl">{totalProject}</p>
-                <p>Total Projects</p>
-              </div>
-            </div>
-         
-      
-            <div class="bg-[#FC8188] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-2xl">5</p>
-                <p>Present</p>
-              </div>
-            </div>
-            <div class="bg-[#51BAD6] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-2xl">2</p>
-                <p>Absent</p>
-              </div>
-            </div>
-            <div class="bg-[#FFB62B] dark:bg-gray-800 shadow-lg rounded-md flex items-center justify-between p-3 border-b-4 border-blue-600 dark:border-gray-600 text-white font-medium group">
-              <div class="text-right">
-                <p class="text-2xl">2</p>
-                <p>Suspend</p>
-              </div>
-            </div>
-          </div>
-          {/* ---------table=============== */}
-        
-        </Typography>
+            {/* ---------table=============== */}
+          </Typography>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 }

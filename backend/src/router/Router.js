@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userRegister, userLogin } from "../controller/user_controller.js";
+import { userRegister, userLogin, userLogout } from "../controller/user_controller.js";
 
 import {
   employeeLogin,
@@ -23,6 +23,7 @@ const userRouter = Router();
 userRouter.route("/Register").post(userRegister);
 // admin user login
 userRouter.route("/Login").post(userLogin);
+userRouter.route("/logout").post(userLogout);
 userRouter.route("/:employeeId/logout").post(employeeLogout);
 userRouter.route("/employee/requestLeave/update").patch(updateLeaveRequest);
 // employee login
