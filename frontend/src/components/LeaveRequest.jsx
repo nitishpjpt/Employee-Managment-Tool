@@ -11,7 +11,7 @@ const LeaveRequest = () => {
   const fetchAllUsers = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/employee/all/registerDetails`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
       );
       setAllUsers(response.data.data.user);
     } catch (error) {
@@ -24,7 +24,7 @@ const LeaveRequest = () => {
     fetchAllUsers();
   }, []);
 
-  // Get the latest leave request
+  // get the latest leave request 
   const getLatestLeave = (requestLeave) => {
     if (!requestLeave || requestLeave.length === 0) return null;
     return requestLeave.reduce((latest, current) =>
@@ -36,7 +36,7 @@ const LeaveRequest = () => {
   const handleLeaveStatusUpdate = async (userId, leaveId, status) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/user/employee/requestLeave/update`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/requestLeave/update`,
         { userId, leaveId, status }
       );
 

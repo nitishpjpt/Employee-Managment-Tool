@@ -1,10 +1,19 @@
 import { Employee } from "../modules/employee_modules.js";
 import ApiError from "../utlis/ApiError.js";
-import uploadOnCloudinary from "../utlis/Cloudinay.js";
 import ApiResponse from "../utlis/ApiResponse.js";
 import moment from "moment";
 import axios from "axios";
 
+// Generate access token function
+const generateAccessToken = async (userId) => {
+  const user = await Employee.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+  const accessToken = user.generateAccessToken(); // Ensure this method exists
+  await user.save({ validateBeforeSave: false }); // Save any changes if necessary
+  return { accessToken };
+};
 
 const employeeRegister = async (req, res) => {
   console.log("Request Body:", req.body);
@@ -86,14 +95,21 @@ const employeeLogin = async (req, res) => {
   try {
     const { email, password, location } = req.body;
 
+    console.log("employee login:", req.body);
+
     // Find the employee by email
     const existingUser = await Employee.findOne({ email });
 
     if (!existingUser) {
-      throw new ApiError(
-        401,
-        "Employee not found. Please check your employee email."
-      );
+      throw new ApiError(404, "Employee not found with this email");
+    }
+
+    // existing user valid then generate access token
+    // generate access token
+    const { accessToken } = await generateAccessToken(existingUser._id);
+    console.log(accessToken);
+    if (!accessToken) {
+      throw new ApiError(500, "Failed to generate access token.");
     }
 
     // Check if the password matches
@@ -106,10 +122,17 @@ const employeeLogin = async (req, res) => {
     const today = moment().format("YYYY-MM-DD");
     if (existingUser.loginDate === today) {
       // If already logged in today, do not update the login time or date
+
+      const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Set secure flag for production
+      };
+      
       return res
         .status(200)
+        .cookie("accessToken", accessToken, options)
         .json(
-          new ApiResponse(200, existingUser, "User already logged in today")
+          new ApiResponse(200, {existingUser,accessToken}, "User already logged in today")
         );
     }
 
@@ -154,13 +177,24 @@ const employeeLogin = async (req, res) => {
     }
 
     // Save the login time, login date, and location in the database
+    const userResponse = await User.findById(existingUser._id).select(
+      "-password -accessToken"
+    );
+
     await existingUser.save();
 
-    
+   
 
     res
       .status(200)
-      .json(new ApiResponse(200, existingUser, "User logged in successfully"));
+      .cookie("accessToken", accessToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          { userResponse, accessToken },
+          "Employee login successfully"
+        )
+      );
   } catch (error) {
     console.error("Error during employee login:", error);
     res
@@ -208,7 +242,6 @@ const employeeLogout = async (req, res) => {
     });
   }
 };
-
 
 // get all user
 const getAllUser = async (req, res) => {

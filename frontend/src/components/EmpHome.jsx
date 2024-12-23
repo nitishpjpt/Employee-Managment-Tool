@@ -24,8 +24,9 @@ const EmpHome = () => {
     if (presentUser) {
       try {
         const userData = JSON.parse(presentUser);
-        setPresentDates(userData.data.attendance || []);
-        console.log(userData.data.attendance || []);
+        setPresentDates(userData.data.existingUser.attendance || []);
+        console.log(userData.data.existingUser.attendance || []);
+        console.log(userData.data.existingUser.attendance)
       } catch (error) {
         console.log("User data not found", error);
       }

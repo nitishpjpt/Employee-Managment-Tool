@@ -11,7 +11,7 @@ const EmployeeTable = () => {
   const getAllUserRegisterDetails = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/employee/all/registerDetails`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
       );
       setAllUser(response.data.data.user); // Update state with the user data
       console.log(response.data.data.user);

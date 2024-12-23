@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import moment from "moment";
+import jwt from "jsonwebtoken";
 
 // Background Verification Schema
 const backgroundVerificationSchema = new mongoose.Schema({
@@ -43,8 +44,8 @@ const requestLeaveSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending', // Default status when leave is requested
+    enum: ["Pending", "Approved", "Rejected"],
+    default: "Pending", // Default status when leave is requested
   },
 });
 
@@ -143,5 +144,25 @@ employeeSchema.methods.markAttendance = async function () {
     await this.save();
   }
 };
+
+// function to generate the access token for login employee
+employeeSchema.methods.generateAccessToken = function () {
+  try {
+    return jwt.sign(
+      {
+        _id: this._id,
+        email: this.email,
+      },
+      process.env.ACCESS_TOKEN,
+      {
+        expiresIn: process.env.EXPIRE_ACCESS_TOKEN,
+      }
+    );
+  } catch (error) {
+    console.error("Error generating access token:", error);
+    throw new Error("Failed to generate access token.");
+  }
+};
+
 
 export const Employee = mongoose.model("Employee", employeeSchema);

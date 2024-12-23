@@ -16,9 +16,9 @@ const EmpDocuments = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser.data);
-        setBankDetails(parsedUser.data.bankVerification);
-        setBackgroundDetails(parsedUser.data.backgroundVerification);
+        setUser(parsedUser.data.existingUser);
+        setBankDetails(parsedUser.data.existingUser.bankVerification);
+        setBackgroundDetails(parsedUser.data.existingUser.backgroundVerification);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }

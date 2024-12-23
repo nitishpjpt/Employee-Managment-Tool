@@ -109,9 +109,9 @@ const userLogin = async (req, res) => {
     if (!isValidPassword) {
       throw new ApiError(401, "Invalid password. Please try again.");
     }
-
+      
     const { accessToken } = await generateAccessToken(existingUser._id);
-
+      
     const userResponse = await User.findById(existingUser._id).select(
       "-password -accessToken"
     );

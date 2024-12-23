@@ -20,7 +20,6 @@ function EmpDashboard() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [employeeId, setEmployeeId] = useState("");
@@ -39,8 +38,8 @@ function EmpDashboard() {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUsername(parsedUser.data.firstName);
-        setEmail(parsedUser.data.email);
+        setUsername(parsedUser.data.existingUser.firstName);
+        setEmail(parsedUser.data.existingUser.email);
         setEmployeeId(parsedUser.data._id);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
@@ -52,7 +51,7 @@ function EmpDashboard() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/${employeeId}/logout`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/logout`
       );
       console.log(response.data);
       toast.success("Employee logout successfully!", {

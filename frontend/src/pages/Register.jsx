@@ -38,7 +38,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/register`, // Correct the endpoint if needed
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/register`, // Correct the endpoint if needed
         userData,
         {
           headers: {

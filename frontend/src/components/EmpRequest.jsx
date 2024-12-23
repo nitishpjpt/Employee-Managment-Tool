@@ -22,7 +22,7 @@ const EmpRequest = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.data.firstName);
-      setEmployeeId(parsedUser.data._id);
+      setEmployeeId(parsedUser.data.existingUser._id);
     }
 
 // Fetch the current Leave status (half and full days taken) for the employee
@@ -30,7 +30,7 @@ const EmpRequest = () => {
     const fetchLeaveStatus = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/user/${employeeId}/leaveStatus`
+          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/leaveStatus`
         );
         setLeaveLimits(response.data); // Assume response includes { halfDayLeaves, fullDayLeaves }
         console.log(response.data);
@@ -76,7 +76,7 @@ const EmpRequest = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/${employeeId}/request/leave`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/request/leave`,
         leaveObj,
         {
           headers: {

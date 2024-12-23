@@ -7,6 +7,9 @@ const ProtectedRoute = ({ element, isAuthenticated }) => {
   return isAuthenticated ? element : <Navigate to="/login" replace />;
 };
 
+// employee protected route
+const EmployeeProtectedRoute = ({ element, isEmployeeAuthenticated }) => {
+  return isEmployeeAuthenticated ? element : <Navigate to="/employee/login" replace />;
+}
 
-
-export default ProtectedRoute;
+export { ProtectedRoute,EmployeeProtectedRoute};

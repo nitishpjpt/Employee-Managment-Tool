@@ -18,8 +18,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
-import { IoMdTimer } from "react-icons/io";
-import { GoProject } from "react-icons/go";
 import { BsPersonCircle } from "react-icons/bs";
 import { FaHome } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
@@ -33,7 +31,7 @@ import { EmployeeContext } from "../context/EmployeeContext";
 import { useContext } from "react";
 import { ProjectContext } from "../context/ProjectContext";
 import { FcLeave } from "react-icons/fc";
-import { FcOvertime } from "react-icons/fc";
+import FrontPage from "../components/FrontPage";
 
 const drawerWidth = 240;
 
@@ -183,7 +181,7 @@ export default function Dashboard() {
     {
       text: "Dashboard",
       icon: <FaHome className="text-3xl text-[#233D7A]" />,
-      path: "/",
+      path: "/home",
     },
     {
       text: "Employee",
@@ -260,7 +258,7 @@ export default function Dashboard() {
           </IconButton>
           <div className="flex justify-between w-full items-center">
             <h1 className="text-xl font-semibold">
-              <Link to="/">Deepnap Softech</Link>
+              <Link to="/home">Deepnap Softech</Link>
             </h1>
 
             {/* <!-- Dropdown menu --> */}
@@ -443,9 +441,7 @@ export default function Dashboard() {
             </div>
           </div>
           {/* ---------table=============== */}
-          {/* <div>
-            <DashTable />
-          </div> */}
+        
         </Typography>
       </Box>
     </Box>

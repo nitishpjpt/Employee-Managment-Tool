@@ -17,13 +17,15 @@ import EmpAttendence from "./components/EmpAttendence";
 import EmpDocuments from "./components/EmpDocuments";
 import EmpRequest from "./components/EmpRequest";
 import LeaveRequest from "./components/LeaveRequest";
-import ProtectedRoute from "./pages/ProtectedRoute";
 import MainDashboard from "./pages/MainDashboard";
+import FirstPage from "./components/FrontPage";
+import { EmployeeProtectedRoute, ProtectedRoute } from "./pages/ProtectedRoute";
 
 const App = () => {
-  const [authToken, setAuthToken] = useState("");
+  const [authToken, setAuthToken] = useState(null); // Initializing as null
+  const [empAuthToken, setEmpToken] = useState(null); // Initializing as null
 
-  // admin Authentication check
+  // Admin Authentication check on page load
   useEffect(() => {
     const token = localStorage.getItem("userLogin");
     if (token) {
@@ -32,17 +34,36 @@ const App = () => {
     }
   }, []);
 
+  // Employee Authentication check on page load
+  useEffect(() => {
+    const token = localStorage.getItem("employeeLogin");
+    if (token) {
+      const parsedUser = JSON.parse(token);
+      setEmpToken(parsedUser?.data?.accessToken || "");
+    }
+  }, []);
+
+  const isEmployeeAuthenticated = !!empAuthToken;
   const isAuthenticated = !!authToken;
 
   return (
     <div>
       <Routes>
-        {/* Protected routes for authenticated users */}
+        {/* Protected routes for authenticated admin */}
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <ProtectedRoute
               element={<MainDashboard />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute
+              element={<FirstPage />}
               isAuthenticated={isAuthenticated}
             />
           }
@@ -128,41 +149,50 @@ const App = () => {
             />
           }
         />
-
         {/* Admin routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Employee routes */}
-        {/* EmployeeLogin */}
-        <Route
-          path="/employee/login"
-          element={<ProtectedRoute element={<EmployeeLogin />} />}
-          isAuthenticated={isAuthenticated}
-        />
+        {/* Employee dashboard routes */}
+        <Route path="/employee/login" element={<EmployeeLogin />} />
         <Route
           path="/employee/home"
-          element={<ProtectedRoute element={<EmpHome />} />}
-          isAuthenticated={isAuthenticated}
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpHome />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
         />
         <Route
           path="/employee/attendence"
-          element={<ProtectedRoute element={<EmpAttendence />} />}
-          isAuthenticated={isAuthenticated}
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpAttendence />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
         />
         <Route
           path="/employee/documents"
-          element={<ProtectedRoute element={<EmpDocuments />} />}
-          isAuthenticated={isAuthenticated}
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpDocuments />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
         />
         <Route
           path="/employee/request/leave"
-          element={<ProtectedRoute element={<EmpRequest />} />}
-          isAuthenticated={isAuthenticated}
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpRequest />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
         />
-
         {/* Public routes */}
-        <Route path="/" element={<login />} />
+        <Route path="/frontpage" element={<FrontPage />} />{" "}
+        {/* Ensure front page is public route */}
       </Routes>
     </div>
   );

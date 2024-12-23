@@ -13,7 +13,7 @@ export const EmployeeProvider = ({ children }) => {
   const fetchEmployees = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/employee/all/registerDetails`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
       );
       setEmployees(response.data.data.user || []);
       console.log(response.data.data.user || []);

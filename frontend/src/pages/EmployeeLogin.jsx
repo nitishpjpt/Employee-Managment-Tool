@@ -4,8 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+
+
 
 const EmployeeLogin = () => {
+ 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState(null); // State for user's location
@@ -43,6 +47,7 @@ const EmployeeLogin = () => {
   useEffect(() => {
     getUserLocation();
   }, []);
+ 
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -54,8 +59,9 @@ const EmployeeLogin = () => {
     };
 
     try {
+  
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/employee/login`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/login`,
         userData,
         {
           headers: {
@@ -63,6 +69,7 @@ const EmployeeLogin = () => {
           },
         }
       );
+     console.log(response)
 
       // time data method to store the login time of register employee
       const date = new Date(response.data.data.createdAt);
@@ -75,6 +82,7 @@ const EmployeeLogin = () => {
 
       // Store user data in local storage
       localStorage.setItem("employeeLogin", JSON.stringify(response.data));
+      console.log(response.data);
 
       toast.success("Employee Login successfully!", {
         position: "top-right",

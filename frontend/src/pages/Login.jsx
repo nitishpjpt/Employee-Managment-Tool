@@ -21,7 +21,7 @@ const login = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/Login`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/Login`,
         userData,
         {
           headers: {
@@ -38,7 +38,7 @@ const login = () => {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
-          navigate("/dashboard");
+          navigate("/home");
         },
       });
     } catch (error) {

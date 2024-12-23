@@ -10,7 +10,7 @@ export const ProjectProvider = ({ children }) => {
   const fetchProject = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/user/all/projectDetails`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/all/projectDetails`
       );
       setProjectDetails(response.data.data.projectDetails);
       setTotalProject(response.data.data.totalProjects);
