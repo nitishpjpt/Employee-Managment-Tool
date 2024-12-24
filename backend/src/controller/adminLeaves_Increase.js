@@ -1,10 +1,8 @@
 import { Employee } from "../modules/employee_modules.js";
-import ApiError from "../utlis/ApiError.js";
-import ApiResponse from "../utlis/ApiResponse.js";
 
 const updateEmployeeLeaveBalance = async (req, res) => {
   const { employeeId, leaveType, amount, action } = req.body; // leaveType = 'fullDay' or 'halfDay', action = 'increase' or 'decrease'
-  
+
   try {
     // Find the employee by ID
     const employee = await Employee.findById(employeeId);
@@ -19,12 +17,16 @@ const updateEmployeeLeaveBalance = async (req, res) => {
 
     // Validate action type
     if (action !== "increase" && action !== "decrease") {
-      return res.status(400).json({ message: "Invalid action type. Use 'increase' or 'decrease'" });
+      return res
+        .status(400)
+        .json({ message: "Invalid action type. Use 'increase' or 'decrease'" });
     }
 
     // Ensure amount is a positive number
     if (amount <= 0) {
-      return res.status(400).json({ message: "Amount should be greater than 0" });
+      return res
+        .status(400)
+        .json({ message: "Amount should be greater than 0" });
     }
 
     // Update the employee's leave balance

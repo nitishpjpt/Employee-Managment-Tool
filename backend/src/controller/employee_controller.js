@@ -193,6 +193,8 @@ const employeeLogin = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
+
+
 const employeeLogout = async (req, res) => {
   try {
     // Get employeeId from URL parameter

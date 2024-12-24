@@ -53,9 +53,7 @@ function EmpDashboard() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        `${
-          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-        }/api/v1/user/${employeeId}/logout`
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL }/api/v1/user/${employeeId}/logout`
       );
       console.log(response.data);
       toast.success("Employee logout successfully!", {

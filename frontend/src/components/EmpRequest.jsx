@@ -7,37 +7,42 @@ import "react-toastify/dist/ReactToastify.css";
 const EmpRequest = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [halfLeave, setHalfLeave] = useState("");
-  const [fullLeave, setFullLeave] = useState("");
+  const [halfLeave, setHalfLeave] = useState(false);  // Store as boolean (checkbox)
+  const [fullLeave, setFullLeave] = useState("");  // Full leave reason (optional text)
   const [leaveType, setLeaveType] = useState("");
   const [username, setUserName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [leaveLimits, setLeaveLimits] = useState({
-    halfDayLeaves: 5,  // Default to 5 half-day leaves
-    fullDayLeaves: 3,  // Default to 3 full-day leaves
+    halfDayLeaves: 0,
+    fullDayLeaves: 0,
   });
-  
 
+  // Load user information from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.data.firstName);
       setEmployeeId(parsedUser.data.userResponse._id);
-      
-      
+      console.log("Employee ID:", parsedUser.data.userResponse._id);
     }
+  }, []);
 
-    // Fetch the current Leave limits set by admin
+  // Fetch the leave limits when employeeId is available
+  useEffect(() => {
     const fetchLeaveLimits = async () => {
+      if (!employeeId) {
+        console.warn("Employee ID is not set yet.");
+        return;
+      }
+      const url = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/leave/limits`;
+      console.log("Fetching leave limits from URL:", url);
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/leave/limits`
-        );
-        setLeaveLimits(response.data); // Set the limits from admin
-        
+        const response = await axios.get(url);
+        setLeaveLimits(response.data.leaveLimits);
+        console.log("Leave limits fetched:", response.data);
       } catch (error) {
-        console.error("Error fetching leave limits:", error);
+        console.error("Error fetching leave limits:", error.response?.data || error.message);
         toast.error("Failed to fetch leave limits", {
           position: "top-right",
           autoClose: 3000,
@@ -46,7 +51,7 @@ const EmpRequest = () => {
     };
 
     fetchLeaveLimits();
-  }, []);
+  }, [employeeId]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -68,13 +73,16 @@ const EmpRequest = () => {
       return;
     }
 
+    // Construct the leave request payload
     const leaveObj = {
       fromDate,
       toDate,
-      halfLeave: halfLeave === "halfday" ? halfLeave : undefined,
-      fullLeave,
+      halfLeave: halfLeave ? "halfday" : undefined, // Only send 'halfday' if checkbox is checked
+      fullLeave, // Send reason if provided
       leaveType,
     };
+
+    console.log("Submitting leave request with payload:", leaveObj);
 
     try {
       const response = await axios.post(
@@ -86,18 +94,18 @@ const EmpRequest = () => {
           },
         }
       );
-
+      console.log("Leave request submitted successfully:", response.data);
       localStorage.setItem("reqLeave", JSON.stringify(response.data));
-      toast.success("Request leave submitted successfully", {
+      toast.success("Leave request submitted successfully", {
         position: "top-right",
         autoClose: 3000,
       });
     } catch (error) {
-      console.error("Error submitting leave request:", error);
-      toast.error("Request leave submission failed", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      console.error("Error response:", error.response?.data || error.message);
+      toast.error(
+        error.response?.data?.message || "Request leave submission failed",
+        { position: "top-right", autoClose: 3000 }
+      );
     }
   };
 
@@ -107,7 +115,7 @@ const EmpRequest = () => {
       <EmpDashboard />
       <div className="max-w-2xl mx-auto shadow-lg p-12 mt-[6rem]">
         <h1 className="pb-10 flex justify-center items-center gap-2 font-bold">
-          Request Leave <h1 className="text-gray-400">{username}</h1>
+          Request Leave <span className="text-gray-400">{username}</span>
         </h1>
         <form onSubmit={submitHandler}>
           <div className="grid gap-6 mb-6 lg:grid-cols-2">
@@ -121,7 +129,7 @@ const EmpRequest = () => {
               <input
                 type="date"
                 id="fromDate"
-                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                 required
                 onChange={(e) => setFromDate(e.target.value)}
               />
@@ -137,7 +145,7 @@ const EmpRequest = () => {
               <input
                 type="date"
                 id="toDate"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                 onChange={(e) => setToDate(e.target.value)}
               />
             </div>
@@ -147,18 +155,16 @@ const EmpRequest = () => {
                 htmlFor="halfLeave"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                Request leave for half day <br></br>{" "}
+                Request leave for half day <br />
                 <span className="text-gray-400">
-                  You can get only {leaveLimits.halfDayLeaves} half days
+                  You can get only {leaveLimits.halfDayLeaves} half-day leaves
                 </span>
               </label>
               <input
                 type="checkbox"
                 id="halfLeave"
                 className="mr-2"
-                onChange={(e) =>
-                  setHalfLeave(e.target.checked ? "halfday" : "")
-                }
+                onChange={(e) => setHalfLeave(e.target.checked)}
               />
               <span className="text-gray-900 dark:text-gray-300">Half Day</span>
             </div>
@@ -172,7 +178,7 @@ const EmpRequest = () => {
               </label>
               <select
                 id="leaveType"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                 required
                 onChange={(e) => setLeaveType(e.target.value)}
               >
@@ -194,7 +200,7 @@ const EmpRequest = () => {
             </label>
             <textarea
               id="fullLeave"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               cols={53}
               rows={4}
               placeholder="Write Reason Here..."
@@ -204,7 +210,7 @@ const EmpRequest = () => {
 
           <button
             type="submit"
-            className="text-white bg-blue-700 mt-4 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-blue-700 mt-4 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
           >
             Submit
           </button>

@@ -88,6 +88,7 @@ const userLogin = async (req, res) => {
 
     const { username, email, password } = req.body;
 
+
     if ((!username && !email) || !password?.trim()) {
       throw new ApiError(
         401,
@@ -138,10 +139,19 @@ const userLogin = async (req, res) => {
   }
 };
 
-// user logout controller
 // User Logout Controller
 const userLogout = async (req, res) => {
   try {
+    // Check if the accessToken cookie is already missing (optional, depending on your logic)
+    const token = req.cookies.accessToken;
+    console.log("backend token:",token);
+
+    if (!token) {
+      return res
+        .status(400)
+        .json(new ApiResponse(400, null, "No active session found"));
+    }
+
     // Clear the accessToken cookie
     res
       .status(200)
@@ -157,6 +167,7 @@ const userLogout = async (req, res) => {
       .json(new ApiResponse(500, null, "Failed to log out user."));
   }
 };
+
 
 
 export { userRegister, userLogin ,userLogout };

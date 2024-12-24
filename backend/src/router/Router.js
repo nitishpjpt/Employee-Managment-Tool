@@ -35,8 +35,8 @@ userRouter.route("/logout").post(userLogout);
 userRouter.route("/:employeeId/logout").post(employeeLogout);
 userRouter.route("/employee/requestLeave/update").patch(updateLeaveRequest);
 userRouter.route("/update-employee-leave").post(updateEmployeeLeaveBalance);
-userRouter.route("/leave/limits").get(getLeaveLimits);
-userRouter.route(":employeeId/request/leave").post(addRequestLeave);
+userRouter.route("/:employeeId/leave/limits").get(getLeaveLimits);
+userRouter.route("/:employeeId/request/leave").post(addRequestLeave);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);

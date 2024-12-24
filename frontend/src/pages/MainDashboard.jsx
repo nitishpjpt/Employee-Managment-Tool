@@ -34,6 +34,7 @@ import { FcLeave } from "react-icons/fc";
 import FrontPage from "../components/FrontPage";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -165,24 +166,24 @@ export default function Dashboard() {
   //funciton to delete login data from localstorage
   const handleLogout = async () => {
     try {
+      // Sending a POST request to the logout endpoint
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/logout`,
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/logout`, // Update the URL accordingly
         {},
-        {
-          withCredentials: true, // Ensure cookies are sent
-        }
+        { withCredentials: true } // Include credentials (cookies) in the request
       );
-      console.log(response); // "User logged out successfully"
+      
+      console.log(response.data);
 
-      toast.success("Admin logout successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        onClose: () => {
-          navigate("/");
-        },
-      });
+
+      if (response.status === 200) {
+        // Successfully logged out, redirect to the login page
+        alert("Logged out successfully");
+        history.push("/login"); // Redirecting user to the login page
+      }
     } catch (error) {
-      console.error("Logout failed:", error.response?.data?.message);
+      console.error("Error logging out:", error);
+      alert("Error logging out. Please try again.");
     }
   };
 
