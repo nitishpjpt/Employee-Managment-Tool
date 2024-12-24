@@ -122,18 +122,6 @@ const employeeLogin = async (req, res) => {
     const today = moment().format("YYYY-MM-DD");
     if (existingUser.loginDate === today) {
       // If already logged in today, do not update the login time or date
-
-      const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Set secure flag for production
-      };
-      
-      return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .json(
-          new ApiResponse(200, {existingUser,accessToken}, "User already logged in today")
-        );
     }
 
     // Mark attendance as 'Present' for today
@@ -177,13 +165,16 @@ const employeeLogin = async (req, res) => {
     }
 
     // Save the login time, login date, and location in the database
-    const userResponse = await User.findById(existingUser._id).select(
+    const userResponse = await Employee.findById(existingUser._id).select(
       "-password -accessToken"
     );
 
     await existingUser.save();
 
-   
+    const options = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Set secure flag for production
+    };
 
     res
       .status(200)

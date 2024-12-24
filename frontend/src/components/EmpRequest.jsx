@@ -22,7 +22,7 @@ const EmpRequest = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.data.firstName);
-      setEmployeeId(parsedUser.data.existingUser._id);
+      setEmployeeId(parsedUser.data.userResponse._id);
     }
 
 // Fetch the current Leave status (half and full days taken) for the employee

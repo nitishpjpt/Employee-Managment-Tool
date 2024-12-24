@@ -18,11 +18,11 @@ const EmpAttendence = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setLastLoginDate(parsedUser.data.existingUser.loginDate);
-        setLastLoginTime(parsedUser.data.existingUser.loginTime);
-        setEmployeeId(parsedUser.data.existingUser._id);
-        setName(parsedUser.data.existingUser); // Assuming the parsed user contains name data
-        console.log(parsedUser.data)
+        setLastLoginDate(parsedUser.data.userResponse.loginDate);
+        setLastLoginTime(parsedUser.data.userResponse.loginTime);
+        setEmployeeId(parsedUser.data.userResponse._id);
+        setName(parsedUser.data.userResponse); // Assuming the parsed user contains name data
+        console.log(parsedUser.data.existingUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -33,7 +33,9 @@ const EmpAttendence = () => {
   const fetchAttendance = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/attendence/details`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/attendence/details`
       );
 
       const data = response.data;

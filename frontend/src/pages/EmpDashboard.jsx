@@ -38,9 +38,11 @@ function EmpDashboard() {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUsername(parsedUser.data.existingUser.firstName);
-        setEmail(parsedUser.data.existingUser.email);
-        setEmployeeId(parsedUser.data.existingUser._id);
+        console.log(parsedUser.data.userResponse.firstName)
+        setUsername(parsedUser.data.userResponse.firstName);
+        setEmail(parsedUser.data.userResponse.email);
+        setEmployeeId(parsedUser.data.userResponse._id);
+        console.log(parsedUser)
 
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);

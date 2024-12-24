@@ -92,8 +92,8 @@ const EmployeeLogin = () => {
         },
       });
     } catch (error) {
-      console.log("User login failed", error);
-      toast.error("User login failed. Please try again.", {
+      console.log("Employee login failed", error);
+      toast.error("Employee login failed. Please try again.", {
         position: "top-right",
         autoClose: 3000,
       });
