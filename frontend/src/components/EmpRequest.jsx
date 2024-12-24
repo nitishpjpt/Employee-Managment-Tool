@@ -13,9 +13,10 @@ const EmpRequest = () => {
   const [username, setUserName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
   const [leaveLimits, setLeaveLimits] = useState({
-    halfDayLeaves: 0,
-    fullDayLeaves: 0,
+    halfDayLeaves: 5,  // Default to 5 half-day leaves
+    fullDayLeaves: 3,  // Default to 3 full-day leaves
   });
+  
 
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
@@ -23,43 +24,44 @@ const EmpRequest = () => {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.data.firstName);
       setEmployeeId(parsedUser.data.userResponse._id);
+      
+      
     }
 
-// Fetch the current Leave status (half and full days taken) for the employee
-
-    const fetchLeaveStatus = async () => {
+    // Fetch the current Leave limits set by admin
+    const fetchLeaveLimits = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/leaveStatus`
+          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/leave/limits`
         );
-        setLeaveLimits(response.data); // Assume response includes { halfDayLeaves, fullDayLeaves }
-        console.log(response.data);
+        setLeaveLimits(response.data); // Set the limits from admin
+        
       } catch (error) {
-        console.error("Error fetching leave status:", error);
-        toast.error("Failed to fetch leave status", {
+        console.error("Error fetching leave limits:", error);
+        toast.error("Failed to fetch leave limits", {
           position: "top-right",
           autoClose: 3000,
         });
       }
     };
 
-    if (employeeId) fetchLeaveStatus();
-  }, [employeeId]);
+    fetchLeaveLimits();
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     // Check if half or full-day leaves exceed the limit
-    if (halfLeave && leaveLimits.halfDayLeaves >= 5) {
-      toast.error("You have exhausted your 5 half-day leaves for this month.", {
+    if (halfLeave && leaveLimits.halfDayLeaves <= 0) {
+      toast.error(`You have exhausted your ${leaveLimits.halfDayLeaves} half-day leaves for this month.`, {
         position: "top-right",
         autoClose: 3000,
       });
       return;
     }
 
-    if (fullLeave && leaveLimits.fullDayLeaves >= 3) {
-      toast.error("You have exhausted your 3 full-day leaves for this month.", {
+    if (fullLeave && leaveLimits.fullDayLeaves <= 0) {
+      toast.error(`You have exhausted your ${leaveLimits.fullDayLeaves} full-day leaves for this month.`, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -147,7 +149,7 @@ const EmpRequest = () => {
               >
                 Request leave for half day <br></br>{" "}
                 <span className="text-gray-400">
-                  You can get only 5 half days
+                  You can get only {leaveLimits.halfDayLeaves} half days
                 </span>
               </label>
               <input
@@ -191,14 +193,12 @@ const EmpRequest = () => {
               Reason for leave
             </label>
             <textarea
-            
               id="fullLeave"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               cols={53}
               rows={4}
               placeholder="Write Reason Here..."
               onChange={(e) => setFullLeave(e.target.value)}
-            
             ></textarea>
           </div>
 

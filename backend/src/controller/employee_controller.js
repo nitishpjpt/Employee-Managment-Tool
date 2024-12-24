@@ -204,26 +204,32 @@ const employeeLogout = async (req, res) => {
     if (!employee) {
       return res.status(404).json({
         success: false,
-        message: "Employee not found. Please check your employee email.",
+        message: "Employee not found. Please check your employee ID.",
       });
     }
 
-    // Capture the current time as logout time
+    // Capture the current date and time
+    const currentDate = moment().format("YYYY-MM-DD");
     const logoutTime = moment().format("HH:mm:ss");
 
-    // Set logout time in the employee record
-    employee.logoutTime = logoutTime;
+    // Check if the employee already has a logout time for today
+    if (employee.lastLogoutDate === currentDate) {
+      // Update the logout time for the same day
+      employee.logoutTime = logoutTime;
+    } else {
+      // If it's a new day, clear the previous logout time and update the date
+      employee.logoutTime = logoutTime;
+      employee.lastLogoutDate = currentDate;
+    }
 
     // Save the updated employee record
     await employee.save();
-
-    // Logic to handle logout (e.g., clear session or token)
-    // If you are using a token, invalidate it here or perform any necessary actions
 
     return res.status(200).json({
       success: true,
       message: "Employee successfully logged out.",
       logoutTime,
+      lastLogoutDate: employee.lastLogoutDate,
     });
   } catch (error) {
     console.error("Error during employee logout:", error);

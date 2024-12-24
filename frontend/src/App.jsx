@@ -20,6 +20,9 @@ import LeaveRequest from "./components/LeaveRequest";
 import MainDashboard from "./pages/MainDashboard";
 import FirstPage from "./components/FrontPage";
 import { EmployeeProtectedRoute, ProtectedRoute } from "./pages/ProtectedRoute";
+import EmpLeavesChanges from "./components/EmpLeavesChanges";
+
+
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null); // Initializing as null
@@ -58,6 +61,15 @@ const App = () => {
               isAuthenticated={isAuthenticated}
             />
           }
+        />
+        <Route
+         path="/employee/leave/changes"
+         element={
+          <ProtectedRoute
+           element={<EmpLeavesChanges/>}
+           isAuthenticated={isAuthenticated}
+          />
+         }
         />
         <Route
           path="/home"

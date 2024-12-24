@@ -71,4 +71,10 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
+
+// schema for adding the employee leave by admin
+
+
+
+
 export const User = mongoose.model("User", userSchema);

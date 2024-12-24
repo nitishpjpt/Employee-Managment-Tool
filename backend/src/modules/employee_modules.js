@@ -145,6 +145,39 @@ employeeSchema.methods.markAttendance = async function () {
   }
 };
 
+// function for ading leave manually by admin
+// Inside employeeSchema
+// Method to update leave balance
+// Method to update leave balance (increase or decrease)
+employeeSchema.methods.updateLeaveBalance = async function (leaveType, amount, action) {
+  if (action === "increase") {
+    // Increase leave balance
+    if (leaveType === "fullDay") {
+      this.fullDayLeavesThisMonth += amount;
+    } else if (leaveType === "halfDay") {
+      this.halfDayLeavesThisMonth += amount;
+    } else {
+      throw new Error("Invalid leave type");
+    }
+  } else if (action === "decrease") {
+    // Decrease leave balance
+    if (leaveType === "fullDay") {
+      this.fullDayLeavesThisMonth -= amount;
+      if (this.fullDayLeavesThisMonth < 0) this.fullDayLeavesThisMonth = 0;
+    } else if (leaveType === "halfDay") {
+      this.halfDayLeavesThisMonth -= amount;
+      if (this.halfDayLeavesThisMonth < 0) this.halfDayLeavesThisMonth = 0;
+    } else {
+      throw new Error("Invalid leave type");
+    }
+  } else {
+    throw new Error("Invalid action. Use 'increase' or 'decrease'.");
+  }
+
+  await this.save();
+};
+
+
 // function to generate the access token for login employee
 employeeSchema.methods.generateAccessToken = function () {
   try {

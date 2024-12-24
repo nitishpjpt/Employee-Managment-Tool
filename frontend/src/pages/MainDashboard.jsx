@@ -241,9 +241,9 @@ export default function Dashboard() {
   // Additional icons for settings
   const settingsOptions = [
     {
-      text: "Profile Settings",
+      text: "Employee leave ",
       icon: <MdPerson className="text-3xl text-[#233D7A]" />,
-      path: "/profile-settings",
+      path: "/employee/leave/changes",
     },
     {
       text: "System Settings",

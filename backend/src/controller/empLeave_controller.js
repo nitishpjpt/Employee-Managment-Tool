@@ -2,6 +2,26 @@ import { Employee } from "../modules/employee_modules.js";
 import ApiError from "../utlis/ApiError.js";
 import ApiResponse from "../utlis/ApiResponse.js";
 
+
+
+// Get Leave Limits from Admin
+const getLeaveLimits = async (req, res) => {
+  try {
+    const limits = {
+      halfDayLeaves: 5, // Default value, this should be fetched dynamically if changed by the admin
+      fullDayLeaves: 3, // Default value, this should be fetched dynamically if changed by the admin
+    };
+    
+    // If you have a configuration model, fetch these values dynamically
+    // Example: const limits = await Config.findOne({ type: 'leave_limits' });
+
+    res.status(200).json(limits);
+  } catch (error) {
+    console.error("Error fetching leave limits:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const addRequestLeave = async (req, res) => {
   const { fromDate, toDate, halfLeave, fullLeave } = req.body; // Request leave data
   const { employeeId } = req.params; // Employee ID from URL
@@ -16,6 +36,14 @@ const addRequestLeave = async (req, res) => {
       throw new ApiError(404, "Employee not found");
     }
 
+    // Initialize leave counters if they don't exist
+    if (employee.halfDayLeavesThisMonth === undefined) {
+      employee.halfDayLeavesThisMonth = 0;
+    }
+    if (employee.fullDayLeavesThisMonth === undefined) {
+      employee.fullDayLeavesThisMonth = 0;
+    }
+
     // Get the current date and month for tracking monthly leaves
     const currentMonth = new Date().getMonth();
 
@@ -26,20 +54,24 @@ const addRequestLeave = async (req, res) => {
       employee.halfDayLeavesThisMonth = 0;
     }
 
+    // Check for the dynamic leave limits from the Admin settings (if applicable)
+    const maxHalfDayLeaves = 5;  // You can change this dynamically based on admin settings
+    const maxFullDayLeaves = 3;  // Similarly, this can be fetched from admin settings
+
     // Validate the leave request
     if (halfLeave) {
       // Half-day leave logic: Limit to 5 per month
-      if (employee.halfDayLeavesThisMonth >= 5) {
+      if (employee.halfDayLeavesThisMonth >= maxHalfDayLeaves) {
         return res.status(400).json({
-          message: "You have exhausted your 5 half-day leaves for this month.",
+          message: `You have exhausted your ${maxHalfDayLeaves} half-day leaves for this month.`,
         });
       }
       employee.halfDayLeavesThisMonth += 1;
     } else if (fullLeave) {
       // Full-day leave logic: Limit to 3 per month
-      if (employee.fullDayLeavesThisMonth >= 3) {
+      if (employee.fullDayLeavesThisMonth >= maxFullDayLeaves) {
         return res.status(400).json({
-          message: "You have exhausted your 3 full-day leaves for this month.",
+          message: `You have exhausted your ${maxFullDayLeaves} full-day leaves for this month.`,
         });
       }
       employee.fullDayLeavesThisMonth += 1;
@@ -68,12 +100,13 @@ const addRequestLeave = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error adding request leave ", error);
+    console.error("Error adding request leave", error);
     res.status(error.statusCode || 500).json({
       message: error.message || "Internal Server Error",
     });
   }
 };
+
 
 // add an request leave controller
 // Delete Request Leave Controller
@@ -131,4 +164,4 @@ const updateLeaveRequest = async (req, res) => {
 
 
 
-export { addRequestLeave, updateLeaveRequest };
+export { addRequestLeave, updateLeaveRequest,getLeaveLimits };

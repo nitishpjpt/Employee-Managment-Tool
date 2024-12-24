@@ -38,12 +38,11 @@ function EmpDashboard() {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        console.log(parsedUser.data.userResponse.firstName)
+        console.log(parsedUser.data.userResponse.firstName);
         setUsername(parsedUser.data.userResponse.firstName);
         setEmail(parsedUser.data.userResponse.email);
         setEmployeeId(parsedUser.data.userResponse._id);
-        console.log(parsedUser)
-
+        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -54,7 +53,9 @@ function EmpDashboard() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/logout`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/logout`
       );
       console.log(response.data);
       toast.success("Employee logout successfully!", {
@@ -123,7 +124,7 @@ function EmpDashboard() {
                 sx={{ display: { xs: "block", md: "none" } }}
               >
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Link to="/employee/dashboard" className="block px-4 py-2">
+                  <Link to="/employee/home" className="block px-4 py-2">
                     Home
                   </Link>
                 </MenuItem>
