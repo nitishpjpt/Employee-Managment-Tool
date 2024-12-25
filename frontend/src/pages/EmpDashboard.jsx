@@ -15,14 +15,18 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EmpActivityTracker from "../components/EmpActivityTracker";
+
 
 function EmpDashboard() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [activeTime, setActiveTime] = useState(0); // State to store active time
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const [empId,setEmpId] = useState("");
 
   const navigate = useNavigate(); // to navigate after logout
 
@@ -68,6 +72,40 @@ function EmpDashboard() {
       console.error("Logout failed:", error);
     }
   };
+
+   // First useEffect to get employeeId from localStorage
+   useEffect(() => {
+    const storedUser = localStorage.getItem("employeeLogin");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setEmpId(parsedUser.data.userResponse._id); // Set empId from parsed data
+        console.log(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data from local storage:", error);
+      }
+    }
+  }, []);
+
+  // Second useEffect to fetch active time once empId is available
+  useEffect(() => {
+    if (empId) { // Only run if empId is available
+      const fetchActiveTime = async () => {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/${empId}/active/time`
+          );
+          setActiveTime(response.data.activeTime); // Set active time to state
+          console.log(response.data);
+        } catch (error) {
+          console.error("Error fetching active time:", error);
+        }
+      };
+
+      fetchActiveTime(); // Fetch active time on component mount
+    }
+  }, [empId]); // Dependency array includes empId to run only when empId changes
+
 
   return (
     <div>
@@ -214,6 +252,8 @@ function EmpDashboard() {
           </Toolbar>
         </Container>
       </AppBar>
+      <p>Active Time: {activeTime}</p>
+      <EmpActivityTracker/>
     </div>
   );
 }

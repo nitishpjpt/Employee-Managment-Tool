@@ -107,6 +107,7 @@ const employeeSchema = new mongoose.Schema(
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
     logoutTime: { type: String },
+    totalActiveTime: { type: Number, default: 0 }, // Total active time in minutes
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
     requestLeave: [requestLeaveSchema],
@@ -149,7 +150,11 @@ employeeSchema.methods.markAttendance = async function () {
 // Inside employeeSchema
 // Method to update leave balance
 // Method to update leave balance (increase or decrease)
-employeeSchema.methods.updateLeaveBalance = async function (leaveType, amount, action) {
+employeeSchema.methods.updateLeaveBalance = async function (
+  leaveType,
+  amount,
+  action
+) {
   if (action === "increase") {
     // Increase leave balance
     if (leaveType === "fullDay") {
@@ -177,7 +182,6 @@ employeeSchema.methods.updateLeaveBalance = async function (leaveType, amount, a
   await this.save();
 };
 
-
 // function to generate the access token for login employee
 employeeSchema.methods.generateAccessToken = function () {
   try {
@@ -196,6 +200,5 @@ employeeSchema.methods.generateAccessToken = function () {
     throw new Error("Failed to generate access token.");
   }
 };
-
 
 export const Employee = mongoose.model("Employee", employeeSchema);
