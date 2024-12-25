@@ -29,7 +29,9 @@ const updateActiveTime = async (req, res) => {
       return res.status(400).json({ message: "Invalid active time provided" });
     }
 
-    console.log(`Received active time: ${activeTime} minutes for employee ID: ${employeeId}`);
+    console.log(
+      `Received active time: ${activeTime} minutes for employee ID: ${employeeId}`
+    );
 
     // Find the employee by ID
     const employee = await Employee.findById(employeeId);
@@ -45,7 +47,7 @@ const updateActiveTime = async (req, res) => {
 
     console.log(`Updated totalActiveTime: ${employee.totalActiveTime} minutes`);
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Activity data updated successfully",
       totalActiveTime: employee.totalActiveTime, // Return the updated total time
     });
@@ -54,7 +56,5 @@ const updateActiveTime = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
 
 export { getActiveTime, updateActiveTime };
