@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 
 const TimeSheet = () => {
   const { employees } = useContext(EmployeeContext);
+  console.log(employees);
 
   // Function to export table data to Excel
   const exportToExcel = () => {
@@ -86,9 +87,9 @@ const TimeSheet = () => {
             <option value="DE">CIO</option>
           </select>
           {/* Export Button */}
-        <Button onClick={exportToExcel} variant="contained">
-          Export
-        </Button>
+          <Button onClick={exportToExcel} variant="contained">
+            Export
+          </Button>
         </form>
         {/* Export Button */}
       </div>
@@ -99,18 +100,17 @@ const TimeSheet = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th className="px-6 py-3">Name</th>
-             
+
               <th className="px-6 py-3">Employee Code</th>
-              <th className="px-6 py-3">Location</th>
+
               <th className="px-6 py-3">Department</th>
               <th className="px-6 py-3">Clock-in</th>
               <th className="px-6 py-3">Clock-out</th>
               <th className="px-6 py-3">Total Hour</th>
-           
+
               <th className="px-6 py-3">Active Hour</th>
               <th className="px-6 py-3 text-[#35A745]">Productive</th>
               <th className="px-6 py-3 text-red-500">Unproductive</th>
-         
             </tr>
           </thead>
           <tbody>
@@ -123,18 +123,19 @@ const TimeSheet = () => {
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {employee.firstName ?? ""}
                   </td>
-                
+
                   <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
-                  <td className="px-6 py-4">{employee.location ?? ""}</td>
+
                   <td className="px-6 py-4">{employee.department ?? ""}</td>
                   <td className="px-6 py-4">{employee.loginTime ?? ""}</td>
                   <td className="px-6 py-4">{employee.logoutTime ?? ""}</td>
                   <td className="px-6 py-4">{employee.totalHour ?? ""}</td>
-                
-                  <td className="px-6 py-4">{employee.activeHour ?? ""}</td>
+
+                  <td className="px-6 py-4">
+                    {employee.formattedActiveTime ?? ""}
+                  </td>
                   <td className="px-6 py-4">{employee.productive ?? ""}</td>
                   <td className="px-6 py-4">{employee.unproductive ?? ""}</td>
-           
                 </tr>
               ))
             ) : (

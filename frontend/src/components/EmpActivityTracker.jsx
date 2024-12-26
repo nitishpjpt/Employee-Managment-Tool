@@ -12,15 +12,21 @@ const EmpActivityTracker = () => {
     return `${hours}h ${remainingMinutes}m`;
   };
 
+  // useEffect to retrive the employeeId form the localStorage
+
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setEmployeeId(parsedUser.data.userResponse._id);
-      console.log("Employee ID from localStorage:", parsedUser.data.userResponse._id);
+      console.log(
+        "Employee ID from localStorage:",
+        parsedUser.data.userResponse._id
+      );
     }
   }, []);
 
+  // useEffect to send the active time to the backend every 10 seconds
   useEffect(() => {
     if (!employeeId) return;
 
@@ -30,7 +36,9 @@ const EmpActivityTracker = () => {
       console.log("Sending activity data:", timeInMinutes); // Debugging log
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/${employeeId}/updateActiveTime`,
+          `${
+            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+          }/api/v1/user/employee/${employeeId}/updateActiveTime`,
           { activeTime: timeInMinutes }
         );
         console.log("Activity data sent successfully", response); // Debugging log
@@ -39,12 +47,12 @@ const EmpActivityTracker = () => {
       }
     };
 
-    // Increment active time every 10 seconds
+    // increment the active time by 10seconds 
     const activityInterval = setInterval(() => {
       setActiveTime((prevTime) => {
         const newTime = prevTime + 10; // Add 10 seconds
         const timeInMinutes = Math.floor(newTime / 60);
-        
+
         console.log("Updated active time:", newTime); // Debugging log
         if (timeInMinutes !== lastSentTime) {
           lastSentTime = timeInMinutes;
@@ -56,9 +64,11 @@ const EmpActivityTracker = () => {
     }, 10000);
 
     return () => {
+      // this will clear the interval when the component is unmounted
+      // this is for the optimization of the code to avoid the memory leak in you code
       clearInterval(activityInterval);
     };
-  }, [employeeId]); // Only employeeId should be in the dependency array
+  }, [employeeId]); // only run this effect when the employee id will change to the other employee id
 
   return (
     <div>

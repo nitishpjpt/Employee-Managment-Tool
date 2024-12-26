@@ -64,9 +64,8 @@ const EmployeeDetails = () => {
     role,
     department,
     date,
-    timezone,
+
     employee,
-    shift,
   };
   // backgroundVerification form object
   const bgObj = {
@@ -90,7 +89,9 @@ const EmployeeDetails = () => {
     //Register employee api
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/register`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/register`,
         userData,
         {
           headers: {
@@ -415,22 +416,7 @@ const EmployeeDetails = () => {
                           onChange={(e) => setDate(e.target.value)}
                         />
                       </div>
-                      <div>
-                        <label
-                          for="visitors"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Timezone
-                        </label>
-                        <input
-                          type="number"
-                          id="visitors"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="Timezone"
-                          required
-                          onChange={(e) => setTimezone(e.target.value)}
-                        />
-                      </div>
+
                       <div>
                         <label
                           for="visitors"
@@ -445,22 +431,6 @@ const EmployeeDetails = () => {
                           placeholder="upload profile pic"
                           required
                           className="rounded-full"
-                        />
-                      </div>
-                      <div>
-                        <label
-                          for="visitors"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Enter shift
-                        </label>
-                        <input
-                          type="number"
-                          id="visitors"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="Select shift"
-                          required
-                          onChange={(e) => setShift(e.target.value)}
                         />
                       </div>
                     </div>
@@ -719,7 +689,7 @@ const EmployeeDetails = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
-           
+
             <Modal
               show={attendenceModel}
               onClose={() => setAttendenceModel(false)}
@@ -867,7 +837,7 @@ const EmployeeDetails = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
-          
+
             {/*table*/}
           </div>
           <EmployeeTable />

@@ -31,19 +31,26 @@ const login = () => {
       );
       console.log(response.data);
 
-   // Store user data in local storage
-   localStorage.setItem("userLogin", JSON.stringify(response.data));
+      // Store user data in local storage
+      localStorage.setItem("userLogin", JSON.stringify(response.data));
 
-      toast.success("User Login successfully!", {
+      toast.success("Admin Login successfully!", {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
           navigate("/home");
+          window.location.reload(); // Ensure the page reloads after navigation
         },
       });
+
+      // Fallback in case toast onClose doesn't work as expected
+      setTimeout(() => {
+        navigate("/home");
+        window.location.reload(); // Ensures page reloads after login
+      }, 3100); // Slight delay to let the toast autoClose first
     } catch (error) {
-      console.log("User login failed", error);
-      toast.error("User login failed. Please try again.", {
+      console.log("Admin login failed", error);
+      toast.error("Admin login failed. Please try again.", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -55,9 +62,7 @@ const login = () => {
       <ToastContainer />
       <div className="pt-[10rem] h-[100vh] bg-[#8194DC] ">
         <div className="max-w-md  mx-auto p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-center p-4 font-bold text-2xl">
-            Admin Login
-          </h1>
+          <h1 className="text-center p-4 font-bold text-2xl">Admin Login</h1>
           <form onSubmit={submitHandler} className="p-2">
             <label for="username" className="font-semibold">
               Username/email

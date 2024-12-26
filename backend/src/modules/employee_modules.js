@@ -51,7 +51,7 @@ const requestLeaveSchema = new mongoose.Schema({
 
 // Attendance Schema
 const attendanceSchema = new mongoose.Schema({
-  date: { type: String, required: true }, // Format: YYYY-MM-DD
+  date: { type: String, required: true }, // Format: YYYY-MM-DD, // Date of the attendance, // Format: YYYY-MM-DD
   status: { type: String, enum: ["Present", "Absent"], default: "Absent" }, // Status: Present or Absent
   loginTime: { type: String }, // Store login time
   logoutTime: { type: String }, // Store logout time
@@ -95,19 +95,16 @@ const employeeSchema = new mongoose.Schema(
     date: {
       type: String,
     },
-    timezone: {
-      type: String,
-    },
+
     avtar: {
       type: String,
     },
-    shift: {
-      type: String,
-    },
+
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
     logoutTime: { type: String },
     totalActiveTime: { type: Number, default: 0 }, // Total active time in minutes
+    formattedActiveTime: { type: String }, // Store formatted time as a string
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
     requestLeave: [requestLeaveSchema],

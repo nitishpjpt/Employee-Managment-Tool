@@ -60,12 +60,17 @@ function EmpDashboard() {
         `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL }/api/v1/user/${employeeId}/logout`
       );
       console.log(response.data);
+      localStorage.removeItem("employeeLogin");
       toast.success("Employee logout successfully!", {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
-          navigate("/employee/login");
+          navigate("/employee/login"); // Navigate to login page
+          setTimeout(() => {
+            window.location.reload(); // Reload the page after navigation
+          }, 100); // Add a slight delay to ensure navigation is complete
         },
+       
       });
       // Perform any additional actions like redirecting or removing from localStorage
     } catch (error) {

@@ -51,15 +51,14 @@ const EmployeeLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     const userData = {
       email,
       password,
-      location, // Include location in the login request
+      location, // Ensure location is being set correctly before using
     };
-
-    try {
   
+    try {
       const response = await axios.post(
         `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/login`,
         userData,
@@ -69,9 +68,11 @@ const EmployeeLogin = () => {
           },
         }
       );
-     console.log(response)
-
-      // time data method to store the login time of register employee
+  
+      // Log response for debugging
+      console.log("Login response:", response);
+  
+      // Handle time data
       const date = new Date(response.data.data.createdAt);
       console.log(
         `Date: ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
@@ -79,26 +80,37 @@ const EmployeeLogin = () => {
       console.log(
         `Time: ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       );
-
+  
       // Store user data in local storage
       localStorage.setItem("employeeLogin", JSON.stringify(response.data));
-      console.log(response.data);
-
+      console.log("Employee data stored in localStorage:", response.data);
+  
+      // Show success toast and navigate to home page after it completes
       toast.success("Employee Login successfully!", {
         position: "top-right",
         autoClose: 3000,
         onClose: () => {
           navigate("/employee/home");
+          window.location.reload(); // Ensure the page reloads after navigation
         },
       });
+  
+      // Fallback navigation in case the toast onClose fails
+      setTimeout(() => {
+        navigate("/employee/home");
+        window.location.reload(); // Ensure page state is fresh
+      }, 3100); // Slight delay beyond toast autoClose
     } catch (error) {
-      console.log("Employee login failed", error);
+      console.error("Employee login failed:", error);
+  
+      // Show error toast
       toast.error("Employee login failed. Please try again.", {
         position: "top-right",
         autoClose: 3000,
       });
     }
   };
+  
 
   return (
     <>

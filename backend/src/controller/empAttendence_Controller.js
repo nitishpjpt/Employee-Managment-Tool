@@ -25,9 +25,10 @@ const markAttendance = async (req, res) => {
       employee.attendance.push({
         date: todayDate,
         status: "Present",
+        loginTime: currentTime, // Save login time only once
       });
 
-      // Only update login time if it's the first login today
+      // Only update loginDate and loginTime fields if it's the first login today
       if (!employee.loginDate || employee.loginDate !== todayDate) {
         employee.loginDate = todayDate;
         employee.loginTime = currentTime;
@@ -40,15 +41,15 @@ const markAttendance = async (req, res) => {
     const attendanceHistory = employee.attendance.map((record) => ({
       date: record.date,
       status: record.status,
-      loginTime: record.date === todayDate ? currentTime : record.loginTime || "N/A", // Today's login time or the saved login time for other dates
+      loginTime: record.date === todayDate ? employee.loginTime : record.loginTime || "N/A", // Use saved loginTime for today or previously recorded
     }));
 
     // Response with today's attendance and the complete attendance history
     res.status(200).json({
       today: {
         date: todayDate,
-        loginTime: currentTime,
-        status: existingAttendance ? existingAttendance.status : "Present",
+        loginTime: employee.loginTime, // Use saved login time, not the current time
+        status: existingAttendance ? existingAttendance.status : "Present", // Status remains as "Present" if not marked already
       },
       attendanceHistory,
       message: "Attendance marked and fetched successfully",

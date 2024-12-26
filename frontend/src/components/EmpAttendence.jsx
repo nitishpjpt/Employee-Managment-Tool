@@ -22,7 +22,7 @@ const EmpAttendence = () => {
         setLastLoginTime(parsedUser.data.userResponse.loginTime);
         setEmployeeId(parsedUser.data.userResponse._id);
         setName(parsedUser.data.userResponse); // Assuming the parsed user contains name data
-        console.log(parsedUser.data.existingUser);
+        console.log(parsedUser.data.userResponse);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -58,6 +58,7 @@ const EmpAttendence = () => {
       console.error("Error fetching attendance:", error);
     }
   };
+  console.log(totalPresentDays)
 
   useEffect(() => {
     if (employeeId) fetchAttendance();

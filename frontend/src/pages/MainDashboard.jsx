@@ -164,26 +164,27 @@ export default function Dashboard() {
   }, []);
 
   //funciton to delete login data from localstorage
-  const handleLogout = async () => {
-    try {
-      // Sending a POST request to the logout endpoint
-      const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/logout`, // Update the URL accordingly
-        {},
-        { withCredentials: true } // Include credentials (cookies) in the request
-      );
-      
-      console.log(response.data);
-
-
-      if (response.status === 200) {
-        // Successfully logged out, redirect to the login page
-        alert("Logged out successfully");
-        history.push("/login"); // Redirecting user to the login page
+  const handleLogout = () => {
+    const getUser = localStorage.getItem("userLogin");
+    if (getUser) {
+      try {
+        localStorage.removeItem("userLogin");
+        toast.success("Admin logout successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          onClose: () => {
+            navigate("/login"); // Navigate to login page
+            setTimeout(() => {
+              window.location.reload(); // Reload the page after navigation
+            }, 100); // Add a slight delay to ensure navigation is complete
+          },
+        });
+      } catch (error) {
+        toast.error("Admin logout failed", {
+          position: "top-right",
+          autoClose: 3000,
+        });
       }
-    } catch (error) {
-      console.error("Error logging out:", error);
-      alert("Error logging out. Please try again.");
     }
   };
 

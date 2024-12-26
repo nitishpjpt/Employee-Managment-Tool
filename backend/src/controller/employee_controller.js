@@ -104,10 +104,8 @@ const employeeLogin = async (req, res) => {
       throw new ApiError(404, "Employee not found with this email");
     }
 
-    // existing user valid then generate access token
-    // generate access token
+    // Existing user is valid, generate access token
     const { accessToken } = await generateAccessToken(existingUser._id);
-    console.log(accessToken);
     if (!accessToken) {
       throw new ApiError(500, "Failed to generate access token.");
     }
@@ -118,25 +116,29 @@ const employeeLogin = async (req, res) => {
       throw new ApiError(401, "Invalid password. Please try again.");
     }
 
-    // Check if the user has already logged in today
+    // Get today's date
     const today = moment().format("YYYY-MM-DD");
-    if (existingUser.loginDate === today) {
-      // If already logged in today, do not update the login time or date
-    }
 
-    // Mark attendance as 'Present' for today
-    try {
-      await existingUser.markAttendance();
-    } catch (error) {
-      console.error("Error marking attendance:", error);
-      throw new ApiError(500, "Failed to mark attendance. Please try again.");
-    }
+    // Find today's attendance record
+    let attendanceRecord = existingUser.attendance.find(
+      (att) => att.date === today
+    );
 
-    // Capture current date and time
-    const loginDate = today;
-    const loginTime = moment().format("HH:mm:ss");
-    existingUser.loginDate = loginDate;
-    existingUser.loginTime = loginTime;
+    if (!attendanceRecord) {
+      // If no attendance record exists for today, create one
+      existingUser.attendance.push({
+        date: today,
+        status: "Present",
+        loginTime: moment().format("HH:mm:ss"), // Set login time on first login
+      });
+    } else {
+      // If attendance record exists, check if loginTime is already set
+      if (!attendanceRecord.loginTime) {
+        // If loginTime is not set, update it with the current time (first login today)
+        attendanceRecord.loginTime = moment().format("HH:mm:ss");
+      }
+      // If loginTime is already set, do not update it again (subsequent logins)
+    }
 
     // If location is provided, reverse geocode it to get the address
     let address = "";
@@ -159,18 +161,15 @@ const employeeLogin = async (req, res) => {
       }
     }
 
-    // Update the user's location in the database
+    // Update the user's location in the database if an address is available
     if (address) {
       existingUser.location = address;
     }
 
-    // Save the login time, login date, and location in the database
-    const userResponse = await Employee.findById(existingUser._id).select(
-      "-password -accessToken"
-    );
-
+    // Save the updated employee data
     await existingUser.save();
 
+    // Generate and send the access token as a cookie
     const options = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Set secure flag for production
@@ -182,7 +181,7 @@ const employeeLogin = async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          { userResponse, accessToken },
+          { userResponse: existingUser, accessToken },
           "Employee login successfully"
         )
       );
@@ -193,7 +192,6 @@ const employeeLogin = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
-
 
 const employeeLogout = async (req, res) => {
   try {

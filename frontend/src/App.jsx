@@ -24,32 +24,43 @@ import EmpLeavesChanges from "./components/EmpLeavesChanges";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
-  const [empAuthToken, setEmpToken] = useState(null);
+  const [empAuthToken, setEmpAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Admin Authentication check on page load
+  // Unified Authentication Check
   useEffect(() => {
-    const token = localStorage.getItem("userLogin");
-    if (token) {
-      const parsedUser = JSON.parse(token);
-      setAuthToken(parsedUser?.data?.accessToken || "");
-    }
-    setLoading(false);
+    const fetchTokens = () => {
+      const adminToken = localStorage.getItem("userLogin");
+      const employeeToken = localStorage.getItem("employeeLogin");
+
+      if (adminToken) {
+        try {
+          const parsedAdmin = JSON.parse(adminToken);
+          setAuthToken(parsedAdmin?.data?.accessToken || "");
+        } catch (error) {
+          console.error("Error parsing admin token:", error);
+        }
+      }
+
+      if (employeeToken) {
+        try {
+          const parsedEmployee = JSON.parse(employeeToken);
+          setEmpAuthToken(parsedEmployee?.data?.accessToken || "");
+        } catch (error) {
+          console.error("Error parsing employee token:", error);
+        }
+      }
+
+      setLoading(false); // Set loading to false after tokens are checked
+    };
+
+    fetchTokens();
   }, []);
 
-  // Employee Authentication check on page load
-  useEffect(() => {
-    const token = localStorage.getItem("employeeLogin");
-    if (token) {
-      const parsedUser = JSON.parse(token);
-      setEmpToken(parsedUser?.data?.accessToken || "");
-    }
-    setLoading(false);
-  }, []);
+  const isAuthenticated = !!authToken; // Admin authentication status
+  const isEmployeeAuthenticated = !!empAuthToken; // Employee authentication status
 
-  const isEmployeeAuthenticated = !!empAuthToken;
-  const isAuthenticated = !!authToken;
-
+  // Show loading while checking tokens
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -57,30 +68,99 @@ const App = () => {
   return (
     <div>
       <Routes>
-        {/* Protected routes for authenticated admin */}
-        <Route path="/" element={<ProtectedRoute element={<MainDashboard />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/employee/leave/changes" element={<ProtectedRoute element={<EmpLeavesChanges />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/home" element={<ProtectedRoute element={<FirstPage />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/employee-details" element={<ProtectedRoute element={<EmployeeDetails />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/timesheet" element={<ProtectedRoute element={<TimeSheet />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/projects" element={<ProtectedRoute element={<Projects />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/reports" element={<ProtectedRoute element={<Reports />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/dlp" element={<ProtectedRoute element={<Dlp />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/setting" element={<ProtectedRoute element={<Setting />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/behavior" element={<ProtectedRoute element={<Behaviour />} isAuthenticated={isAuthenticated} />} />
-        <Route path="/salary/details" element={<ProtectedRoute element={<SalaryPage />} isAuthenticated={isAuthenticated} />} />
-        <Route path="employee/request/leave/approval" element={<ProtectedRoute element={<LeaveRequest />} isAuthenticated={isAuthenticated} />} />
-        {/* Admin routes */}
+        {/* Admin Protected Routes */}
+        <Route
+          path="/"
+          element={<ProtectedRoute element={<MainDashboard />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/employee/leave/changes"
+          element={<ProtectedRoute element={<EmpLeavesChanges />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/home"
+          element={<ProtectedRoute element={<FirstPage />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/employee-details"
+          element={<ProtectedRoute element={<EmployeeDetails />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/timesheet"
+          element={<ProtectedRoute element={<TimeSheet />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/projects"
+          element={<ProtectedRoute element={<Projects />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/reports"
+          element={<ProtectedRoute element={<Reports />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/dlp"
+          element={<ProtectedRoute element={<Dlp />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/setting"
+          element={<ProtectedRoute element={<Setting />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/behavior"
+          element={<ProtectedRoute element={<Behaviour />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="/salary/details"
+          element={<ProtectedRoute element={<SalaryPage />} isAuthenticated={isAuthenticated} />}
+        />
+        <Route
+          path="employee/request/leave/approval"
+          element={<ProtectedRoute element={<LeaveRequest />} isAuthenticated={isAuthenticated} />}
+        />
+
+        {/* Public Routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {/* Employee dashboard routes */}
-        <Route path="/employee/login" element={<EmployeeLogin />} />
-        <Route path="/employee/home" element={<EmployeeProtectedRoute element={<EmpHome />} isEmployeeAuthenticated={isEmployeeAuthenticated} />} />
-        <Route path="/employee/attendence" element={<EmployeeProtectedRoute element={<EmpAttendence />} isEmployeeAuthenticated={isEmployeeAuthenticated} />} />
-        <Route path="/employee/documents" element={<EmployeeProtectedRoute element={<EmpDocuments />} isEmployeeAuthenticated={isEmployeeAuthenticated} />} />
-        <Route path="/employee/request/leave" element={<EmployeeProtectedRoute element={<EmpRequest />} isEmployeeAuthenticated={isEmployeeAuthenticated} />} />
-        {/* Public routes */}
         <Route path="/frontpage" element={<FrontPage />} />
+
+        {/* Employee Protected Routes */}
+        <Route path="/employee/login" element={<EmployeeLogin />} />
+        <Route
+          path="/employee/home"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpHome />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/employee/attendence"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpAttendence />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/employee/documents"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpDocuments />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
+        />
+        <Route
+          path="/employee/request/leave"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpRequest />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
+          }
+        />
       </Routes>
     </div>
   );
