@@ -45,6 +45,7 @@ const userRegister = async (req, res) => {
     const existingUser = await User.findOne({
       $or: [{ username }, { email }, { contactId }],
     });
+   
 
     if (existingUser) {
       throw new ApiError(409, "User with these details already exists.");
@@ -58,7 +59,7 @@ const userRegister = async (req, res) => {
       firstName,
       lastName,
     });
-
+   console.log("User:",user);
     if (!user) {
       throw new ApiError(500, "User could not be created. Please try again.");
     }
