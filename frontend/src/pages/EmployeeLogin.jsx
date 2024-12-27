@@ -4,12 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
-
-
 
 const EmployeeLogin = () => {
- 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState(null); // State for user's location
@@ -47,20 +43,21 @@ const EmployeeLogin = () => {
   useEffect(() => {
     getUserLocation();
   }, []);
- 
 
   const submitHandler = async (e) => {
     e.preventDefault();
-  
+
     const userData = {
       email,
       password,
       location, // Ensure location is being set correctly before using
     };
-  
+
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/login`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/login`,
         userData,
         {
           headers: {
@@ -68,10 +65,10 @@ const EmployeeLogin = () => {
           },
         }
       );
-  
+
       // Log response for debugging
       console.log("Login response:", response);
-  
+
       // Handle time data
       const date = new Date(response.data.data.createdAt);
       console.log(
@@ -80,11 +77,11 @@ const EmployeeLogin = () => {
       console.log(
         `Time: ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       );
-  
+
       // Store user data in local storage
       localStorage.setItem("employeeLogin", JSON.stringify(response.data));
       console.log("Employee data stored in localStorage:", response.data);
-  
+
       // Show success toast and navigate to home page after it completes
       toast.success("Employee Login successfully!", {
         position: "top-right",
@@ -94,7 +91,7 @@ const EmployeeLogin = () => {
           window.location.reload(); // Ensure the page reloads after navigation
         },
       });
-  
+
       // Fallback navigation in case the toast onClose fails
       setTimeout(() => {
         navigate("/employee/home");
@@ -102,7 +99,7 @@ const EmployeeLogin = () => {
       }, 3100); // Slight delay beyond toast autoClose
     } catch (error) {
       console.error("Employee login failed:", error);
-  
+
       // Show error toast
       toast.error("Employee login failed. Please try again.", {
         position: "top-right",
@@ -110,7 +107,6 @@ const EmployeeLogin = () => {
       });
     }
   };
-  
 
   return (
     <>

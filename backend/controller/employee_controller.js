@@ -139,7 +139,7 @@ const employeeLogin = async (req, res) => {
       }
       // If loginTime is already set, do not update it again (subsequent logins)
     }
-
+    existingUser.loginTime = attendanceRecord.loginTime;
     // If location is provided, reverse geocode it to get the address
     let address = "";
     if (location && location.latitude && location.longitude) {

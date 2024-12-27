@@ -18,11 +18,11 @@ const EmpAttendence = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setLastLoginDate(parsedUser.data.userResponse.loginDate);
+        setLastLoginDate(parsedUser.data.userResponse.date);
         setLastLoginTime(parsedUser.data.userResponse.loginTime);
         setEmployeeId(parsedUser.data.userResponse._id);
         setName(parsedUser.data.userResponse); // Assuming the parsed user contains name data
-        console.log(parsedUser.data.userResponse);
+        console.log(parsedUser.data.userResponse.date);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
