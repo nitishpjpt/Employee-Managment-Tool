@@ -4,6 +4,8 @@ import axios from "axios";
 const EmpActivityTracker = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [activeTime, setActiveTime] = useState(0); // Time in seconds
+  const [inactiveTime, setInactiveTime] = useState(0); // Inactive time in seconds
+  const [isInactive, setIsInactive] = useState(false); // Tracks inactivity status
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -12,8 +14,7 @@ const EmpActivityTracker = () => {
     return `${hours}h ${remainingMinutes}m`;
   };
 
-  // useEffect to retrive the employeeId form the localStorage
-
+  // Retrieve employeeId from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
@@ -26,20 +27,20 @@ const EmpActivityTracker = () => {
     }
   }, []);
 
-  // useEffect to send the active time to the backend every 10 seconds
   useEffect(() => {
     if (!employeeId) return;
 
     let lastSentTime = 0; // Last sent active time in minutes
+    let inactivityTimer = null; // Timer to track inactivity
 
-    const sendActivityData = async (timeInMinutes) => {
-      console.log("Sending activity data:", timeInMinutes); // Debugging log
+    const sendActivityData = async (timeInMinutes, inactiveTimeInMinutes) => {
+      console.log("Sending activity data:", timeInMinutes, inactiveTimeInMinutes); // Debugging log
       try {
         const response = await axios.post(
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
           }/api/v1/user/employee/${employeeId}/updateActiveTime`,
-          { activeTime: timeInMinutes }
+          { activeTime: timeInMinutes, inactiveTime: inactiveTimeInMinutes }
         );
         console.log("Activity data sent successfully", response); // Debugging log
       } catch (error) {
@@ -47,33 +48,63 @@ const EmpActivityTracker = () => {
       }
     };
 
-    // increment the active time by 10seconds 
+    const handleUserActivity = () => {
+      // Reset inactivity flag and timer if the user becomes active again
+      if (isInactive) {
+        console.log("Activity resumed: Active time tracking restarted.");
+        setIsInactive(false); // Reset inactivity status
+        setInactiveTime(0); // Reset inactive time when activity resumes
+      }
+      clearTimeout(inactivityTimer); // Clear the previous timer
+
+      // Restart the inactivity timer (1 minute)
+      inactivityTimer = setTimeout(() => {
+        console.log("User inactive: Active time tracking stopped.");
+        setIsInactive(true); // Set the user as inactive after 1 minute
+      }, 1 * 60 * 1000); // 1 minute (60,000 ms)
+    };
+
+    // Event listeners for user activity
+    window.addEventListener("mousemove", handleUserActivity);
+    window.addEventListener("keydown", handleUserActivity);
+    window.addEventListener("mousedown", handleUserActivity);
+
     const activityInterval = setInterval(() => {
-      setActiveTime((prevTime) => {
-        const newTime = prevTime + 10; // Add 10 seconds
-        const timeInMinutes = Math.floor(newTime / 60);
+      if (!isInactive) { // Only update if not inactive
+        setActiveTime((prevTime) => {
+          const newTime = prevTime + 10; // Add 10 seconds to active time
+          const timeInMinutes = Math.floor(newTime / 60);
 
-        console.log("Updated active time:", newTime); // Debugging log
-        if (timeInMinutes !== lastSentTime) {
-          lastSentTime = timeInMinutes;
-          sendActivityData(timeInMinutes);
-        }
+          console.log("Updated active time:", newTime); // Debugging log
+          if (timeInMinutes !== lastSentTime) {
+            lastSentTime = timeInMinutes;
+            sendActivityData(timeInMinutes, Math.floor(inactiveTime / 60)); // Send both active and inactive time to backend
+          }
 
-        return newTime;
-      });
-    }, 10000);
+          return newTime;
+        });
+      } else {
+        setInactiveTime((prevTime) => prevTime + 10); // Increase inactive time every 10 seconds
+        console.log("Inactive time updated:", inactiveTime); // Debugging log
+      }
+    }, 10000); // Run every 10 seconds
 
     return () => {
-      // this will clear the interval when the component is unmounted
-      // this is for the optimization of the code to avoid the memory leak in you code
+      // Cleanup on unmount
       clearInterval(activityInterval);
+      clearTimeout(inactivityTimer);
+      window.removeEventListener("mousemove", handleUserActivity);
+      window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("mousedown", handleUserActivity);
     };
-  }, [employeeId]); // only run this effect when the employee id will change to the other employee id
+  }, [employeeId, isInactive, inactiveTime]);
 
   return (
     <div>
       <h2>Employee Activity Tracker</h2>
       <p>Active Time: {formatTime(activeTime)}</p>
+      <p>Status: {isInactive ? "Inactive" : "Active"}</p>
+      <p>Inactive Time: {formatTime(inactiveTime)}</p>
     </div>
   );
 };

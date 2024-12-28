@@ -108,6 +108,8 @@ const employeeSchema = new mongoose.Schema(
     loginTime: { type: String },
     logoutTime: { type: String },
     totalActiveTime: { type: Number, default: 0 }, // Total active time in minutes
+    totalInactiveTime: { type: Number, default: 0 },
+    formattedInactiveTime: { type: String }, // Store formatted inactive time
     formattedActiveTime: { type: String }, // Store formatted time as a string
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
