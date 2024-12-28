@@ -108,7 +108,7 @@ const TimeSheet = () => {
               <th className="px-6 py-3">Clock-out</th>
               <th className="px-6 py-3">Total Hour</th>
 
-              <th className="px-6 py-3">Active Hour</th>
+           
               <th className="px-6 py-3 text-[#35A745]">Productive</th>
               <th className="px-6 py-3 text-red-500">Unproductive</th>
             </tr>
@@ -132,13 +132,12 @@ const TimeSheet = () => {
                     {employee.lastLoginTime ?? ""}{" "}
                   </td>
                   <td className="px-6 py-4">{employee.logoutTime ?? ""} </td>
-                  <td className="px-6 py-4">{employee.totalHour ?? ""}</td>
+                  <td className="px-6 py-4">{employee.totalHour ?? ""}10Hr</td>
 
                   <td className="px-6 py-4">
                     {employee.formattedActiveTime ?? ""}
                   </td>
-                  <td className="px-6 py-4">{employee.productive ?? ""}</td>
-                  <td className="px-6 py-4">{employee.unproductive ?? ""}</td>
+                  <td className="px-6 py-4">{employee.formattedInactiveTime?? ""}</td>
                 </tr>
               ))
             ) : (

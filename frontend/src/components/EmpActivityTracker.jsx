@@ -49,11 +49,9 @@ const EmpActivityTracker = () => {
     };
 
     const handleUserActivity = () => {
-      // Reset inactivity flag and timer if the user becomes active again
       if (isInactive) {
         console.log("Activity resumed: Active time tracking restarted.");
         setIsInactive(false); // Reset inactivity status
-        setInactiveTime(0); // Reset inactive time when activity resumes
       }
       clearTimeout(inactivityTimer); // Clear the previous timer
 
@@ -70,7 +68,7 @@ const EmpActivityTracker = () => {
     window.addEventListener("mousedown", handleUserActivity);
 
     const activityInterval = setInterval(() => {
-      if (!isInactive) { // Only update if not inactive
+      if (!isInactive) { 
         setActiveTime((prevTime) => {
           const newTime = prevTime + 10; // Add 10 seconds to active time
           const timeInMinutes = Math.floor(newTime / 60);
@@ -84,8 +82,11 @@ const EmpActivityTracker = () => {
           return newTime;
         });
       } else {
-        setInactiveTime((prevTime) => prevTime + 10); // Increase inactive time every 10 seconds
-        console.log("Inactive time updated:", inactiveTime); // Debugging log
+        setInactiveTime((prevTime) => {
+          const newTime = prevTime + 10; // Increase inactive time
+          console.log("Inactive time updated:", newTime); // Debugging log
+          return newTime;
+        });
       }
     }, 10000); // Run every 10 seconds
 

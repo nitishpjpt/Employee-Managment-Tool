@@ -19,7 +19,7 @@ const EmpAttendence = () => {
       try {
         const parsedUser = JSON.parse(storedUser);
         setLastLoginDate(parsedUser.data.userResponse.date);
-        setLastLoginTime(parsedUser.data.userResponse.loginTime);
+        setLastLoginTime(parsedUser.data.userResponse.lastLoginTime);
         setEmployeeId(parsedUser.data.userResponse._id);
         setName(parsedUser.data.userResponse); // Assuming the parsed user contains name data
         console.log(parsedUser.data.userResponse.date);
