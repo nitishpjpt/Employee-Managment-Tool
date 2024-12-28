@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -78,15 +79,20 @@ const Register = () => {
               Deepnap Softech
             </h1>
             <p className="text-gray-600 mt-2">
-              Empowering Your Digital Journey
+              Track and manage your employees with ease
             </p>
           </div>
           <form onSubmit={submitHandler} className="space-y-6">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-700">Register</h2>
+              <h2 className="text-xl font-semibold text-gray-700">
+                <Link>Register</Link>
+              </h2>
               <p className="text-sm text-gray-500">
                 Already have an account?{" "}
-                <span className="text-blue-600">Log in</span>.
+                <span className="text-blue-600">
+                  <Link to="/Login">Log in</Link>
+                </span>
+                .
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">

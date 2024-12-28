@@ -3,7 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoPersonCircleSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EmployeeLogin = () => {
   const [email, setEmail] = useState("");
@@ -111,11 +111,10 @@ const EmployeeLogin = () => {
   return (
     <>
       <ToastContainer />
-      <div className="pt-[10rem] h-[100vh] bg-[#8194DC] ">
+      <div className="pt-[10rem] h-[100vh] bg-[#F3F4F6] ">
         <div className="max-w-md  mx-auto p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-center flex justify-center gap-2 items-center p-4 font-bold text-2xl">
             Employee Login{" "}
-            <IoPersonCircleSharp className="text-4xl text-[#1976D2]" />
           </h1>
           <form onSubmit={submitHandler} className="p-2">
             <label htmlFor="username" className="font-semibold">
@@ -146,7 +145,7 @@ const EmployeeLogin = () => {
             <br />
             <button
               type="submit"
-              className="bg-[#445CAB] text-white font-semibold p-2 w-[20rem] mt-4"
+              className="bg-[#3F83F8] text-white font-semibold p-2 w-[20rem] mt-4"
             >
               Login
             </button>

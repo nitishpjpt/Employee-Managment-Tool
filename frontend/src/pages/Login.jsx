@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const login = () => {
   const navigate = useNavigate();
@@ -60,16 +61,16 @@ const login = () => {
   return (
     <>
       <ToastContainer />
-      <div className="pt-[10rem] h-[100vh] bg-[#8194DC] ">
+      <div className="pt-[10rem] h-[100vh] bg-[#F3F4F6] ">
         <div className="max-w-md  mx-auto p-8 bg-white rounded-lg shadow-md">
           <h1 className="text-center p-4 font-bold text-2xl">Admin Login</h1>
-          <form onSubmit={submitHandler} className="p-2">
+          <form onSubmit={submitHandler} className="p-4 ">
             <label for="username" className="font-semibold">
               Username/email
             </label>
             <br />
             <input
-              className="border p-2 w-[20rem] mt-4"
+              className="border p-2 w-[20rem] mt-4 rounded-lg"
               type="text"
               id="username"
               name="username"
@@ -79,10 +80,12 @@ const login = () => {
               }
             />
             <br />
-            <label for="password">Password:</label>
+            <label className="pt-2" for="password">
+              Password:
+            </label>
             <br />
             <input
-              className="border p-2 w-[20rem]"
+              className="border p-2 w-[20rem] rounded-lg"
               type="password"
               id="password"
               name="password"
@@ -92,10 +95,16 @@ const login = () => {
             <br />
             <button
               type="submit"
-              className="bg-[#445CAB] text-white font-semibold p-2 w-[20rem] mt-4"
+              className="bg-[#3F83F8] text-white font-semibold p-2 w-[20rem] mt-4 rounded-lg"
             >
               Login
             </button>
+            <h1 className="mt-5">
+              If you don't have account?{" "}
+              <span className="text-blue-600">
+                <Link to="/Register">Register</Link>
+              </span>
+            </h1>
           </form>
         </div>
       </div>
