@@ -100,6 +100,10 @@ const employeeSchema = new mongoose.Schema(
       type: String,
     },
 
+    lastLoginTime: {
+      type: String, // Stores the most recent login time (HH:mm:ss format)
+      default: null,
+    },
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
     logoutTime: { type: String },

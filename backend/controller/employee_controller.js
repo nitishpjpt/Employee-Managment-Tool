@@ -118,6 +118,7 @@ const employeeLogin = async (req, res) => {
 
     // Get today's date
     const today = moment().format("YYYY-MM-DD");
+    const currentLoginTime = moment().format("HH:mm:ss");
 
     // Find today's attendance record
     let attendanceRecord = existingUser.attendance.find(
@@ -129,17 +130,19 @@ const employeeLogin = async (req, res) => {
       existingUser.attendance.push({
         date: today,
         status: "Present",
-        loginTime: moment().format("HH:mm:ss"), // Set login time on first login
+        loginTime: currentLoginTime, // Set login time on first login
       });
     } else {
       // If attendance record exists, check if loginTime is already set
       if (!attendanceRecord.loginTime) {
         // If loginTime is not set, update it with the current time (first login today)
-        attendanceRecord.loginTime = moment().format("HH:mm:ss");
+        attendanceRecord.loginTime = currentLoginTime;
       }
-      // If loginTime is already set, do not update it again (subsequent logins)
     }
-    existingUser.loginTime = attendanceRecord.loginTime;
+
+    // Update the `lastLoginTime` field outside the attendance array
+    existingUser.lastLoginTime = currentLoginTime;
+
     // If location is provided, reverse geocode it to get the address
     let address = "";
     if (location && location.latitude && location.longitude) {
@@ -192,6 +195,7 @@ const employeeLogin = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
+
 
 const employeeLogout = async (req, res) => {
   try {
