@@ -248,9 +248,9 @@ export default function Dashboard() {
       path: "/employee/leave/changes",
     },
     {
-      text: "System Settings",
+      text: "Salary Management",
       icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
-      path: "/system-settings",
+      path: "/employee/salary/management",
     },
     {
       text: "Notifications",

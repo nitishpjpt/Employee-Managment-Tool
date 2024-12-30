@@ -21,6 +21,7 @@ import MainDashboard from "./pages/MainDashboard";
 import FirstPage from "./components/FrontPage";
 import { EmployeeProtectedRoute, ProtectedRoute } from "./pages/ProtectedRoute";
 import EmpLeavesChanges from "./components/EmpLeavesChanges";
+import EmpSalaryManagement from "./components/EmpSalaryManagment";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -117,6 +118,12 @@ const App = () => {
           path="employee/request/leave/approval"
           element={<ProtectedRoute element={<LeaveRequest />} isAuthenticated={isAuthenticated} />}
         />
+        <Route
+         path="/employee/salary/management"
+         element={<ProtectedRoute element={<EmpSalaryManagement />} isAuthenticated={isAuthenticated}/>}
+              >
+
+        </Route>
 
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />
