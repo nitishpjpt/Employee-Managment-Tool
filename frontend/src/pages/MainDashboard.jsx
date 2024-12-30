@@ -35,6 +35,7 @@ import FrontPage from "../components/FrontPage";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { FcMoneyTransfer } from "react-icons/fc";
 
 const drawerWidth = 240;
 
@@ -249,7 +250,7 @@ export default function Dashboard() {
     },
     {
       text: "Salary Management",
-      icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
+      icon: <FcMoneyTransfer className="text-3xl text-[#233D7A]" />,
       path: "/employee/salary/management",
     },
     {
