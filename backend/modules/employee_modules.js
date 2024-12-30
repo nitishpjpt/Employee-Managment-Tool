@@ -111,6 +111,15 @@ const employeeSchema = new mongoose.Schema(
     totalInactiveTime: { type: Number, default: 0 },
     formattedInactiveTime: { type: String }, // Store formatted inactive time
     formattedActiveTime: { type: String }, // Store formatted time as a string
+    dailyActivity: [
+      {
+        date: { type: Date, default: Date.now },
+        activeTime: { type: Number, default: 0 },
+        inactiveTime: { type: Number, default: 0 },
+        formattedInactiveTime: { type: String }, // Store formatted inactive time
+        formattedActiveTime: { type: String }, // Store formatted time as a string
+      },
+    ],
     backgroundVerification: backgroundVerificationSchema,
     bankVerification: bankVerificationSchema,
     requestLeave: [requestLeaveSchema],

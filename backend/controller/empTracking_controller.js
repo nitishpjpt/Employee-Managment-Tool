@@ -26,20 +26,14 @@ const getActiveTime = async (req, res) => {
 const updateActiveTime = async (req, res) => {
   try {
     const employeeId = req.params.employeeId;
-    const { activeTime, inactiveTime } = req.body; // Expecting both activeTime and inactiveTime
-    console.log("Updating active and inactive time");
+    const { activeTime, inactiveTime } = req.body; // Time in minutes
 
-    // Validate the activeTime and inactiveTime input (in minutes)
     if (typeof activeTime !== "number" || activeTime < 0) {
-      return res.status(400).json({ message: "Invalid active time provided" });
+      return res.status(400).json({ message: "Invalid active time" });
     }
     if (typeof inactiveTime !== "number" || inactiveTime < 0) {
-      return res.status(400).json({ message: "Invalid inactive time provided" });
+      return res.status(400).json({ message: "Invalid inactive time" });
     }
-
-    console.log(
-      `Received active time: ${activeTime} minutes and inactive time: ${inactiveTime} minutes for employee ID: ${employeeId}`
-    );
 
     // Find the employee by ID
     const employee = await Employee.findById(employeeId);
@@ -47,49 +41,61 @@ const updateActiveTime = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Update totalActiveTime by adding the new active time (in minutes)
-    employee.totalActiveTime += activeTime; // Store the time in minutes, for calculations
-    employee.totalInactiveTime += inactiveTime; // Accumulate inactive time in minutes
+    // Get the current date and the last activity date from the employee data
+    const currentDate = new Date();
+    const lastActivityDate =
+      employee.dailyActivity[employee.dailyActivity.length - 1]?.date;
 
-    // Convert the total active time (in minutes) to hours, minutes format
-    const totalMinutes = employee.totalActiveTime;
-    const hr = Math.floor(totalMinutes / 60); // Get the hours
-    const min = totalMinutes % 60; // Get the remaining minutes
+    // If it's a new day, reset the active and inactive times
+    if (
+      !lastActivityDate ||
+      lastActivityDate.toDateString() !== currentDate.toDateString()
+    ) {
+      // New day, add the current day's data and reset the time counters
+      employee.dailyActivity.push({
+        date: currentDate,
+        activeTime: employee.totalActiveTime,
+        inactiveTime: employee.totalInactiveTime,
+        formattedActiveTime: formatTime(employee.totalActiveTime), // Add formatted active time
+        formattedInactiveTime: formatTime(employee.totalInactiveTime), // Add formatted inactive time
+      });
 
-    // Convert to a human-readable format (string)
-    const formattedActiveTime = `${hr}hr ${min} min`;
+      // Reset active and inactive times for the new day
+      employee.totalActiveTime = 0;
+      employee.totalInactiveTime = 0;
+    }
 
-    // Convert the total inactive time (in minutes) to hours, minutes format
-    const totalInactiveMinutes = employee.totalInactiveTime;
-    const inactiveHr = Math.floor(totalInactiveMinutes / 60); // Get the hours
-    const inactiveMin = totalInactiveMinutes % 60; // Get the remaining minutes
+    // Update the total active and inactive times for the day
+    employee.totalActiveTime += activeTime;
+    employee.totalInactiveTime += inactiveTime;
 
-    // Convert to a human-readable format (string) for inactive time
-    const formattedInactiveTime = `${inactiveHr}hr ${inactiveMin} min`;
+    // Format active time and inactive time for the current day
+    const formattedActiveTime = formatTime(employee.totalActiveTime);
+    const formattedInactiveTime = formatTime(employee.totalInactiveTime);
 
-    // Store the formatted time as a string in the database
-    employee.formattedActiveTime = formattedActiveTime;
-    employee.formattedInactiveTime = formattedInactiveTime;
-
-    // Save the updated employee document with formatted times
+    // Save the employee document
     await employee.save();
 
-    // Log the updated times in the backend console
-    console.log(`Updated totalActiveTime: ${formattedActiveTime}`);
-    console.log(`Updated totalInactiveTime: ${formattedInactiveTime}`);
-
-    // Return the updated total active and inactive time in both minutes (for calculations) and formatted strings (for display)
     res.status(200).json({
       message: "Activity data updated successfully",
-      totalActiveTime: employee.totalActiveTime, // Return the time in minutes (stored in DB)
-      formattedActiveTime, // Optionally return the formatted active time for frontend display
-      totalInactiveTime: employee.totalInactiveTime, // Return the inactive time in minutes
-      formattedInactiveTime, // Optionally return the formatted inactive time for frontend display
+      totalActiveTime: employee.totalActiveTime,
+      totalInactiveTime: employee.totalInactiveTime,
+      formattedActiveTime,        // Return formatted active time
+      formattedInactiveTime,      // Return formatted inactive time
+      dailyActivity: employee.dailyActivity,
     });
   } catch (error) {
     console.error("Error updating activity time:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Helper function to format time (in minutes) to hh:mm
+const formatTime = (timeInMinutes) => {
+  const hours = Math.floor(timeInMinutes / 60);
+  const minutes = timeInMinutes % 60;
+  return `${hours}hr ${minutes}min`;
+};
+
 
 export { getActiveTime, updateActiveTime };

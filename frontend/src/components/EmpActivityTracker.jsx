@@ -6,6 +6,8 @@ const EmpActivityTracker = () => {
   const [activeTime, setActiveTime] = useState(0); // Time in seconds
   const [inactiveTime, setInactiveTime] = useState(0); // Inactive time in seconds
   const [isInactive, setIsInactive] = useState(false); // Tracks inactivity status
+  const [formattedActiveTime, setFormattedActiveTime] = useState("0h 0m");
+  const [formattedInactiveTime, setFormattedInactiveTime] = useState("0h 0m");
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -20,10 +22,7 @@ const EmpActivityTracker = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setEmployeeId(parsedUser.data.userResponse._id);
-      console.log(
-        "Employee ID from localStorage:",
-        parsedUser.data.userResponse._id
-      );
+      console.log("Employee ID from localStorage:", parsedUser.data.userResponse._id);
     }
   }, []);
 
@@ -37,12 +36,13 @@ const EmpActivityTracker = () => {
       console.log("Sending activity data:", timeInMinutes, inactiveTimeInMinutes); // Debugging log
       try {
         const response = await axios.post(
-          `${
-            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-          }/api/v1/user/employee/${employeeId}/updateActiveTime`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/${employeeId}/updateActiveTime`,
           { activeTime: timeInMinutes, inactiveTime: inactiveTimeInMinutes }
         );
         console.log("Activity data sent successfully", response); // Debugging log
+        // Update state with the formatted active and inactive time
+        setFormattedActiveTime(response.data.formattedActiveTime);
+        setFormattedInactiveTime(response.data.formattedInactiveTime);
       } catch (error) {
         console.error("Error sending activity data:", error);
       }
@@ -68,7 +68,7 @@ const EmpActivityTracker = () => {
     window.addEventListener("mousedown", handleUserActivity);
 
     const activityInterval = setInterval(() => {
-      if (!isInactive) { 
+      if (!isInactive) {
         setActiveTime((prevTime) => {
           const newTime = prevTime + 10; // Add 10 seconds to active time
           const timeInMinutes = Math.floor(newTime / 60);
@@ -102,10 +102,12 @@ const EmpActivityTracker = () => {
 
   return (
     <div>
-      <h2>Employee Activity Tracker</h2>
-      <p>Active Time: {formatTime(activeTime)}</p>
+      {/* <h2>Employee Activity Tracker</h2>
+      <p>Active Time: {formatTime(activeTime)}</p> */}
       <p>Status: {isInactive ? "Inactive" : "Active"}</p>
-      <p>Inactive Time: {formatTime(inactiveTime)}</p>
+      {/* <p>Inactive Time: {formatTime(inactiveTime)}</p> */}
+      {/* <p>Formatted Active Time: {formattedActiveTime}</p>
+      <p>Formatted Inactive Time: {formattedInactiveTime}</p> */}
     </div>
   );
 };

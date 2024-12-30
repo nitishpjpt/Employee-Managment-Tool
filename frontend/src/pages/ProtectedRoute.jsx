@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 
 // Admin Protected route
 const ProtectedRoute = ({ element, isAuthenticated }) => {
-  return isAuthenticated ? element : <Navigate to="/login" replace />;
+  return isAuthenticated ? element : <Navigate to="/register" replace />;
 };
 
 // employee protected route

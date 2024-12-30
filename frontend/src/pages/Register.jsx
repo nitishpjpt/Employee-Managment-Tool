@@ -88,9 +88,16 @@ const Register = () => {
                 <Link>Register</Link>
               </h2>
               <p className="text-sm text-gray-500">
-                Already have an account?{" "}
+                Already have an account as Admin then?{" "}
                 <span className="text-blue-600">
                   <Link to="/Login">Log in</Link>
+                </span>
+                .
+              </p>
+              <p className="text-sm text-gray-500">
+                If you have an employee then?{" "}
+                <span className="text-blue-600">
+                  <Link to="/employee/Login">Log in</Link>
                 </span>
                 .
               </p>

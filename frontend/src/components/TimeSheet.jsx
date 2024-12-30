@@ -17,25 +17,32 @@ const TimeSheet = () => {
     }
 
     // Map employee data for Excel
-    const formattedData = employees.map((employee) => ({
-      Name: employee.firstName || "",
-      Email: employee.email || "",
-      "Employee Code": employee.employeeCode || "",
-      Location: employee.location || "",
-      Department: employee.department || "",
-      "Clock-In": employee.clockIn || "",
-      "Clock-Out": employee.clockOut || "",
-      "Total Hour": employee.totalHour || "",
-      "Office Hour": employee.officeHour || "",
-      "Active Hour": employee.activeHour || "",
-      Productive: employee.productive || "",
-      Unproductive: employee.unproductive || "",
-      Neutral: employee.neutral || "",
-      Idle: employee.idle || "",
-      "Offline Hours": employee.offlineHours || "",
-      Break: employee.break || "",
-      Productivity: employee.productivity || "",
-    }));
+    const formattedData = employees.map((employee) => {
+      // Get the latest dailyActivity entry
+      const latestActivity = employee.dailyActivity?.[employee.dailyActivity.length - 1] || {};
+      const date = latestActivity.date ? new Date(latestActivity.date) : null;
+
+      return {
+        Name: employee.firstName || "",
+        Email: employee.email || "",
+        "Employee Code": employee.employeeCode || "",
+        Location: employee.location || "",
+        Department: employee.department || "",
+        "Clock-In": employee.clockIn || "",
+        "Clock-Out": employee.clockOut || "",
+        "Total Hour": employee.totalHour || "",
+        "Office Hour": employee.officeHour || "",
+        "Active Hour": employee.activeHour || "",
+        Productive: latestActivity.formattedActiveTime || "", // Use formatted active time for productive
+        Unproductive: latestActivity.formattedInactiveTime || "", // Use formatted inactive time for unproductive
+        Neutral: employee.neutral || "",
+        Idle: employee.idle || "",
+        "Offline Hours": employee.offlineHours || "",
+        Break: employee.break || "",
+        Productivity: employee.productivity || "",
+        Date: date instanceof Date && !isNaN(date) ? date.toLocaleDateString() : "Invalid Date" // Ensure valid date format
+      };
+    });
 
     // Create a worksheet and a workbook
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
@@ -100,46 +107,51 @@ const TimeSheet = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th className="px-6 py-3">Name</th>
-
               <th className="px-6 py-3">Employee Code</th>
-
               <th className="px-6 py-3">Department</th>
               <th className="px-6 py-3">Clock-in</th>
               <th className="px-6 py-3">Clock-out</th>
               <th className="px-6 py-3">Total Hour</th>
-
-           
               <th className="px-6 py-3 text-[#35A745]">Productive</th>
               <th className="px-6 py-3 text-red-500">Unproductive</th>
+              <th className="px-6 py-3">Date</th> {/* Added Date Column */}
             </tr>
           </thead>
           <tbody>
             {employees.length > 0 ? (
-              employees.map((employee, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {employee.firstName ?? ""}
-                  </td>
+              employees.map((employee, index) => {
+                // Get the latest dailyActivity entry for each employee
+                const latestActivity = employee.dailyActivity?.[employee.dailyActivity.length - 1] || {};
+                const date = latestActivity.date ? new Date(latestActivity.date) : null;
 
-                  <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
+                return (
+                  <tr
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {employee.firstName ?? ""}
+                    </td>
 
-                  <td className="px-6 py-4">{employee.department ?? ""}</td>
-                  <td className="px-6 py-4">
-                    {" "}
-                    {employee.lastLoginTime ?? ""}{" "}
-                  </td>
-                  <td className="px-6 py-4">{employee.logoutTime ?? ""} </td>
-                  <td className="px-6 py-4">{employee.totalHour ?? ""}10Hr</td>
+                    <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
 
-                  <td className="px-6 py-4">
-                    {employee.formattedActiveTime ?? ""}
-                  </td>
-                  <td className="px-6 py-4">{employee.formattedInactiveTime?? ""}</td>
-                </tr>
-              ))
+                    <td className="px-6 py-4">{employee.department ?? ""}</td>
+                    <td className="px-6 py-4">{employee.lastLoginTime ?? ""}</td>
+                    <td className="px-6 py-4">{employee.logoutTime ?? ""}</td>
+                    <td className="px-6 py-4">{employee.totalHour ?? "10Hr"}</td>
+
+                    <td className="px-6 py-4">
+                      {latestActivity.formattedActiveTime ?? ""}
+                    </td>
+                    <td className="px-6 py-4">
+                      {latestActivity.formattedInactiveTime ?? ""}
+                    </td>
+                    <td className="px-6 py-4">
+                      {date instanceof Date && !isNaN(date) ? date.toLocaleDateString() : "Invalid Date"}
+                    </td> {/* Display Date */}
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td
