@@ -22,6 +22,7 @@ import FirstPage from "./components/FrontPage";
 import { EmployeeProtectedRoute, ProtectedRoute } from "./pages/ProtectedRoute";
 import EmpLeavesChanges from "./components/EmpLeavesChanges";
 import EmpSalaryManagement from "./components/EmpSalaryManagment";
+import EmpDailyAttendence from "./components/EmpDailyAttendence";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -72,58 +73,130 @@ const App = () => {
         {/* Admin Protected Routes */}
         <Route
           path="/"
-          element={<ProtectedRoute element={<MainDashboard />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<MainDashboard />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/employee/leave/changes"
-          element={<ProtectedRoute element={<EmpLeavesChanges />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<EmpLeavesChanges />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/home"
-          element={<ProtectedRoute element={<FirstPage />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<FirstPage />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/employee-details"
-          element={<ProtectedRoute element={<EmployeeDetails />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<EmployeeDetails />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/timesheet"
-          element={<ProtectedRoute element={<TimeSheet />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<TimeSheet />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/projects"
-          element={<ProtectedRoute element={<Projects />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<Projects />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/reports"
-          element={<ProtectedRoute element={<Reports />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<Reports />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/dlp"
-          element={<ProtectedRoute element={<Dlp />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<Dlp />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/setting"
-          element={<ProtectedRoute element={<Setting />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<Setting />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/behavior"
-          element={<ProtectedRoute element={<Behaviour />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<Behaviour />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="/salary/details"
-          element={<ProtectedRoute element={<SalaryPage />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<SalaryPage />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
           path="employee/request/leave/approval"
-          element={<ProtectedRoute element={<LeaveRequest />} isAuthenticated={isAuthenticated} />}
+          element={
+            <ProtectedRoute
+              element={<LeaveRequest />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
         />
         <Route
-         path="/employee/salary/management"
-         element={<ProtectedRoute element={<EmpSalaryManagement />} isAuthenticated={isAuthenticated}/>}
-              >
-
-        </Route>
+          path="/employee/salary/management"
+          element={
+            <ProtectedRoute
+              element={<EmpSalaryManagement />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        ></Route>
+        <Route
+          path="/employee/daily/attendance"
+          element={
+            <ProtectedRoute
+              element={<EmpDailyAttendence />}
+              isAuthenticated={isAuthenticated}
+            />
+          }
+        ></Route>
 
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />

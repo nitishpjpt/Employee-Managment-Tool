@@ -28,6 +28,7 @@ import updateEmployeeLeaveBalance from "../controller/adminLeaves_Increase.js";
 import { getActiveTime, updateActiveTime } from "../controller/empTracking_controller.js";
 import {getTotalPresentEmployees,getTotalAbsentEmployees }from "../controller/empTotalPresent_controller.js";
 import deleteEmployee from "../controller/empDelete_controller.js";
+import getTodayAttendance from "../controller/dailyAttendence.js";
 
 const userRouter = Router();
 
@@ -45,6 +46,7 @@ userRouter.route("/employee/:employeeId/updateActiveTime").post(updateActiveTime
 userRouter.route("/employee/attendance/present/count").get(getTotalPresentEmployees);
 userRouter.route("/employee/attendance/absent/count").get(getTotalAbsentEmployees);
 userRouter.route("/employee/:employeeId/delete").delete(deleteEmployee);
+userRouter.route("/employee/daily/attendance").get(getTodayAttendance);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);

@@ -37,6 +37,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { MdOutlinePendingActions } from "react-icons/md";
 import axios from "axios";
 import { FcMoneyTransfer } from "react-icons/fc";
+import { MdCoPresent } from "react-icons/md";
+import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 
 const drawerWidth = 240;
 
@@ -280,8 +282,13 @@ export default function Dashboard() {
     },
     {
       text: "Salary Management",
-      icon: <FcMoneyTransfer className="text-3xl text-[#233D7A]" />,
+      icon: <RiMoneyRupeeCircleFill className="text-3xl text-[#233D7A]" />,
       path: "/employee/salary/management",
+    },
+    {
+      text: "Daily Attendance",
+      icon: <MdCoPresent className="text-3xl text-[#233D7A]" />,
+      path: "/employee/daily/attendance",
     },
   ];
 
