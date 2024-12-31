@@ -11,7 +11,9 @@ const LeaveRequest = () => {
   const fetchAllUsers = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/all/registerDetails`
       );
       setAllUsers(response.data.data.user);
     } catch (error) {
@@ -24,7 +26,7 @@ const LeaveRequest = () => {
     fetchAllUsers();
   }, []);
 
-  // get the latest leave request 
+  // get the latest leave request
   const getLatestLeave = (requestLeave) => {
     if (!requestLeave || requestLeave.length === 0) return null;
     return requestLeave.reduce((latest, current) =>
@@ -36,7 +38,9 @@ const LeaveRequest = () => {
   const handleLeaveStatusUpdate = async (userId, leaveId, status) => {
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/requestLeave/update`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/requestLeave/update`,
         { userId, leaveId, status }
       );
 
@@ -45,9 +49,7 @@ const LeaveRequest = () => {
 
       // Update the state with the updated employee data
       setAllUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === userId ? updatedEmployee : user
-        )
+        prevUsers.map((user) => (user._id === userId ? updatedEmployee : user))
       );
 
       alert(`Leave request ${status.toLowerCase()} successfully.`);
@@ -60,7 +62,7 @@ const LeaveRequest = () => {
   return (
     <div>
       <MainDashboard />
-      <div className="relative overflow-x-auto ml-[5rem]">
+      <div className="relative overflow-x-auto ml-[15rem]">
         <h1 className="text-center text-lg font-bold p-5">
           Employee Leave Approval
         </h1>
@@ -122,36 +124,55 @@ const LeaveRequest = () => {
                     </td>
                     <td className="px-6 py-4 flex justify-center gap-2 items-center">
                       <Button
-                     variant="contained" color="success"
+                        variant="contained"
+                        color="success"
                         onClick={() =>
-                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Approved")
+                          handleLeaveStatusUpdate(
+                            user._id,
+                            latestLeave?._id,
+                            "Approved"
+                          )
                         }
                         className="text-green-500 hover:underline"
-                        disabled={!latestLeave || latestLeave.status === "Approved"}
+                        disabled={
+                          !latestLeave || latestLeave.status === "Approved"
+                        }
                       >
                         Approve
                       </Button>
                       <Button
-                     variant="contained" color="error"
+                        variant="contained"
+                        color="error"
                         onClick={() =>
-                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Rejected")
+                          handleLeaveStatusUpdate(
+                            user._id,
+                            latestLeave?._id,
+                            "Rejected"
+                          )
                         }
                         className="text-red-500 hover:underline"
-                        disabled={!latestLeave || latestLeave.status === "Rejected"}
+                        disabled={
+                          !latestLeave || latestLeave.status === "Rejected"
+                        }
                       >
                         Reject
                       </Button>
                       <Button
-                      variant="contained"
+                        variant="contained"
                         onClick={() =>
-                          handleLeaveStatusUpdate(user._id, latestLeave?._id, "Pending")
+                          handleLeaveStatusUpdate(
+                            user._id,
+                            latestLeave?._id,
+                            "Pending"
+                          )
                         }
                         className="text-yellow-500 hover:underline"
-                        disabled={!latestLeave || latestLeave.status === "Pending"}
+                        disabled={
+                          !latestLeave || latestLeave.status === "Pending"
+                        }
                       >
                         Pending
                       </Button>
-                     
                     </td>
                   </tr>
                 );

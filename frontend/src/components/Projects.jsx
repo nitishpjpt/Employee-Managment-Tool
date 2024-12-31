@@ -40,7 +40,9 @@ const Projects = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/projectDetails`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/projectDetails`,
         projectObj,
         {
           headers: {
@@ -68,7 +70,7 @@ const Projects = () => {
       <ToastContainer />
       <MainDashboard />
       {/*------select----options-----------*/}
-      <div className="mx-[10rem] px-6 flex justify-end items-center gap-4 text-center shadow-lg rounded-lg">
+      <div className="px-[8rem] flex justify-end items-center gap-4 text-center shadow-lg rounded-lg">
         <p className="font-semibold">Select date range</p>
         <input type="date" />
 
@@ -219,10 +221,10 @@ const Projects = () => {
           </Modal.Footer>
         </Modal>
       </div>
-      
+
       {/*--------Table-------------*/}
       <div>
-        <div class="relative overflow-x-auto ml-[5rem] pt-10">
+        <div class="relative overflow-x-auto ml-[15rem] pt-10">
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -245,12 +247,7 @@ const Projects = () => {
                 <th scope="col" class="px-6 py-3">
                   Total Time
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Progress
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Status
-                </th>
+
                 <th scope="col" class="px-6 py-3">
                   Action
                 </th>
@@ -271,8 +268,6 @@ const Projects = () => {
                     <td class="px-6 py-4">{item.startDate || "not found"} </td>
                     <td class="px-6 py-4">{item.startDate || "not found"}</td>
                     <td class="px-6 py-4">404</td>
-                    <td class="px-6 py-4">nothing</td>
-                    <td class="px-6 py-4">nothing</td>
 
                     <td className=" text-center flex justify-center gap-1 items-center">
                       <IoIosSettings className="text-blue-400" />

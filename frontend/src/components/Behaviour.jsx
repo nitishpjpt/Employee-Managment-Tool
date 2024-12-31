@@ -51,7 +51,7 @@ const Behaviour = () => {
       <ToastContainer />
       <MainDashboard />
       <div></div>
-      <div className="max-w-xl mx-auto bg-white shadow-md p-10 rounded-lg">
+      <div className="max-w-xl ml-[28rem] mx-auto bg-white shadow-md p-10 rounded-lg">
         <h1 className="pb-8">Rule Trigger</h1>
         <form onSubmit={submitHandler}>
           <div className="rid gap-8 mb-6 lg:grid-cols-2">

@@ -88,9 +88,11 @@ const EmpHome = () => {
             <tbody>
               {presentDates.length > 0 ? (
                 presentDates.map((item, index) => {
-                  // Find the employee data from the context based on name or _id
+                  // Assuming the logged-in employee has an ID or email stored
+                  const presentUser = JSON.parse(localStorage.getItem("employeeLogin"));
+                  const employeeId = presentUser?.data?.userResponse?._id;
                   const employee = employees.find(
-                    (emp) => emp.firstName === "Nitish" && emp.lastName === "Prajapati"
+                    (emp) => emp._id === employeeId
                   );
 
                   // Find the leave request for the employee based on the present date
@@ -107,9 +109,9 @@ const EmpHome = () => {
                     >
                       <th
                         scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        className="px-6 py-4 capitalize font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        Nitish
+                        {employee ? `${employee.firstName} ${employee.lastName}` : "N/A"}
                       </th>
                       <td className="px-6 py-4">{item.date}</td>
                       <td className="px-6 py-4">

@@ -17,7 +17,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmpActivityTracker from "../components/EmpActivityTracker";
 
-
 function EmpDashboard() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -26,7 +25,7 @@ function EmpDashboard() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [employeeId, setEmployeeId] = useState("");
-  const [empId,setEmpId] = useState("");
+  const [empId, setEmpId] = useState("");
 
   const navigate = useNavigate(); // to navigate after logout
 
@@ -57,7 +56,9 @@ function EmpDashboard() {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL }/api/v1/user/${employeeId}/logout`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/logout`
       );
       console.log(response.data);
       localStorage.removeItem("employeeLogin");
@@ -70,7 +71,6 @@ function EmpDashboard() {
             window.location.reload(); // Reload the page after navigation
           }, 100); // Add a slight delay to ensure navigation is complete
         },
-       
       });
       // Perform any additional actions like redirecting or removing from localStorage
     } catch (error) {
@@ -78,8 +78,8 @@ function EmpDashboard() {
     }
   };
 
-   // First useEffect to get employeeId from localStorage
-   useEffect(() => {
+  // First useEffect to get employeeId from localStorage
+  useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       try {
@@ -94,11 +94,14 @@ function EmpDashboard() {
 
   // Second useEffect to fetch active time once empId is available
   useEffect(() => {
-    if (empId) { // Only run if empId is available
+    if (empId) {
+      // Only run if empId is available
       const fetchActiveTime = async () => {
         try {
           const response = await axios.get(
-            `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/${empId}/active/time`
+            `${
+              import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+            }/api/v1/user/employee/${empId}/active/time`
           );
           setActiveTime(response.data.activeTime); // Set active time to state
           console.log(response.data);
@@ -110,7 +113,6 @@ function EmpDashboard() {
       fetchActiveTime(); // Fetch active time on component mount
     }
   }, [empId]); // Dependency array includes empId to run only when empId changes
-
 
   return (
     <div>
@@ -207,8 +209,16 @@ function EmpDashboard() {
             </Box>
 
             {/* User Menu */}
-            <Box sx={{ flexGrow: 0 }}>
-              {username ? username : ""}{" "}
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: "flex",
+                gap: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <h1 className="capitalize">{username ? username : ""} </h1>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -258,7 +268,7 @@ function EmpDashboard() {
         </Container>
       </AppBar>
       <p>Active Time: {activeTime}</p>
-      <EmpActivityTracker/>
+      <EmpActivityTracker />
     </div>
   );
 }

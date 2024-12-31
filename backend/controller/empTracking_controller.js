@@ -28,6 +28,7 @@ const updateActiveTime = async (req, res) => {
     const employeeId = req.params.employeeId;
     const { activeTime, inactiveTime } = req.body; // Time in minutes
 
+    // Validate input
     if (typeof activeTime !== "number" || activeTime < 0) {
       return res.status(400).json({ message: "Invalid active time" });
     }
@@ -41,37 +42,60 @@ const updateActiveTime = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Get the current date and the last activity date from the employee data
-    const currentDate = new Date();
-    const lastActivityDate =
-      employee.dailyActivity[employee.dailyActivity.length - 1]?.date;
+    // Get the current date in "YYYY-MM-DD" format
+    const currentDate = new Date().toISOString().split("T")[0];
 
-    // If it's a new day, reset the active and inactive times
-    if (
-      !lastActivityDate ||
-      lastActivityDate.toDateString() !== currentDate.toDateString()
-    ) {
-      // New day, add the current day's data and reset the time counters
-      employee.dailyActivity.push({
+    // Check if there's already an existing activity for the current date
+    let currentDayActivity = employee.dailyActivity.find(
+      (activity) => activity.date === currentDate
+    );
+
+    if (currentDayActivity) {
+      // If activity for the current day exists, update the active and inactive times
+      currentDayActivity.activeTime += activeTime;
+      currentDayActivity.inactiveTime += inactiveTime;
+
+      // Update formatted times for the current day
+      currentDayActivity.formattedActiveTime = formatTime(currentDayActivity.activeTime);
+      currentDayActivity.formattedInactiveTime = formatTime(currentDayActivity.inactiveTime);
+    } else {
+      // If no activity for the current day, create a new entry for the new day
+      const newActivity = {
         date: currentDate,
-        activeTime: employee.totalActiveTime,
-        inactiveTime: employee.totalInactiveTime,
-        formattedActiveTime: formatTime(employee.totalActiveTime), // Add formatted active time
-        formattedInactiveTime: formatTime(employee.totalInactiveTime), // Add formatted inactive time
-      });
+        activeTime: activeTime, // Set the initial active time for the day
+        inactiveTime: inactiveTime, // Set the initial inactive time for the day
+        formattedActiveTime: formatTime(activeTime),
+        formattedInactiveTime: formatTime(inactiveTime),
+      };
 
-      // Reset active and inactive times for the new day
-      employee.totalActiveTime = 0;
-      employee.totalInactiveTime = 0;
+      // Assign the new activity to dailyActivity
+      employee.dailyActivity.push(newActivity);
     }
 
-    // Update the total active and inactive times for the day
-    employee.totalActiveTime += activeTime;
-    employee.totalInactiveTime += inactiveTime;
+    // Recalculate total active and inactive times across all days
+    const totalActiveTime = employee.dailyActivity.reduce(
+      (total, activity) => total + activity.activeTime,
+      0
+    );
+    const totalInactiveTime = employee.dailyActivity.reduce(
+      (total, activity) => total + activity.inactiveTime,
+      0
+    );
 
-    // Format active time and inactive time for the current day
-    const formattedActiveTime = formatTime(employee.totalActiveTime);
-    const formattedInactiveTime = formatTime(employee.totalInactiveTime);
+    // Track the number of days with activity or inactivity
+    const totalActivityDays = employee.dailyActivity.filter(
+      (activity) => activity.activeTime > 0
+    ).length;
+
+    const totalInactivityDays = employee.dailyActivity.filter(
+      (activity) => activity.inactiveTime > 0
+    ).length;
+
+    // Update the employee's total active and inactive times
+    employee.totalActiveTime = totalActiveTime;
+    employee.totalInactiveTime = totalInactiveTime;
+    employee.totalActivityDays = totalActivityDays;
+    employee.totalInactivityDays = totalInactivityDays;
 
     // Save the employee document
     await employee.save();
@@ -80,8 +104,10 @@ const updateActiveTime = async (req, res) => {
       message: "Activity data updated successfully",
       totalActiveTime: employee.totalActiveTime,
       totalInactiveTime: employee.totalInactiveTime,
-      formattedActiveTime,        // Return formatted active time
-      formattedInactiveTime,      // Return formatted inactive time
+      totalActivityDays: employee.totalActivityDays,
+      totalInactivityDays: employee.totalInactivityDays,
+      formattedActiveTime: formatTime(employee.totalActiveTime),
+      formattedInactiveTime: formatTime(employee.totalInactiveTime),
       dailyActivity: employee.dailyActivity,
     });
   } catch (error) {
@@ -96,6 +122,7 @@ const formatTime = (timeInMinutes) => {
   const minutes = timeInMinutes % 60;
   return `${hours}hr ${minutes}min`;
 };
+
 
 
 export { getActiveTime, updateActiveTime };
