@@ -1,6 +1,7 @@
 # Admin Dashboard
 
-![Admin Dashboard](https://github.com/user-attachments/assets/21276d84-1ec0-4489-9f98-ea0f60891bf3)
+![FireShot Capture 003 - Vite + React - localhost](https://github.com/user-attachments/assets/b70314ad-72ef-495b-82c4-c9d9ce91ab71)
+
 
 # Employee Dashboard
 
