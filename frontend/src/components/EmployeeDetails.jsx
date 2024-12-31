@@ -111,7 +111,7 @@ const EmployeeDetails = () => {
       //handle the response
       toast.success("User registered successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     } catch (error) {
       toast.error("User  does not register", {
@@ -176,7 +176,7 @@ const EmployeeDetails = () => {
         "Employee background verification details added successfully",
         {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
         }
       );
     } catch (error) {
@@ -212,7 +212,7 @@ const EmployeeDetails = () => {
       console.log(response);
       toast.success("Employee bank details added successfully", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     } catch (error) {
       toast.error("Employee bank details does not added", {
@@ -429,7 +429,6 @@ const EmployeeDetails = () => {
                           id="visitors"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="upload profile pic"
-                          required
                           className="rounded-full"
                         />
                       </div>
@@ -482,7 +481,6 @@ const EmployeeDetails = () => {
                           id="aadhar_number"
                           class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Aadhar Number must be 10 digits"
-                          pattern="\d{12}"
                           title="Aadhar Number must be 10 digits"
                           required
                           onChange={(e) => setAddhar(e.target.value)}
@@ -499,11 +497,10 @@ const EmployeeDetails = () => {
                         <input
                           type="text"
                           id="pan_number"
+                          required
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="must be in the format: ABCDE1234F"
-                          pattern="[A-Z]{5}\d{4}[A-Z]{1}"
                           title="PAN Number must be in the format: ABCDE1234F"
-                          required
                           onChange={(e) => setPan(e.target.value)}
                         />
                       </div>
@@ -514,7 +511,6 @@ const EmployeeDetails = () => {
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
                           Driving Licence{" "}
-                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -522,7 +518,6 @@ const EmployeeDetails = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="must be in the format: XX00XXXXXXXXX"
                           title="Driving Licence must be in the format: XX00XXXXXXXXX"
-                          required
                           onChange={(e) => setDriving(e.target.value)}
                         />
                       </div>
@@ -532,16 +527,14 @@ const EmployeeDetails = () => {
                           for="voter_id"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Voter ID <span className="text-red-500">*</span>
+                          Voter ID
                         </label>
                         <input
                           type="text"
                           id="voter_id"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="must be in the format: ABC1234567"
-                          pattern="[A-Z]{3}\d{7}"
                           title="must be in the format: ABC1234567"
-                          required
                           onChange={(e) => setVoterCard(e.target.value)}
                         />
                       </div>
@@ -551,16 +544,14 @@ const EmployeeDetails = () => {
                           for="uan_number"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          UAN Number <span className="text-red-500">*</span>
+                          UAN Number
                         </label>
                         <input
                           type="text"
                           id="uan_number"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="UAN must be in 12 digits"
-                          pattern="\d{12}"
                           title="UAN Number must be 12 digits"
-                          required
                           onChange={(e) => setUan(e.target.value)}
                         />
                       </div>
@@ -630,7 +621,6 @@ const EmployeeDetails = () => {
                           id="account_number"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter Account Number"
-                          pattern="\d{9,18}"
                           title="Account Number must be between 9 to 18 digits"
                           required
                           onChange={(e) => setAccountNumber(e.target.value)}
@@ -649,7 +639,6 @@ const EmployeeDetails = () => {
                           id="bank_name"
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           placeholder="Enter Bank Name"
-                          required
                           onChange={(e) => setAccountName(e.target.value)}
                         />
                       </div>

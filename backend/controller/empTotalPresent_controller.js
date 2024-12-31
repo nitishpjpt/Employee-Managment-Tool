@@ -16,7 +16,7 @@ const getTotalPresentEmployees = async (req, res) => {
       },
     });
 
-    console.log(presentEmployeeCount); // Log the count of present employees
+    // console.log(presentEmployeeCount); // Log the count of present employees
 
     // Send the count as a response in JSON format
     return res.json({ presentCount: presentEmployeeCount });
@@ -44,7 +44,7 @@ const getTotalAbsentEmployees = async(req,res) => {
         },
         });
     
-        console.log(absentEmployeeCount); // Log the count of absent employees
+        // console.log(absentEmployeeCount); // Log the count of absent employees
     
         // Send the count as a response in JSON format
         return res.json({ absentCount: absentEmployeeCount });

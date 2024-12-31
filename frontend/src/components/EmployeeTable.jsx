@@ -3,6 +3,8 @@ import axios from "axios";
 import { IoEyeSharp } from "react-icons/io5";
 import { IoIosSettings } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EmployeeTable = () => {
   const [getallUser, setAllUser] = useState([]);
@@ -11,12 +13,39 @@ const EmployeeTable = () => {
   const getAllUserRegisterDetails = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/all/registerDetails`
       );
       setAllUser(response.data.data.user); // Update state with the user data
-      console.log(response.data.data.user);
     } catch (error) {
       console.log("Error fetching registered users:", error);
+    }
+  };
+
+  // Function to delete an employee
+  const deleteEmployee = async (employeeId) => {
+    try {
+      const response = await axios.delete(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/${employeeId}/delete`
+      );
+      if (response.status === 200) {
+        // Remove deleted employee from the state
+        setAllUser(getallUser.filter((user) => user._id !== employeeId));
+
+        toast.success("Employee deleted successfully!", {
+          position: "top-right",
+          autoClose: 1000,
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting employee:", error);
+      toast.error("Employee does not deleted. Please try again.", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     }
   };
 
@@ -73,9 +102,10 @@ const EmployeeTable = () => {
                   <td className="px-6 py-4">{user.employeeCode}</td>
 
                   <td className="px-6 py-4 flex justify-center gap-1 items-center py-8">
-                    <IoIosSettings className="text-blue-400" />
-                    <RiDeleteBin6Line className="text-red-500" />
-                    <IoEyeSharp className="text-blue-400" />
+                    <RiDeleteBin6Line
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => deleteEmployee(user._id)}
+                    />
                   </td>
                 </tr>
               ))
