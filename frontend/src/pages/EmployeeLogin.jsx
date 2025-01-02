@@ -9,6 +9,7 @@ const EmployeeLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState(null); // State for user's location
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Function to get user's location
@@ -46,6 +47,7 @@ const EmployeeLogin = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const userData = {
       email,
@@ -85,7 +87,7 @@ const EmployeeLogin = () => {
       // Show success toast and navigate to home page after it completes
       toast.success("Employee Login successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
         onClose: () => {
           navigate("/employee/home");
           window.location.reload(); // Ensure the page reloads after navigation
@@ -99,11 +101,11 @@ const EmployeeLogin = () => {
       }, 3100); // Slight delay beyond toast autoClose
     } catch (error) {
       console.error("Employee login failed:", error);
-
+      setLoading(false);
       // Show error toast
       toast.error("Employee login failed. Please try again.", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -147,7 +149,7 @@ const EmployeeLogin = () => {
               type="submit"
               className="bg-[#3F83F8] text-white font-semibold p-2 w-[20rem] mt-4"
             >
-              Login
+              {loading ? "Loading..." : "Login"}
             </button>
           </form>
         </div>

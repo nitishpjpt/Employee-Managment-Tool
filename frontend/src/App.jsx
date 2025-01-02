@@ -23,6 +23,7 @@ import { EmployeeProtectedRoute, ProtectedRoute } from "./pages/ProtectedRoute";
 import EmpLeavesChanges from "./components/EmpLeavesChanges";
 import EmpSalaryManagement from "./components/EmpSalaryManagment";
 import EmpDailyAttendence from "./components/EmpDailyAttendence";
+import Payroll from "./components/Payroll";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -197,6 +198,17 @@ const App = () => {
             />
           }
         ></Route>
+        <Route
+        path="/employee/payroll"
+        element={
+          <ProtectedRoute
+           element={<Payroll/>}
+           isAuthenticated={isAuthenticated}
+          />
+        }
+        >
+
+        </Route>
 
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />

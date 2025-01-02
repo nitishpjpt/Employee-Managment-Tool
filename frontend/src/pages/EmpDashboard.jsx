@@ -64,7 +64,7 @@ function EmpDashboard() {
       localStorage.removeItem("employeeLogin");
       toast.success("Employee logout successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
         onClose: () => {
           navigate("/employee/login"); // Navigate to login page
           setTimeout(() => {
@@ -267,7 +267,7 @@ function EmpDashboard() {
           </Toolbar>
         </Container>
       </AppBar>
-      <p>Active Time: {activeTime}</p>
+      {/* <p>Active Time: {activeTime}</p> */}
       <EmpActivityTracker />
     </div>
   );

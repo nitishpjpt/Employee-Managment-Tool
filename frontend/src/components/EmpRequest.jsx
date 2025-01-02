@@ -7,8 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 const EmpRequest = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [halfLeave, setHalfLeave] = useState(false);  // Store as boolean (checkbox)
-  const [fullLeave, setFullLeave] = useState("");  // Full leave reason (optional text)
+  const [halfLeave, setHalfLeave] = useState(false); // Store as boolean (checkbox)
+  const [fullLeave, setFullLeave] = useState(""); // Full leave reason (optional text)
   const [leaveType, setLeaveType] = useState("");
   const [username, setUserName] = useState("");
   const [employeeId, setEmployeeId] = useState("");
@@ -35,14 +35,19 @@ const EmpRequest = () => {
         console.warn("Employee ID is not set yet.");
         return;
       }
-      const url = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/leave/limits`;
+      const url = `${
+        import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+      }/api/v1/user/${employeeId}/leave/limits`;
       console.log("Fetching leave limits from URL:", url);
       try {
         const response = await axios.get(url);
         setLeaveLimits(response.data.leaveLimits);
         console.log("Leave limits fetched:", response.data);
       } catch (error) {
-        console.error("Error fetching leave limits:", error.response?.data || error.message);
+        console.error(
+          "Error fetching leave limits:",
+          error.response?.data || error.message
+        );
         toast.error("Failed to fetch leave limits", {
           position: "top-right",
           autoClose: 3000,
@@ -58,18 +63,24 @@ const EmpRequest = () => {
 
     // Check if half or full-day leaves exceed the limit
     if (halfLeave && leaveLimits.halfDayLeaves <= 0) {
-      toast.error(`You have exhausted your ${leaveLimits.halfDayLeaves} half-day leaves for this month.`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error(
+        `You have exhausted your ${leaveLimits.halfDayLeaves} half-day leaves for this month.`,
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
       return;
     }
 
     if (fullLeave && leaveLimits.fullDayLeaves <= 0) {
-      toast.error(`You have exhausted your ${leaveLimits.fullDayLeaves} full-day leaves for this month.`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error(
+        `You have exhausted your ${leaveLimits.fullDayLeaves} full-day leaves for this month.`,
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
       return;
     }
 
@@ -86,7 +97,9 @@ const EmpRequest = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/request/leave`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/request/leave`,
         leaveObj,
         {
           headers: {
@@ -98,13 +111,13 @@ const EmpRequest = () => {
       localStorage.setItem("reqLeave", JSON.stringify(response.data));
       toast.success("Leave request submitted successfully", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     } catch (error) {
       console.error("Error response:", error.response?.data || error.message);
       toast.error(
         error.response?.data?.message || "Request leave submission failed",
-        { position: "top-right", autoClose: 3000 }
+        { position: "top-right", autoClose: 1000 }
       );
     }
   };

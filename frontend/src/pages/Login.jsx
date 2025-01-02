@@ -10,9 +10,11 @@ const login = () => {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const userData = {
       username,
@@ -37,7 +39,7 @@ const login = () => {
 
       toast.success("Admin Login successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
         onClose: () => {
           navigate("/home");
           window.location.reload(); // Ensure the page reloads after navigation
@@ -51,9 +53,10 @@ const login = () => {
       }, 3100); // Slight delay to let the toast autoClose first
     } catch (error) {
       console.log("Admin login failed", error);
+      setLoading(false);
       toast.error("Admin login failed. Please try again.", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -97,7 +100,7 @@ const login = () => {
               type="submit"
               className="bg-[#3F83F8] text-white font-semibold p-2 w-[20rem] mt-4 rounded-lg"
             >
-              Login
+              {loading ? "Login user..." : "Login"}
             </button>
             <h1 className="mt-5">
               If you don't have account?{" "}

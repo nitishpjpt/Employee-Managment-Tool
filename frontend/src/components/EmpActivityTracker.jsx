@@ -22,7 +22,10 @@ const EmpActivityTracker = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setEmployeeId(parsedUser.data.userResponse._id);
-      console.log("Employee ID from localStorage:", parsedUser.data.userResponse._id);
+      console.log(
+        "Employee ID from localStorage:",
+        parsedUser.data.userResponse._id
+      );
     }
   }, []);
 
@@ -33,10 +36,16 @@ const EmpActivityTracker = () => {
     let inactivityTimer = null; // Timer to track inactivity
 
     const sendActivityData = async (timeInMinutes, inactiveTimeInMinutes) => {
-      console.log("Sending activity data:", timeInMinutes, inactiveTimeInMinutes); // Debugging log
+      console.log(
+        "Sending activity data:",
+        timeInMinutes,
+        inactiveTimeInMinutes
+      ); // Debugging log
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/${employeeId}/updateActiveTime`,
+          `${
+            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+          }/api/v1/user/employee/${employeeId}/updateActiveTime`,
           { activeTime: timeInMinutes, inactiveTime: inactiveTimeInMinutes }
         );
         console.log("Activity data sent successfully", response); // Debugging log
@@ -104,7 +113,7 @@ const EmpActivityTracker = () => {
     <div>
       {/* <h2>Employee Activity Tracker</h2>
       <p>Active Time: {formatTime(activeTime)}</p> */}
-      <p>Status: {isInactive ? "Inactive" : "Active"}</p>
+      {/* <p>Status: {isInactive ? "Inactive" : "Active"}</p> */}
       {/* <p>Inactive Time: {formatTime(inactiveTime)}</p> */}
       {/* <p>Formatted Active Time: {formattedActiveTime}</p>
       <p>Formatted Inactive Time: {formattedInactiveTime}</p> */}

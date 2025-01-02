@@ -16,7 +16,7 @@ const generateAccessToken = async (userId) => {
 };
 
 const employeeRegister = async (req, res) => {
-  console.log("Request Body:", req.body);
+  
 
   const {
     firstName,
@@ -32,8 +32,10 @@ const employeeRegister = async (req, res) => {
     date,
     timezone,
     shift,
+    salary
   } = req.body;
 
+  console.log("Request Body:", req.body);
   // check if user already register in database
   const existingUser = await Employee.findOne({
     $or: [{ email, password, phnNumber }],
@@ -67,8 +69,10 @@ const employeeRegister = async (req, res) => {
     date,
     timezone,
     shift,
+    salary
   });
 
+  console.log("Employee:", employee);
   // if employee does not register then throw a error
   if (!employee) {
     throw new ApiError(400, "Employee does not register");

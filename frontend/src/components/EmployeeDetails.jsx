@@ -36,6 +36,7 @@ const EmployeeDetails = () => {
   const [timezone, setTimezone] = useState("");
   const [shift, setShift] = useState("");
   const [employee, setEmployee] = useState("");
+  const [salary, setSalary] = useState("");
   const [user, setUser] = useState(null);
   const [allUser, setAllUser] = useState("");
   // state for the background verification form
@@ -64,7 +65,7 @@ const EmployeeDetails = () => {
     role,
     department,
     date,
-
+    salary,
     employee,
   };
   // backgroundVerification form object
@@ -112,11 +113,15 @@ const EmployeeDetails = () => {
       toast.success("User registered successfully!", {
         position: "top-right",
         autoClose: 1000,
+        onClose: () => {
+          window.location.reload(); // Ensure the page reloads after navigation
+        },
       });
+      setRegisterModal(false);
     } catch (error) {
       toast.error("User  does not register", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -177,12 +182,17 @@ const EmployeeDetails = () => {
         {
           position: "top-right",
           autoClose: 1000,
+          onClose: () => {
+            window.location.reload(); // Ensure the page reloads after navigation
+          },
         }
       );
+      // Ensures page reloads after employee details
+      setBulkRegisterModal(false);
     } catch (error) {
       toast.error("Employee background verification details does not added", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -213,11 +223,15 @@ const EmployeeDetails = () => {
       toast.success("Employee bank details added successfully", {
         position: "top-right",
         autoClose: 1000,
+        onClose: () => {
+          window.location.reload(); // Ensure the page reloads after navigation
+        },
       });
+      setBulkUpdateModel(false);
     } catch (error) {
       toast.error("Employee bank details does not added", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -398,6 +412,22 @@ const EmployeeDetails = () => {
                           placeholder="Enter your department"
                           required
                           onChange={(e) => setDepartment(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label
+                          for="visitors"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >
+                          Salary <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id="visitors"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="Enter your department"
+                          required
+                          onChange={(e) => setSalary(e.target.value)}
                         />
                       </div>
                       <div>

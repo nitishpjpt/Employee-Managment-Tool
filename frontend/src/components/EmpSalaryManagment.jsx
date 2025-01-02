@@ -5,97 +5,138 @@ import { saveAs } from "file-saver";
 import MainDashboard from "../pages/MainDashboard.jsx";
 
 const EmpSalaryManagement = () => {
-  const [allUsers, setAllUsers] = useState([]); // Use allUsers for the data
+  const [allUsers, setAllUsers] = useState([]);
   const [employeeData, setEmployeeData] = useState({});
   const [updatedSalaries, setUpdatedSalaries] = useState([]);
-  const [companyTotalActiveTime, setCompanyTotalActiveTime] = useState(0); // New state for company total active time
+  const [companyTotalActiveHours, setCompanyTotalActiveHours] = useState(10); // Default to 10 hours
 
-  // Fetch all registered employees
-  const fetchEmployees = async () => {
-    try {
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-        }/api/v1/user/employee/all/registerDetails`
-      );
-      setAllUsers(response.data.data.user || []); // Corrected: Set data to allUsers state
-      console.log(response.data.data.user || []);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
+  // Helper function to convert formatted time (e.g., "5hr 30min") to minutes
+  const convertFormattedTimeToMinutes = (formattedTime) => {
+    if (!formattedTime) return 0;
+    const [hours, minutes] = formattedTime
+      .split(" ")
+      .map((t) => parseInt(t.replace(/\D/g, ""), 10) || 0);
+    return hours * 60 + minutes;
   };
 
+  // Helper function to calculate salary
+  const calculateSalary = (
+    wage,
+    presentDays,
+    activeMinutes,
+    companyActiveMinutes
+  ) => {
+    if (!wage || !presentDays || !activeMinutes || !companyActiveMinutes)
+      return 0;
+    return parseFloat(
+      ((wage * presentDays * activeMinutes) / companyActiveMinutes).toFixed(2)
+    );
+  };
+
+  // Fetch all employees and initialize data
   useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.post(
+          `${
+            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+          }/api/v1/user/employee/all/registerDetails`
+        );
+        const users = response.data.data.user || [];
+        setAllUsers(users);
+
+        const initialEmployeeData = {};
+        users.forEach((user) => {
+          const activeMinutes = convertFormattedTimeToMinutes(
+            user.formattedTotalActiveTime
+          );
+          initialEmployeeData[user._id] = {
+            wage: user.salary || 0,
+            presentDays:
+              user.attendance?.filter((att) => att.status === "Present")
+                .length || 0,
+            activeMinutes,
+          };
+        });
+        setEmployeeData(initialEmployeeData);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
     fetchEmployees();
   }, []);
 
-  // Calculate salary based on wages, present days, and active time
-  const calculateSalary = (wage, presentDays, activeTimeEmployee, activeTimeCompany) => {
-    if (activeTimeCompany > 0) {
-      return (wage * presentDays) * (activeTimeEmployee / activeTimeCompany); // Adjust salary based on active time
-    }
-    return 0; // Return 0 if no company active time
-  };
-
-  // Update the wage, active time, or present days of an employee
+  // Handle input changes for employees
   const handleChange = (e, userId, field) => {
     const { value } = e.target;
     setEmployeeData({
       ...employeeData,
       [userId]: {
         ...employeeData[userId],
-        [field]: value,
+        [field]: field === "wage" ? parseFloat(value) : parseInt(value, 10),
       },
     });
   };
 
-  // Update company total active time
-  const handleCompanyTotalTimeChange = (e) => {
-    setCompanyTotalActiveTime(e.target.value);
+  // Handle company active hours change
+  const handleCompanyTotalHoursChange = (e) => {
+    setCompanyTotalActiveHours(parseFloat(e.target.value));
   };
 
-  // Generate updated salary data for each employee
+  // Update salary for an employee
   const handleSalaryUpdate = (userId) => {
     const user = allUsers.find((user) => user._id === userId);
-    const wage = parseFloat(employeeData[userId]?.wage || 0);
-    const presentDays = parseInt(employeeData[userId]?.presentDays || 0);
-    const activeTimeEmployee = parseInt(employeeData[userId]?.activeTime || 0); // Get active time for the employee
+    const { wage, presentDays, activeMinutes } = employeeData[userId] || {};
+    const companyActiveMinutes = companyTotalActiveHours * 60;
 
-    const salary = calculateSalary(wage, presentDays, activeTimeEmployee, companyTotalActiveTime);
+    const salary = calculateSalary(
+      wage,
+      presentDays,
+      activeMinutes,
+      companyActiveMinutes
+    );
 
     setUpdatedSalaries((prevData) => [
-      ...prevData,
+      ...prevData.filter((entry) => entry.employeeCode !== user.employeeCode),
       {
         name: user.firstName,
         employeeCode: user.employeeCode,
-        wage: wage,
-        presentDays: presentDays,
-        activeTime: activeTimeEmployee,
-        salary: salary,
+        wage,
+        presentDays,
+        activeTime: activeMinutes,
+        salary,
       },
     ]);
   };
 
-  // Export salary data to CSV
+  // Export updated salaries to CSV
   const exportToCSV = () => {
     const data = updatedSalaries.map((entry) => ({
       Name: entry.name,
       Emp_Code: entry.employeeCode,
       Wage: entry.wage,
       Present_Days: entry.presentDays,
-      Active_Time: entry.activeTime,
+      Active_Time: `${Math.floor(entry.activeTime / 60)}hr ${
+        entry.activeTime % 60
+      }min`,
       Salary: entry.salary,
     }));
 
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
+    const csvContent = [
       [
-        ["Name", "Emp_Code", "Wage", "Present_Days", "Active_Time", "Salary"].join(","),
-        ...data.map((item) => Object.values(item).join(",")),
-      ].join("\n");
+        "Name",
+        "Emp_Code",
+        "Wage",
+        "Present_Days",
+        "Active_Time",
+        "Salary",
+      ].join(","),
+      ...data.map((item) => Object.values(item).join(",")),
+    ].join("\n");
 
-    const encodedUri = encodeURI(csvContent);
-    saveAs(encodedUri, "salary_report.csv");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "salary_report.csv");
   };
 
   return (
@@ -145,25 +186,19 @@ const EmpSalaryManagement = () => {
                     />
                   </td>
                   <td className="px-6 py-4">
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      name="activeTime"
-                      value={employeeData[user._id]?.activeTime || ""}
-                      onChange={(e) => handleChange(e, user._id, "activeTime")}
-                    />
+                    {`${Math.floor(
+                      (employeeData[user._id]?.activeMinutes || 0) / 60
+                    )}hr ${
+                      (employeeData[user._id]?.activeMinutes || 0) % 60
+                    }min`}
                   </td>
                   <td className="px-6 py-4">
-                    {employeeData[user._id]?.wage &&
-                    employeeData[user._id]?.presentDays &&
-                    employeeData[user._id]?.activeTime
-                      ? calculateSalary(
-                          parseFloat(employeeData[user._id]?.wage),
-                          parseInt(employeeData[user._id]?.presentDays),
-                          parseInt(employeeData[user._id]?.activeTime),
-                          companyTotalActiveTime
-                        )
-                      : "N/A"}
+                    {calculateSalary(
+                      employeeData[user._id]?.wage,
+                      employeeData[user._id]?.presentDays,
+                      employeeData[user._id]?.activeMinutes,
+                      companyTotalActiveHours * 60
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <Button
@@ -185,7 +220,6 @@ const EmpSalaryManagement = () => {
             )}
           </tbody>
         </table>
-
         <div className="mt-4 text-center">
           <Button
             variant="contained"
@@ -196,14 +230,12 @@ const EmpSalaryManagement = () => {
             Download Salary Report
           </Button>
         </div>
-
-        {/* Adjust Company Active Time */}
         <div className="mt-4 text-center">
           <TextField
-            label="Adjust Company Total Active Time"
+            label="Company Total Active Hours"
             type="number"
-            value={companyTotalActiveTime}
-            onChange={handleCompanyTotalTimeChange}
+            value={companyTotalActiveHours}
+            onChange={handleCompanyTotalHoursChange}
             variant="outlined"
             size="small"
           />

@@ -99,7 +99,9 @@ const employeeSchema = new mongoose.Schema(
     avtar: {
       type: String,
     },
-
+    salary: {
+      type: Number,
+    },
     lastLoginTime: {
       type: String, // Stores the most recent login time (HH:mm:ss format)
       default: null,
@@ -109,6 +111,8 @@ const employeeSchema = new mongoose.Schema(
     logoutTime: { type: String },
     totalActiveTime: { type: Number, default: 0 }, // Total active time in minutes
     totalInactiveTime: { type: Number, default: 0 },
+    formattedTotalInactiveTime: { type: String }, // Store formatted total inactive time
+    formattedTotalActiveTime: { type: String }, // Store formatted total active time
     formattedInactiveTime: { type: String }, // Store formatted inactive time
     formattedActiveTime: { type: String }, // Store formatted time as a string
     dailyActivity: [

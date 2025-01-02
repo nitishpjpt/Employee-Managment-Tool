@@ -39,6 +39,7 @@ import axios from "axios";
 import { FcMoneyTransfer } from "react-icons/fc";
 import { MdCoPresent } from "react-icons/md";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { TbReportMoney } from "react-icons/tb";
 
 const drawerWidth = 240;
 
@@ -136,8 +137,7 @@ export default function Dashboard() {
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
           }/api/v1/user/employee/attendance/present/count`
-        );
-       ; // Log the response here
+        ); // Log the response here
         setPresentCount(response.data.presentCount);
       } catch (err) {
         console.error("Error fetching present employees:", err);
@@ -213,7 +213,7 @@ export default function Dashboard() {
         localStorage.removeItem("userLogin");
         toast.success("Admin logout successfully!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
           onClose: () => {
             navigate("/login"); // Navigate to login page
             setTimeout(() => {
@@ -269,7 +269,7 @@ export default function Dashboard() {
       icon: <RiListSettingsLine className="text-3xl text-[#233D7A]" />,
       path: "/reports",
     },
-  
+
     {
       text: "Settings",
       icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
@@ -289,6 +289,11 @@ export default function Dashboard() {
       text: "Daily Attendance",
       icon: <MdCoPresent className="text-3xl text-[#233D7A]" />,
       path: "/employee/daily/attendance",
+    },
+    {
+      text: "Payroll",
+      icon: <TbReportMoney className="text-3xl text-[#233D7A]" />,
+      path: "/employee/payroll",
     },
   ];
 

@@ -64,8 +64,8 @@ const updateActiveTime = async (req, res) => {
         date: currentDate,
         activeTime: activeTime, // Set the initial active time for the day
         inactiveTime: inactiveTime, // Set the initial inactive time for the day
-        formattedActiveTime: formatTime(activeTime),
-        formattedInactiveTime: formatTime(inactiveTime),
+        formattedActiveTime: formatTime(activeTime), // Format the active time
+        formattedInactiveTime: formatTime(inactiveTime), // Format the inactive time
       };
 
       // Assign the new activity to dailyActivity
@@ -97,6 +97,10 @@ const updateActiveTime = async (req, res) => {
     employee.totalActivityDays = totalActivityDays;
     employee.totalInactivityDays = totalInactivityDays;
 
+    // Store the formatted total active and inactive times
+    employee.formattedTotalActiveTime = formatTime(totalActiveTime);
+    employee.formattedTotalInactiveTime = formatTime(totalInactiveTime);
+
     // Save the employee document
     await employee.save();
 
@@ -106,8 +110,8 @@ const updateActiveTime = async (req, res) => {
       totalInactiveTime: employee.totalInactiveTime,
       totalActivityDays: employee.totalActivityDays,
       totalInactivityDays: employee.totalInactivityDays,
-      formattedActiveTime: formatTime(employee.totalActiveTime),
-      formattedInactiveTime: formatTime(employee.totalInactiveTime),
+      formattedActiveTime: employee.formattedTotalActiveTime,
+      formattedInactiveTime: employee.formattedTotalInactiveTime,
       dailyActivity: employee.dailyActivity,
     });
   } catch (error) {
@@ -122,7 +126,6 @@ const formatTime = (timeInMinutes) => {
   const minutes = timeInMinutes % 60;
   return `${hours}hr ${minutes}min`;
 };
-
 
 
 export { getActiveTime, updateActiveTime };
