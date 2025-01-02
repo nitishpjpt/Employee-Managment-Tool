@@ -55,12 +55,12 @@ const Projects = () => {
       //handle the response
       toast.success("Project Added Successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     } catch (error) {
       toast.error("Project does not creatd", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -225,8 +225,8 @@ const Projects = () => {
       {/*--------Table-------------*/}
       <div>
         <div class="relative overflow-x-auto ml-[15rem] pt-10">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-6 py-3">
                   Project Name
@@ -244,9 +244,6 @@ const Projects = () => {
                 <th scope="col" class="px-6 py-3">
                   End Date
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Total Time
-                </th>
 
                 <th scope="col" class="px-6 py-3">
                   Action
@@ -256,7 +253,7 @@ const Projects = () => {
             {projectDetails.length > 0 ? (
               projectDetails.map((item, index) => (
                 <tbody key={index}>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <tr class=" bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -267,18 +264,10 @@ const Projects = () => {
                     <td class="px-6 py-4">{item.managerName}</td>
                     <td class="px-6 py-4">{item.startDate || "not found"} </td>
                     <td class="px-6 py-4">{item.startDate || "not found"}</td>
-                    <td class="px-6 py-4">404</td>
 
-                    <td className=" text-center flex justify-center gap-1 items-center">
-                      <IoIosSettings className="text-blue-400" />
+                    <td className="px-6 py-4 text-center">
                       <RiDeleteBin6Line className="text-red-500" />
-                      <IoEyeSharp className="text-blue-400" />
                     </td>
-
-                    <td
-                      class="px-6 py-4"
-                      className="flex justify-center gap-1 items-center py-8"
-                    ></td>
                   </tr>
                 </tbody>
               ))

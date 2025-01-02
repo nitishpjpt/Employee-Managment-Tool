@@ -47,6 +47,7 @@ userRouter.route("/employee/attendance/present/count").get(getTotalPresentEmploy
 userRouter.route("/employee/attendance/absent/count").get(getTotalAbsentEmployees);
 userRouter.route("/employee/:employeeId/delete").delete(deleteEmployee);
 userRouter.route("/employee/daily/attendance").get(getTodayAttendance);
+userRouter.route("/projectDetails/:id").delete(deleteEmployee)
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);

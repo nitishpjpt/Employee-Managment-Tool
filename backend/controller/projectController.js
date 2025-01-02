@@ -38,6 +38,23 @@ const projectDetails = async (req, res) => {
     .json(new ApiResponse(201, { project }, "Project Created Successfully"));
 };
 
+// controller for delete all project details
+const deleteProject  = async(req,res) => {
+  try {
+    const { id } = req.params;
+    const deletedProject = await Project.findByIdAndDelete(id);
+
+    if (!deletedProject) {
+      return res.status(404).json({ success: false, message: "Project not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Project deleted successfully" },deletedProject);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to delete project", error });
+  }
+}
+
+
 // count total  project
 const getAllProject = async (req, res) => {
   const projectDetails = await Project.find();
@@ -62,4 +79,4 @@ const getAllProject = async (req, res) => {
   );
 };
 
-export { projectDetails, getAllProject };
+export { projectDetails, getAllProject ,deleteProject};

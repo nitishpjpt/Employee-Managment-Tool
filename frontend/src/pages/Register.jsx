@@ -54,24 +54,17 @@ const Register = () => {
       // Store user data in local storage
       localStorage.setItem("registerUser", JSON.stringify(response.data));
 
-      toast.success("User registered successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        onClose: () => {
-          navigate("/login");
-        },
-      });
+      toast.success("User registered successfully!");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
-      toast.error("User registration failed", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.error("User registration failed");
     }
   };
 
   return (
     <>
-      <ToastContainer />
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
         <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6 sm:p-8">
           <div className="text-center mb-6">

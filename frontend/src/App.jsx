@@ -24,6 +24,8 @@ import EmpLeavesChanges from "./components/EmpLeavesChanges";
 import EmpSalaryManagement from "./components/EmpSalaryManagment";
 import EmpDailyAttendence from "./components/EmpDailyAttendence";
 import Payroll from "./components/Payroll";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -70,6 +72,18 @@ const App = () => {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         {/* Admin Protected Routes */}
         <Route
@@ -198,17 +212,6 @@ const App = () => {
             />
           }
         ></Route>
-        <Route
-        path="/employee/payroll"
-        element={
-          <ProtectedRoute
-           element={<Payroll/>}
-           isAuthenticated={isAuthenticated}
-          />
-        }
-        >
-
-        </Route>
 
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />

@@ -110,13 +110,7 @@ const EmployeeDetails = () => {
       );
 
       //handle the response
-      toast.success("User registered successfully!", {
-        position: "top-right",
-        autoClose: 1000,
-        onClose: () => {
-          window.location.reload(); // Ensure the page reloads after navigation
-        },
-      });
+      toast.success("User registered successfully!");
       setRegisterModal(false);
     } catch (error) {
       toast.error("User  does not register", {
@@ -178,22 +172,12 @@ const EmployeeDetails = () => {
       );
       console.log(response);
       toast.success(
-        "Employee background verification details added successfully",
-        {
-          position: "top-right",
-          autoClose: 1000,
-          onClose: () => {
-            window.location.reload(); // Ensure the page reloads after navigation
-          },
-        }
+        "Employee background verification details added successfully"
       );
       // Ensures page reloads after employee details
       setBulkRegisterModal(false);
     } catch (error) {
-      toast.error("Employee background verification details does not added", {
-        position: "top-right",
-        autoClose: 1000,
-      });
+      toast.error("Employee background verification details does not added");
     }
   };
   // bank verfication handler
@@ -220,24 +204,15 @@ const EmployeeDetails = () => {
         }
       );
       console.log(response);
-      toast.success("Employee bank details added successfully", {
-        position: "top-right",
-        autoClose: 1000,
-        onClose: () => {
-          window.location.reload(); // Ensure the page reloads after navigation
-        },
-      });
+      toast.success("Employee bank details added successfully");
       setBulkUpdateModel(false);
     } catch (error) {
-      toast.error("Employee bank details does not added", {
-        position: "top-right",
-        autoClose: 1000,
-      });
+      toast.error("Employee bank details does not added");
     }
   };
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <MainDashboard />
       <div>
         <div className="w-[100vw]">
