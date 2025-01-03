@@ -53,51 +53,81 @@ const login = () => {
 
   return (
     <>
-      <div className="pt-[10rem] h-[100vh] bg-[#F3F4F6] ">
-        <div className="max-w-md  mx-auto p-8 bg-white rounded-lg shadow-md">
-          <h1 className="text-center p-4 font-bold text-2xl">Admin Login</h1>
-          <form onSubmit={submitHandler} className="p-4 ">
-            <label for="username" className="font-semibold">
-              Username/email
-            </label>
-            <br />
-            <input
-              className="border p-2 w-[20rem] mt-4 rounded-lg"
-              type="text"
-              id="username"
-              name="username"
-              required
-              onChange={(e) =>
-                setUserName(e.target.value) || setEmail(e.target.value)
-              }
+      <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
+        <div className="flex flex-col lg:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
+          {/* Left Section with Illustration */}
+          <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">
+            {/* Decorative Circle */}
+            <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
+            <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+            <img
+              src="https://www.ubitechsolutions.com/_next/image?url=%2Fimages%2FhrmAutomationIcon.png&w=1920&q=75"
+              alt="Login Illustration"
+              className="w-3/4 object-contain"
             />
-            <br />
-            <label className="pt-2" for="password">
-              Password:
-            </label>
-            <br />
-            <input
-              className="border p-2 w-[20rem] rounded-lg"
-              type="password"
-              id="password"
-              name="password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <br />
-            <button
-              type="submit"
-              className="bg-[#3F83F8] text-white font-semibold p-2 w-[20rem] mt-4 rounded-lg"
-            >
-              {loading ? "Login user..." : "Login"}
-            </button>
-            <h1 className="mt-5">
-              If you don't have account?{" "}
-              <span className="text-blue-600">
-                <Link to="/Register">Register</Link>
-              </span>
+          </div>
+
+          {/* Right Section with Form */}
+          <div className="flex flex-col justify-center p-8 lg:w-1/2">
+            <h1 className="text-3xl font-bold text-gray-800 text-center mb-4">
+              Welcome Back!
             </h1>
-          </form>
+            <p className="text-gray-500 text-center mb-6">
+              Please login to access your admin account.
+            </p>
+            <form onSubmit={submitHandler} className="space-y-6">
+              {/* Username Field */}
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  Email
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  required
+                  placeholder="Enter your email/username"
+                  className="mt-2 block w-full px-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              {/* Password Field */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  placeholder="Enter your password"
+                  className="mt-2 block w-full px-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full px-4 py-3 text-white font-bold bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg shadow-lg hover:from-indigo-600 hover:to-blue-600 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </form>
+            <div className="text-center text-sm text-gray-500 mt-6">
+              <a href="#" className="text-indigo-600 hover:underline">
+                Forgot Password?
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </>
