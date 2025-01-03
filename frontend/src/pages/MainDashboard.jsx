@@ -165,6 +165,7 @@ export default function Dashboard() {
     getAbsentEmployee();
   }, []);
 
+  
   //toggle drop down
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

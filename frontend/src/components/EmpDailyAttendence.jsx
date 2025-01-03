@@ -16,6 +16,7 @@ const EmpDailyAttendance = () => {
         }/api/v1/user/employee/daily/attendance?date=${today}`
       );
       setDailyAttendance(response.data.attendance); // Store attendance data
+      console.log(response.data.attendance);
       setLoading(false);
     } catch (error) {
       setError("Error fetching daily attendance.");
