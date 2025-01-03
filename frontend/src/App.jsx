@@ -26,6 +26,8 @@ import EmpDailyAttendence from "./components/EmpDailyAttendence";
 import Payroll from "./components/Payroll";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EmpForgotPassword from "./pages/EmpForgotPassword";
+import EmpResetPassword from "./pages/EmpResetPassword";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -256,6 +258,15 @@ const App = () => {
             />
           }
         />
+
+        <Route
+          path="/employee/forgot/password"
+          element={<EmpForgotPassword />}
+        ></Route>
+        <Route
+          path="/employee/reset/password"
+          element={<EmpResetPassword />}
+        ></Route>
       </Routes>
     </div>
   );
