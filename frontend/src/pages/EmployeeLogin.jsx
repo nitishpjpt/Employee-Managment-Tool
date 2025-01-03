@@ -184,7 +184,7 @@ const EmployeeLogin = () => {
             </form>
             <div className="text-center text-sm text-gray-500 mt-6">
               <button>
-              <Link to="/employee/forgot/password">Forgot Password?</Link>
+                <Link to="/employee/forgot/password">Forgot Password?</Link>
               </button>
             </div>
           </div>

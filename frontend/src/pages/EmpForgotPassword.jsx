@@ -87,7 +87,7 @@ const EmpForgotPassword = () => {
             <p className="text-gray-500 text-center mb-6">
               Please enter your email to reset the password.
             </p>
-            <form className="space-y-6">
+            <form onSubmit={submitHandler} className="space-y-6">
               {/* Username Field */}
               <div>
                 <label

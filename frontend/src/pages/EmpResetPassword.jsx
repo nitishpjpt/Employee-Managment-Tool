@@ -3,36 +3,38 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { useLocation } from "react-router-dom";
+import {useNavigate} from "react-router-dom"
 
 const EmpResetPassword = () => {
-  // const location = useLocation();
-  // const history = useHistory();
-  // const [newPassword, setNewPassword] = useState("");
-  // const [message, setMessage] = useState("");
+  const location = useLocation();
+  const navigate= useNavigate();
+  const [newPassword, setNewPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-  // const params = new URLSearchParams(location.search);
-  // const token = params.get("token");
-  // const email = params.get("email");
+  const params = new URLSearchParams(location.search);
+  const token = params.get("token");
+  const email = params.get("email");
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post(
-  //       `${
-  //         import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-  //       }/api/v1/user/employee/reset/password`,
-  //       {
-  //         token,
-  //         email,
-  //         newPassword,
-  //       }
-  //     );
-  //     setMessage(response.data.message);
-  //     history.push("/login"); // Redirect to login page after success
-  //   } catch (error) {
-  //     setMessage("Error resetting password.");
-  //   }
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/reset/password`,
+        {
+          token,
+          email,
+          newPassword,
+        }
+      );
+      setMessage(response.data.message);
+      navigate("/login"); // Redirect to login page after success
+    } catch (error) {
+      setMessage("Error resetting password.");
+    }
+  };
   return (
     <>
       <ToastContainer />
@@ -58,7 +60,7 @@ const EmpResetPassword = () => {
             <p className="text-gray-500 text-center mb-6">
               Please enter your new password to reset the password.
             </p>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Username Field */}
               <div>
                 <label

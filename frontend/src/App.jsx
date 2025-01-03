@@ -92,7 +92,7 @@ const App = () => {
           path="/"
           element={
             <ProtectedRoute
-              element={<MainDashboard />}
+              element={<FirstPage />}
               isAuthenticated={isAuthenticated}
             />
           }
