@@ -34,18 +34,13 @@ const userRegister = async (req, res) => {
     const { username, email, password, firstName, lastName, contactId } =
       req.body;
 
-    if (
-      [username, email, password, contactId].some(
-        (field) => !field || !field.trim()
-      )
-    ) {
+    if ([username, email, password].some((field) => !field || !field.trim())) {
       throw new ApiError(409, "User details are incomplete.");
     }
 
     const existingUser = await User.findOne({
-      $or: [{ username }, { email }, { contactId }],
+      $or: [{ username }, { email }],
     });
-   
 
     if (existingUser) {
       throw new ApiError(409, "User with these details already exists.");
@@ -59,7 +54,7 @@ const userRegister = async (req, res) => {
       firstName,
       lastName,
     });
-   console.log("User:",user);
+    console.log("User:", user);
     if (!user) {
       throw new ApiError(500, "User could not be created. Please try again.");
     }
@@ -89,7 +84,6 @@ const userLogin = async (req, res) => {
 
     const { username, email, password } = req.body;
 
-
     if ((!username && !email) || !password?.trim()) {
       throw new ApiError(
         401,
@@ -111,9 +105,9 @@ const userLogin = async (req, res) => {
     if (!isValidPassword) {
       throw new ApiError(401, "Invalid password. Please try again.");
     }
-      
+
     const { accessToken } = await generateAccessToken(existingUser._id);
-      
+
     const userResponse = await User.findById(existingUser._id).select(
       "-password -accessToken"
     );
@@ -145,7 +139,7 @@ const userLogout = async (req, res) => {
   try {
     // Check if the accessToken cookie is already missing (optional, depending on your logic)
     const token = req.cookies.accessToken;
-    console.log("backend token:",token);
+    console.log("backend token:", token);
 
     if (!token) {
       return res
@@ -163,12 +157,8 @@ const userLogout = async (req, res) => {
       })
       .json(new ApiResponse(200, null, "User logged out successfully"));
   } catch (error) {
-    res
-      .status(500)
-      .json(new ApiResponse(500, null, "Failed to log out user."));
+    res.status(500).json(new ApiResponse(500, null, "Failed to log out user."));
   }
 };
 
-
-
-export { userRegister, userLogin ,userLogout };
+export { userRegister, userLogin, userLogout };

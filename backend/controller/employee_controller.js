@@ -16,8 +16,6 @@ const generateAccessToken = async (userId) => {
 };
 
 const employeeRegister = async (req, res) => {
-  
-
   const {
     firstName,
     lastName,
@@ -32,7 +30,7 @@ const employeeRegister = async (req, res) => {
     date,
     timezone,
     shift,
-    salary
+    salary,
   } = req.body;
 
   console.log("Request Body:", req.body);
@@ -69,7 +67,7 @@ const employeeRegister = async (req, res) => {
     date,
     timezone,
     shift,
-    salary
+    salary,
   });
 
   console.log("Employee:", employee);
@@ -199,7 +197,6 @@ const employeeLogin = async (req, res) => {
       .json({ message: error.message || "Internal Server Error" });
   }
 };
-
 
 const employeeLogout = async (req, res) => {
   try {

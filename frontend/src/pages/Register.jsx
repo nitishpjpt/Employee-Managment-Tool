@@ -15,9 +15,11 @@ const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [contactId, setContactId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Make sure passwords match
     if (password !== confirmPassword) {
@@ -60,13 +62,14 @@ const Register = () => {
       }, 2000);
     } catch (error) {
       toast.error("User registration failed");
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-        <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6 sm:p-8">
+      <div className="min-h-screen bg-[#EAF1FF] flex items-center justify-center px-4">
+        <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-gray-800">
               Deepnap Softech
@@ -189,24 +192,9 @@ const Register = () => {
                   className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
-                <button
-                  type="button"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Send Code
-                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                required
-              />
-              <label className="text-gray-600 text-sm">
-                This is my WhatsApp number as well.
-              </label>
-            </div>
+
             <div>
               <label className="block text-gray-700 font-medium mb-1">
                 Preferred Contact ID
@@ -217,14 +205,13 @@ const Register = () => {
                 name="contactId"
                 onChange={(e) => setContactId(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600"
             >
-              Register
+              {loading ? "Registering..." : "Register"}
             </button>
           </form>
         </div>

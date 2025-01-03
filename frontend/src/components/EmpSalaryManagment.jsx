@@ -4,33 +4,44 @@ import { Button, TextField } from "@mui/material";
 import { saveAs } from "file-saver";
 import MainDashboard from "../pages/MainDashboard.jsx";
 
+// Function to calculate the number of days in the current month
+const getDaysInMonth = () => {
+  const date = new Date();
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(); // Get the last date of the current month
+};
+
 const EmpSalaryManagement = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [employeeData, setEmployeeData] = useState({});
   const [updatedSalaries, setUpdatedSalaries] = useState([]);
-  const [companyTotalActiveHours, setCompanyTotalActiveHours] = useState(10); // Default to 10 hours
+  const [companyTotalActiveHours, setCompanyTotalActiveHours] = useState(10); // Default to 10 hours per day
 
-  // Helper function to convert formatted time (e.g., "5hr 30min") to minutes
-  const convertFormattedTimeToMinutes = (formattedTime) => {
-    if (!formattedTime) return 0;
-    const [hours, minutes] = formattedTime
-      .split(" ")
-      .map((t) => parseInt(t.replace(/\D/g, ""), 10) || 0);
-    return hours * 60 + minutes;
-  };
-
-  // Helper function to calculate salary
+  // Calculate salary using actual days in the month
   const calculateSalary = (
-    wage,
+    monthlySalary,
     presentDays,
     activeMinutes,
     companyActiveMinutes
   ) => {
-    if (!wage || !presentDays || !activeMinutes || !companyActiveMinutes)
+    if (
+      !monthlySalary ||
+      !presentDays ||
+      !activeMinutes ||
+      !companyActiveMinutes
+    )
       return 0;
-    return parseFloat(
-      ((wage * presentDays * activeMinutes) / companyActiveMinutes).toFixed(2)
-    );
+
+    // Get the actual number of days in the current month
+    const totalDaysInMonth = getDaysInMonth();
+
+    // Calculate daily salary based on the actual days in the month
+    const dailySalary = monthlySalary / totalDaysInMonth;
+
+    // Calculate hourly salary (assuming 8 hours of work per day)
+    const hourlySalary = dailySalary / 10;
+
+    // Calculate the total salary based on active minutes worked (in hours)
+    return parseFloat((hourlySalary * (activeMinutes / 60)).toFixed(2));
   };
 
   // Fetch all employees and initialize data
@@ -51,7 +62,7 @@ const EmpSalaryManagement = () => {
             user.formattedTotalActiveTime
           );
           initialEmployeeData[user._id] = {
-            wage: user.salary || 0,
+            monthlySalary: user.salary || 10000, // Default to 10,000 if no salary
             presentDays:
               user.attendance?.filter((att) => att.status === "Present")
                 .length || 0,
@@ -67,15 +78,51 @@ const EmpSalaryManagement = () => {
     fetchEmployees();
   }, []);
 
+  // Helper function to convert formatted time (e.g., "5hr 30min") to minutes
+  const convertFormattedTimeToMinutes = (formattedTime) => {
+    if (!formattedTime) return 0;
+    const [hours, minutes] = formattedTime
+      .split(" ")
+      .map((t) => parseInt(t.replace(/\D/g, ""), 10) || 0);
+    return hours * 60 + minutes;
+  };
+
   // Handle input changes for employees
   const handleChange = (e, userId, field) => {
     const { value } = e.target;
-    setEmployeeData({
-      ...employeeData,
-      [userId]: {
-        ...employeeData[userId],
-        [field]: field === "wage" ? parseFloat(value) : parseInt(value, 10),
-      },
+    setEmployeeData((prevData) => {
+      const newData = {
+        ...prevData,
+        [userId]: {
+          ...prevData[userId],
+          [field]:
+            field === "monthlySalary" ? parseFloat(value) : parseInt(value, 10),
+        },
+      };
+
+      // Recalculate salary after presentDays or monthlySalary changes
+      const updatedSalary = calculateSalary(
+        newData[userId].monthlySalary,
+        newData[userId].presentDays,
+        newData[userId].activeMinutes,
+        companyTotalActiveHours * 60 // Company active hours in minutes
+      );
+
+      // Update the salary in updatedSalaries state
+      setUpdatedSalaries((prevSalaries) => [
+        ...prevSalaries.filter(
+          (entry) => entry.employeeCode !== prevData[userId].employeeCode
+        ),
+        {
+          name: allUsers.find((user) => user._id === userId).firstName,
+          employeeCode: allUsers.find((user) => user._id === userId)
+            .employeeCode,
+          salary: updatedSalary,
+          presentDays: newData[userId].presentDays,
+          activeTime: newData[userId].activeMinutes,
+        },
+      ]);
+      return newData;
     });
   };
 
@@ -87,11 +134,12 @@ const EmpSalaryManagement = () => {
   // Update salary for an employee
   const handleSalaryUpdate = (userId) => {
     const user = allUsers.find((user) => user._id === userId);
-    const { wage, presentDays, activeMinutes } = employeeData[userId] || {};
+    const { monthlySalary, presentDays, activeMinutes } =
+      employeeData[userId] || {};
     const companyActiveMinutes = companyTotalActiveHours * 60;
 
     const salary = calculateSalary(
-      wage,
+      monthlySalary,
       presentDays,
       activeMinutes,
       companyActiveMinutes
@@ -102,10 +150,9 @@ const EmpSalaryManagement = () => {
       {
         name: user.firstName,
         employeeCode: user.employeeCode,
-        wage,
+        salary,
         presentDays,
         activeTime: activeMinutes,
-        salary,
       },
     ]);
   };
@@ -115,23 +162,15 @@ const EmpSalaryManagement = () => {
     const data = updatedSalaries.map((entry) => ({
       Name: entry.name,
       Emp_Code: entry.employeeCode,
-      Wage: entry.wage,
+      Salary: entry.salary,
       Present_Days: entry.presentDays,
       Active_Time: `${Math.floor(entry.activeTime / 60)}hr ${
         entry.activeTime % 60
       }min`,
-      Salary: entry.salary,
     }));
 
     const csvContent = [
-      [
-        "Name",
-        "Emp_Code",
-        "Wage",
-        "Present_Days",
-        "Active_Time",
-        "Salary",
-      ].join(","),
+      ["Name", "Emp_Code", "Salary", "Present_Days", "Active_Time"].join(","),
       ...data.map((item) => Object.values(item).join(",")),
     ].join("\n");
 
@@ -149,7 +188,7 @@ const EmpSalaryManagement = () => {
             <tr>
               <th className="px-6 py-3">Full Name</th>
               <th className="px-6 py-3">Emp-code</th>
-              <th className="px-6 py-3">New Wage</th>
+              <th className="px-6 py-3">New Monthly Salary</th>
               <th className="px-6 py-3">Present Days</th>
               <th className="px-6 py-3">Active Time</th>
               <th className="px-6 py-3">Calculated Salary</th>
@@ -171,9 +210,11 @@ const EmpSalaryManagement = () => {
                     <TextField
                       variant="outlined"
                       size="small"
-                      name="wage"
-                      value={employeeData[user._id]?.wage || ""}
-                      onChange={(e) => handleChange(e, user._id, "wage")}
+                      name="monthlySalary"
+                      value={employeeData[user._id]?.monthlySalary || ""}
+                      onChange={(e) =>
+                        handleChange(e, user._id, "monthlySalary")
+                      }
                     />
                   </td>
                   <td className="px-6 py-4">
@@ -188,13 +229,11 @@ const EmpSalaryManagement = () => {
                   <td className="px-6 py-4">
                     {`${Math.floor(
                       (employeeData[user._id]?.activeMinutes || 0) / 60
-                    )}hr ${
-                      (employeeData[user._id]?.activeMinutes || 0) % 60
-                    }min`}
+                    )}hr ${employeeData[user._id]?.activeMinutes % 60}min`}
                   </td>
                   <td className="px-6 py-4">
                     {calculateSalary(
-                      employeeData[user._id]?.wage,
+                      employeeData[user._id]?.monthlySalary,
                       employeeData[user._id]?.presentDays,
                       employeeData[user._id]?.activeMinutes,
                       companyTotalActiveHours * 60
