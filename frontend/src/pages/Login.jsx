@@ -37,7 +37,12 @@ const login = () => {
       // Store user data in local storage
       localStorage.setItem("userLogin", JSON.stringify(response.data));
 
-      toast.success("Admin Login successfully!");
+      toast.success("Admin Login successfully!", 
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+    );
 
       // Fallback in case toast onClose doesn't work as expected
       setTimeout(() => {
@@ -47,12 +52,16 @@ const login = () => {
     } catch (error) {
       console.log("Admin login failed", error);
       setLoading(false);
-      toast.error("Admin login failed. Please try again.");
+      toast.error("Admin login failed. Please try again.", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     }
   };
 
   return (
     <>
+      <ToastContainer />
       <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
         <div className="flex flex-col lg:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
           {/* Left Section with Illustration */}

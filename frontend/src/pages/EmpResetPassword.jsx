@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EmpResetPassword = () => {
   const location = useLocation();
@@ -8,13 +10,16 @@ const EmpResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/reset-password/verify`,
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/reset-password/verify`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -24,10 +29,15 @@ const EmpResetPassword = () => {
 
       const data = await response.json();
       setMessage(data.message);
+      //handle the response
+      toast.success("Employee password reset successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+        onClose: () => {
+          navigate("/employee/login");
+        },
+      });
 
-      if (data.success) {
-        // Optionally, navigate to login page or show success message
-      }
       setLoading(false);
     } catch (error) {
       console.log("Error in handleResetPassword:", error);
@@ -37,34 +47,80 @@ const EmpResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-500">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">
-          Verify OTP and Reset Password
-        </h2>
-        <input
-          type="text"
-          placeholder="Enter OTP"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md mb-4"
-        />
-        <input
-          type="password"
-          placeholder="Enter New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md mb-4"
-        />
-        <button
-          onClick={handleResetPassword}
-          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
-        >
-          {loading ? "Loading..." : "Reset Password"}
-        </button>
-        {message && <p className="text-center text-sm mt-4">{message}</p>}
+    <>
+      <ToastContainer />
+      <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
+        <div className="flex flex-col  bg-white rounded-2xl shadow-2xl overflow-hidden  max-w-2xl">
+          {/* Left Section with Illustration */}
+          <div className="hidden lg:flex  bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">
+            {/* Decorative Circle */}
+            <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
+            <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+            <img
+              src="https://cdn.prod.website-files.com/63c50a0cab4c86831ccbeef6/63e5dfffa9332278d24932fc_21404-removebg-preview.png"
+              alt="Login Illustration"
+              className="w-2/4 object-contain"
+            />
+          </div>
+
+          {/* Right Section with Form */}
+          <div className="flex flex-col justify-center p-8 ">
+            <h1 className="text-3xl font-bold text-gray-800 text-center mb-4">
+              Welcome Back !
+            </h1>
+            <p className="text-gray-500 text-center mb-6">
+              Please enter Verify OTP and Reset Password
+            </p>
+
+            {/* Username Field */}
+
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium  text-gray-600"
+            >
+              Enter OTP
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className="mt-2 block w-full px-4 mb-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+            />
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium  text-gray-600"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="mt-2 block w-full px-4 mb-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
+            />
+
+            {/* Submit Button */}
+            <button
+              onClick={handleResetPassword}
+              type="submit"
+              className="w-full px-3 py-3 text-white font-bold bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg shadow-lg hover:from-indigo-600 hover:to-blue-600 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+            >
+              {loading ? "Loading..." : "Reset Password"}
+            </button>
+            <p className="text-center pt-4">
+              Employee login here{" "}
+              <Link to="/employee/login" className="text-[#2C5FF0]">
+                Login
+              </Link>
+            </p>
+            {message && <p className="text-center text-sm mt-4">{message}</p>}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

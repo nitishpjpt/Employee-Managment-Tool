@@ -186,6 +186,12 @@ const EmployeeLogin = () => {
               <button>
                 <Link to="/employee/forgot/password">Forgot Password?</Link>
               </button>
+              <p className="text-center pt-1">
+                Admin login here{" "}
+                <Link to="/login" className="text-[#2C5FF0]">
+                  Login
+                </Link>
+              </p>
             </div>
           </div>
         </div>

@@ -110,7 +110,10 @@ const EmployeeDetails = () => {
       );
 
       //handle the response
-      toast.success("User registered successfully!");
+      toast.success("User registered successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
       setRegisterModal(false);
     } catch (error) {
       toast.error("User  does not register", {
@@ -172,7 +175,11 @@ const EmployeeDetails = () => {
       );
       console.log(response);
       toast.success(
-        "Employee background verification details added successfully"
+        "Employee background verification details added successfully",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
       );
       // Ensures page reloads after employee details
       setBulkRegisterModal(false);
@@ -204,7 +211,10 @@ const EmployeeDetails = () => {
         }
       );
       console.log(response);
-      toast.success("Employee bank details added successfully");
+      toast.success("Employee bank details added successfully", {
+        position: "top-right",
+        autoClose: 1000,
+      });
       setBulkUpdateModel(false);
     } catch (error) {
       toast.error("Employee bank details does not added");
