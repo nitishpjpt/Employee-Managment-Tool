@@ -30,7 +30,7 @@ import {getTotalPresentEmployees,getTotalAbsentEmployees }from "../controller/em
 import deleteEmployee from "../controller/empDelete_controller.js";
 import getTodayAttendance from "../controller/dailyAttendence.js";
 import { requestPasswordReset, resetPassword } from "../controller/requestPasswordReset.js";
-
+import { adminResetPassword, adminRequestPasswordReset} from "../controller/adminRequestPasswordReset.js"
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -51,6 +51,8 @@ userRouter.route("/employee/daily/attendance").get(getTodayAttendance);
 userRouter.route("/projectDetails/:id").delete(deleteEmployee)
 userRouter.route("/reset-password/request").post(requestPasswordReset);
 userRouter.route("/reset-password/verify").post(resetPassword);
+userRouter.route("/admin/reset-password/request").post(adminRequestPasswordReset);
+userRouter.route("/admin/reset-password/verify").post(adminResetPassword);
 
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);

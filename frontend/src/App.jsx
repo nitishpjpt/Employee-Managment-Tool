@@ -28,6 +28,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmpForgotPassword from "./pages/EmpForgotPassword";
 import EmpResetPassword from "./pages/EmpResetPassword";
+import AdminForgotPassword from "./pages/AdminForgotPassword";
+import AdminResetPassword from "./pages/AdminResetPassword";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -104,6 +106,16 @@ const App = () => {
           path="/employee/reset/password"
           element={<EmpResetPassword email={email} />}
         />
+        <Route
+          path="/forgot/password"
+          element={
+            <AdminForgotPassword onRequestSuccess={handleRequestSuccess} />
+          }
+        ></Route>
+        <Route
+          path="/reset/password"
+          element={<AdminResetPassword email={email} />}
+        ></Route>
         <Route
           path="/employee/leave/changes"
           element={
@@ -274,6 +286,12 @@ const App = () => {
           path="/employee/reset/password"
           element={<EmpResetPassword />}
         ></Route>
+
+        <Route
+          path="/forgot/password"
+          element={<AdminForgotPassword />}
+        ></Route>
+        <Route path="/reset/password" element={<AdminResetPassword />}></Route>
       </Routes>
     </div>
   );

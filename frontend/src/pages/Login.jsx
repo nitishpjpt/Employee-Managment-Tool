@@ -37,12 +37,10 @@ const login = () => {
       // Store user data in local storage
       localStorage.setItem("userLogin", JSON.stringify(response.data));
 
-      toast.success("Admin Login successfully!", 
-        {
-          position: "top-right",
-          autoClose: 1000,
-        }
-    );
+      toast.success("Admin Login successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
 
       // Fallback in case toast onClose doesn't work as expected
       setTimeout(() => {
@@ -138,9 +136,9 @@ const login = () => {
                   Register
                 </Link>
               </h1>
-              <a href="#" className="text-indigo-600 hover:underline">
+              <Link to='/forgot/password' className="text-indigo-600 hover:underline">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
           </div>
         </div>
