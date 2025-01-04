@@ -89,8 +89,8 @@ const AdminForgotPassword = ({ onRequestSuccess }) => {
             {loading ? "Loading..." : "Request OTP"}
           </button>
           <p className="text-center pt-4">
-            Employee login here ?{" "}
-            <Link to="/employee/login" className="text-[#2C5FF0]">
+            Admin login here ?{" "}
+            <Link to="/login" className="text-[#2C5FF0]">
               Login
             </Link>
           </p>
