@@ -33,6 +33,11 @@ const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [empAuthToken, setEmpAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [email,setEmail]=useState("");
+
+  const handleRequestSuccess = (email) => {
+    setEmail(email); // Store the email
+  };
 
   // Unified Authentication Check
   useEffect(() => {
@@ -97,6 +102,8 @@ const App = () => {
             />
           }
         />
+        <Route path="/employee/forgot/password" element={<EmpForgotPassword onRequestSuccess={handleRequestSuccess} />} />
+        <Route path="/employee/reset/password" element={<EmpResetPassword email={email} />} />
         <Route
           path="/employee/leave/changes"
           element={

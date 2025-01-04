@@ -106,8 +106,9 @@ const employeeSchema = new mongoose.Schema(
       type: String, // Stores the most recent login time (HH:mm:ss format)
       default: null,
     },
-    passwordResetToken: String,
-    passwordResetExpires: Date,
+    otp: String,            // Store the generated OTP
+    otpExpires: Date,       // Store the expiration time of the OTP
+    
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
     logoutTime: { type: String },
@@ -136,17 +137,25 @@ const employeeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// bcrypt the employee password and confirm password
+// bcrypt the employee password before saving
 employeeSchema.pre("save", async function (next) {
+  // Check if the password field is modified
   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 10);
-  return next();
+  // Hash the password only if it's not already hashed
+  const isAlreadyHashed = this.password.startsWith("$2b$");
+  if (!isAlreadyHashed) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  next();
 });
 
 // Function to compare the password
 employeeSchema.methods.isPasswordCorrect = async function (password) {
+  if (!password || typeof password !== "string") {
+    throw new Error("Invalid password provided for comparison.");
+  }
   return await bcrypt.compare(password, this.password);
 };
 

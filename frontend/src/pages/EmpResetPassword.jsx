@@ -1,97 +1,70 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { IoPersonCircleSharp } from "react-icons/io5";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import {useNavigate} from "react-router-dom"
 
 const EmpResetPassword = () => {
   const location = useLocation();
-  const navigate= useNavigate();
+  const { email } = location.state || {}; // Get the email passed from the previous page
+  const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const params = new URLSearchParams(location.search);
-  const token = params.get("token");
-  const email = params.get("email");
-
-  const handleSubmit = async (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await axios.post(
-        `${
-          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-        }/api/v1/user/employee/reset/password`,
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/reset-password/verify`,
         {
-          token,
-          email,
-          newPassword,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp, newPassword }),
         }
       );
-      setMessage(response.data.message);
-      navigate("/login"); // Redirect to login page after success
+
+      const data = await response.json();
+      setMessage(data.message);
+
+      if (data.success) {
+        // Optionally, navigate to login page or show success message
+      }
+      setLoading(false);
     } catch (error) {
-      setMessage("Error resetting password.");
+      console.log("Error in handleResetPassword:", error);
+      setMessage("An error occurred. Please try again.");
+      setLoading(false);
     }
   };
+
   return (
-    <>
-      <ToastContainer />
-      <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
-        <div className="flex flex-col lg:flex-col bg-white rounded-2xl shadow-2xl overflow-hidden ">
-          {/* Left Section with Illustration */}
-          <div className="hidden lg:flex  bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">
-            {/* Decorative Circle */}
-            <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
-            <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
-            <img
-              src="https://cdn.prod.website-files.com/63c50a0cab4c86831ccbeef6/63e5dfffa9332278d24932fc_21404-removebg-preview.png"
-              alt="Login Illustration"
-              className="w-1/2 pr-[4rem] object-contain"
-            />
-          </div>
-
-          {/* Right Section with Form */}
-          <div className="flex flex-col justify-center p-8 ">
-            <h1 className="text-3xl font-bold text-gray-800 text-center mb-4">
-              Welcome Back !
-            </h1>
-            <p className="text-gray-500 text-center mb-6">
-              Please enter your new password to reset the password.
-            </p>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-600"
-                >
-                  Set New Password
-                </label>
-                <input
-                  type="text"
-                  id="password"
-                  name="password"
-                  required
-                  placeholder="Enter your new password"
-                  className="mt-2 block w-full px-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full px-4 py-3 text-white font-bold bg-gradient-to-r from-indigo-500 to-blue-500 rounded-lg shadow-lg hover:from-indigo-600 hover:to-blue-600 focus:outline-none focus:ring-4 focus:ring-indigo-300"
-              >
-                {loading ? "Reset password..." : "Reset Password"}
-              </button>
-            </form>
-          </div>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-500">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 className="text-2xl font-semibold text-gray-700 text-center mb-4">
+          Verify OTP and Reset Password
+        </h2>
+        <input
+          type="text"
+          placeholder="Enter OTP"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+        />
+        <input
+          type="password"
+          placeholder="Enter New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+        />
+        <button
+          onClick={handleResetPassword}
+          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+        >
+          {loading ? "Loading..." : "Reset Password"}
+        </button>
+        {message && <p className="text-center text-sm mt-4">{message}</p>}
       </div>
-    </>
+    </div>
   );
 };
 

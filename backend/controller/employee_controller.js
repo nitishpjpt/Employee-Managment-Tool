@@ -3,6 +3,7 @@ import ApiError from "../utlis/ApiError.js";
 import ApiResponse from "../utlis/ApiResponse.js";
 import moment from "moment";
 import axios from "axios";
+import bcrypt from "bcrypt";
 
 // Generate access token function
 const generateAccessToken = async (userId) => {
@@ -113,10 +114,15 @@ const employeeLogin = async (req, res) => {
     }
 
     // Check if the password matches
-    const isValidPassword = await existingUser.isPasswordCorrect(password);
-    if (!isValidPassword) {
-      throw new ApiError(401, "Invalid password. Please try again.");
-    }
+   // Compare the provided password with the hashed password stored in the database
+   console.log(existingUser.password)
+   const isValidPassword = await bcrypt.compare(password, existingUser.password);
+   console.log('Password entered:', password);
+console.log('Stored password hash:', existingUser.password);
+console.log("Password comparison result:", isValidPassword);
+   if (!isValidPassword) {
+     return res.status(401).json({ success: false, message: "Invalid password. Please try again." });
+   }
 
     // Get today's date
     const today = moment().format("YYYY-MM-DD");
