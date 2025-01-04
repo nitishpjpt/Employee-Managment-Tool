@@ -41,7 +41,7 @@ const requestPasswordReset = async (req, res) => {
         <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
           <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
             <h2 style="color: #4CAF50; text-align: center;">Password Reset Request</h2>
-            <p>Dear ${employee},</p>
+            <p>Dear ${employee.firstName},</p>
             <p>You have requested to reset your password. Please use the OTP below:</p>
             <h3 style="text-align: center; color: #333; font-size: 24px;">${otp}</h3>
             <p style="text-align: center;">This OTP is valid for <strong>10 minutes</strong>.</p>
@@ -54,7 +54,7 @@ const requestPasswordReset = async (req, res) => {
       `;
 
     await transporter.sendMail({
-      from: `"Your Company Name" <${process.env.EMAIL_USER}>`,
+      from: `"Deepnap Softech" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Password Reset OTP",
       html: emailTemplate,
