@@ -42,8 +42,8 @@ const Reports = () => {
         <MainDashboard />
         {/*--------Table-------------*/}
         <div>
-          <div class="relative ml-[14rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8">
-            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400 border-collapse rounded-lg shadow-lg">
+          <div class="relative ml-[14rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8  p-4 ">
+            <table class="w-full  p-4 bg-white text-sm text-left text-gray-600 dark:text-gray-400 border-collapse rounded-lg shadow-lg">
               <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>
                   <th

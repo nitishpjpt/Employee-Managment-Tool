@@ -19,7 +19,8 @@ const TimeSheet = () => {
     // Map employee data for Excel
     const formattedData = employees.map((employee) => {
       // Get the latest dailyActivity entry
-      const latestActivity = employee.dailyActivity?.[employee.dailyActivity.length - 1] || {};
+      const latestActivity =
+        employee.dailyActivity?.[employee.dailyActivity.length - 1] || {};
       const date = latestActivity.date ? new Date(latestActivity.date) : null;
 
       return {
@@ -40,7 +41,10 @@ const TimeSheet = () => {
         "Offline Hours": employee.offlineHours || "",
         Break: employee.break || "",
         Productivity: employee.productivity || "",
-        Date: date instanceof Date && !isNaN(date) ? date.toLocaleDateString() : "Invalid Date" // Ensure valid date format
+        Date:
+          date instanceof Date && !isNaN(date)
+            ? date.toLocaleDateString()
+            : "Invalid Date", // Ensure valid date format
       };
     });
 
@@ -102,9 +106,9 @@ const TimeSheet = () => {
       </div>
 
       {/* Table */}
-      <div className="relative overflow-x-auto ml-[15rem] pt-10">
-        <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="relative overflow-x-auto ml-[15rem] pt-10 p-2 bg-white shadow-md rounded-lg">
+        <table className="w-full text-sm text-left rtl:text-right  text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
             <tr>
               <th className="px-6 py-3">Name</th>
               <th className="px-6 py-3">Employee Code</th>
@@ -114,20 +118,24 @@ const TimeSheet = () => {
               <th className="px-6 py-3">Total Hour</th>
               <th className="px-6 py-3 text-[#35A745]">Productive</th>
               <th className="px-6 py-3 text-red-500">Unproductive</th>
-              <th className="px-6 py-3">Date</th> {/* Added Date Column */}
+              <th className="px-6 py-3">Date</th>
             </tr>
           </thead>
           <tbody>
             {employees.length > 0 ? (
               employees.map((employee, index) => {
                 // Get the latest dailyActivity entry for each employee
-                const latestActivity = employee.dailyActivity?.[employee.dailyActivity.length - 1] || {};
-                const date = latestActivity.date ? new Date(latestActivity.date) : null;
+                const latestActivity =
+                  employee.dailyActivity?.[employee.dailyActivity.length - 1] ||
+                  {};
+                const date = latestActivity.date
+                  ? new Date(latestActivity.date)
+                  : null;
 
                 return (
                   <tr
                     key={index}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 transition-all hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {employee.firstName ?? ""}
@@ -136,28 +144,29 @@ const TimeSheet = () => {
                     <td className="px-6 py-4">{employee.employeeCode ?? ""}</td>
 
                     <td className="px-6 py-4">{employee.department ?? ""}</td>
-                    <td className="px-6 py-4">{employee.lastLoginTime ?? ""}</td>
-                    <td className="px-6 py-4">{employee.logoutTime ?? ""}</td>
-                    <td className="px-6 py-4">{employee.totalHour ?? "10Hr"}</td>
-
                     <td className="px-6 py-4">
+                      {employee.lastLoginTime ?? ""}
+                    </td>
+                    <td className="px-6 py-4">{employee.logoutTime ?? ""}</td>
+                    <td className="px-6 py-4">
+                      {employee.totalHour ?? "10Hr"}
+                    </td>
+
+                    <td className="px-6 py-4 text-[#35A745]">
                       {latestActivity.formattedActiveTime ?? ""}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 text-red-500">
                       {latestActivity.formattedInactiveTime ?? ""}
                     </td>
                     <td className="px-6 py-4">
-                      { employee.date ?? "Invalid Date"}
-                    </td> {/* Display Date */}
+                      {employee.date ?? "Invalid Date"}
+                    </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td
-                  colSpan="17"
-                  className="px-6 py-4 text-center text-gray-500"
-                >
+                <td colSpan="9" className="px-6 py-4 text-center text-gray-500">
                   No data available
                 </td>
               </tr>
