@@ -31,6 +31,7 @@ import deleteEmployee from "../controller/empDelete_controller.js";
 import getTodayAttendance from "../controller/dailyAttendence.js";
 import { requestPasswordReset, resetPassword } from "../controller/requestPasswordReset.js";
 import { adminResetPassword, adminRequestPasswordReset} from "../controller/adminRequestPasswordReset.js"
+import editEmployeeDetails from "../controller/empEditDetails_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -53,7 +54,7 @@ userRouter.route("/reset-password/request").post(requestPasswordReset);
 userRouter.route("/reset-password/verify").post(resetPassword);
 userRouter.route("/admin/reset-password/request").post(adminRequestPasswordReset);
 userRouter.route("/admin/reset-password/verify").post(adminResetPassword);
-
+userRouter.route("/employee/:id").put(editEmployeeDetails);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);

@@ -271,11 +271,6 @@ export default function Dashboard() {
     },
 
     {
-      text: "Settings",
-      icon: <IoMdSettings className="text-3xl text-[#233D7A]" />,
-      onClick: toggleSettingsOptions, // Toggle settings options
-    },
-    {
       text: "Update Leave Balance",
       icon: <MdPerson className="text-3xl text-[#233D7A]" />,
       path: "/employee/leave/changes",
