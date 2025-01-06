@@ -22,7 +22,9 @@ const Reports = () => {
       Location: employee.location || "",
       Department: employee.department || "",
       Role: employee.role || "",
-      Report: employee.role || "",
+      Salary: employee.salary || "",
+      PresentDays: employee.attendance,
+      Total: employee.formattedTotalActiveTime || "",
     }));
 
     // Create a worksheet and a workbook
@@ -40,57 +42,101 @@ const Reports = () => {
         <MainDashboard />
         {/*--------Table-------------*/}
         <div>
-          <div class="relative overflow-x-auto ml-[15rem] pt-10">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <div class="relative ml-[14rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8">
+            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400 border-collapse rounded-lg shadow-lg">
+              <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>
-                  <th scope="col" class="px-6 py-3">
-                    Full Name
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
+                    Name
                   </th>
-                  <th scope="col" class="px-6 py-3">
-                    Email
-                  </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
                     Location
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
                     Department
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
                     Role
                   </th>
-                  <th scope="col" class="px-6 py-3">
-                               {/* Export Button */}
-            <Button onClick={exportToExcel} variant="contained">
-              Export
-            </Button>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
+                    Salary
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
+                    Present Days
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 border-b dark:border-gray-600"
+                  >
+                    Total Active Time
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-right">
+                    <Button
+                      onClick={exportToExcel}
+                      variant="contained"
+                      className="bg-blue-500 text-white hover:bg-blue-600"
+                    >
+                      Export
+                    </Button>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {employees.length > 0 ? (
                   employees.map((item, index) => (
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <tr
+                      class={`${
+                        index % 2 === 0
+                          ? "bg-gray-50 dark:bg-gray-800"
+                          : "bg-white dark:bg-gray-700"
+                      } hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors`}
+                    >
                       <th
                         scope="row"
-                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                       >
-                        {item.firstName} {item.lastName}
+                        {item.firstName}
                       </th>
-                      <td class="px-6 py-4">{item.email}</td>
                       <td class="px-6 py-4">{item.location}</td>
                       <td class="px-6 py-4">{item.department}</td>
                       <td class="px-6 py-4">{item.role}</td>
-                      <td class="px-6 py-4">not found</td>
-
-                      <td
-                        class="px-6 py-4"
-                        className="flex justify-center gap-1 items-center py-8"
-                      ></td>
+                      <td class="px-6 py-4">{item.salary}</td>
+                      <td class="px-6 py-4">
+                        {item.attendance?.filter(
+                          (att) => att.status === "Present"
+                        ).length || 0}
+                      </td>
+                      <td class="px-6 py-4">{item.formattedTotalActiveTime}</td>
+                      <td class="px-6 py-4"></td>
                     </tr>
                   ))
                 ) : (
-                  <h1>not data found</h1>
+                  <tr>
+                    <td
+                      colSpan="8"
+                      class="text-center py-6 text-gray-500 dark:text-gray-300"
+                    >
+                      No data found
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

@@ -66,6 +66,7 @@ const EmpSalaryManagement = () => {
             presentDays:
               user.attendance?.filter((att) => att.status === "Present")
                 .length || 0,
+
             activeMinutes,
           };
         });
