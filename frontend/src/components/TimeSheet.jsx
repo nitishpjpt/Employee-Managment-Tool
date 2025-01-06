@@ -147,7 +147,7 @@ const TimeSheet = () => {
                       {latestActivity.formattedInactiveTime ?? ""}
                     </td>
                     <td className="px-6 py-4">
-                      {date instanceof Date && !isNaN(date) ? date.toLocaleDateString() : "Invalid Date"}
+                      { employee.date ?? "Invalid Date"}
                     </td> {/* Display Date */}
                   </tr>
                 );

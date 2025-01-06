@@ -57,8 +57,9 @@ const Projects = () => {
         position: "top-right",
         autoClose: 1000,
       });
+      setProjectModal(false);
     } catch (error) {
-      toast.error("Project does not creatd", {
+      toast.error("Project does not created", {
         position: "top-right",
         autoClose: 1000,
       });
