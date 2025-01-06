@@ -68,7 +68,6 @@ const Projects = () => {
 
   return (
     <>
-      <ToastContainer />
       <MainDashboard />
       {/*------select----options-----------*/}
       <div className="px-[8rem] flex justify-end items-center gap-4 text-center shadow-lg rounded-lg">
@@ -233,10 +232,10 @@ const Projects = () => {
                   Project Name
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Assignees
+                  Member
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Modules
+                  Manager
                 </th>
 
                 <th scope="col" class="px-6 py-3">
