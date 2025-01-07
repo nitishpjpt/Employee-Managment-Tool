@@ -33,7 +33,9 @@ const EmpAttendence = () => {
   const fetchAttendance = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/${employeeId}/attendence/details`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/attendence/details`
       );
 
       const data = response.data;
@@ -58,7 +60,7 @@ const EmpAttendence = () => {
       console.error("Error fetching attendance:", error);
     }
   };
-  console.log(totalPresentDays)
+  console.log(totalPresentDays);
 
   useEffect(() => {
     if (employeeId) fetchAttendance();

@@ -107,6 +107,7 @@ const TimeSheet = () => {
 
       {/* Table */}
       <div className="relative overflow-x-auto ml-[15rem] pt-10 p-2 bg-white shadow-md rounded-lg">
+        <h1 className="text-center text-2xl font-bold pb-4">Timesheet</h1>
         <table className="w-full text-sm text-left rtl:text-right  text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
             <tr>

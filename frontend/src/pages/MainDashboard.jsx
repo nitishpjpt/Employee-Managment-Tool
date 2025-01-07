@@ -126,7 +126,7 @@ export default function Dashboard() {
   // const [open, setOpen] = React.useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [presentCount, setPresentCount] = useState(0); // State to store present count
-  const [absentCount, setAbsentCount] = useState(0); // State to stor
+  const [absentCount, setAbsentCount] = useState(0); // State to store the absent count
 
   // function to get the total present employee count
   useEffect(() => {
@@ -286,6 +286,11 @@ export default function Dashboard() {
       text: <span className="text-[1rem] font-semibold">Daily Attendance</span>,
       icon: <MdCoPresent className="text-2xl " />,
       path: "/employee/daily/attendance",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">All Attendance</span>,
+      icon: <MdCoPresent className="text-2xl " />,
+      path: "/employee/all/attendence",
     },
   ];
 

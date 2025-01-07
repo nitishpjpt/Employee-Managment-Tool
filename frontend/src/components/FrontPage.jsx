@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "react-toastify/dist/ReactToastify.css";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import MainDashboard from "../pages/MainDashboard.jsx";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const FrontPage = () => {
   const [getallUser, setAllUser] = useState([]);
+  const [chartData, setChartData] = useState(null);
 
-  // Function to get all user registration details
+  // Fetch all user registration details
   const getAllUserRegisterDetails = async () => {
     try {
       const response = await axios.post(
@@ -15,10 +19,32 @@ const FrontPage = () => {
           import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
         }/api/v1/user/employee/all/registerDetails`
       );
-      setAllUser(response.data.data.user); // Update state with the user data
-      console.log("All registered users:", response.data.data.user);
+      const users = response.data.data.user;
+      setAllUser(users);
+
+      // Process data for the chart
+      const departmentCounts = users.reduce((acc, user) => {
+        acc[user.department] = (acc[user.department] || 0) + 1;
+        return acc;
+      }, {});
+
+      setChartData({
+        labels: Object.keys(departmentCounts),
+        datasets: [
+          {
+            data: Object.values(departmentCounts),
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#4BC0C0",
+              "#9966FF",
+            ],
+          },
+        ],
+      });
     } catch (error) {
-      console.log("Error fetching registered users:", error);
+      console.error("Error fetching registered users:", error);
     }
   };
 
@@ -29,11 +55,13 @@ const FrontPage = () => {
   return (
     <>
       <MainDashboard />
-      <div className="relative overflow-x-auto pt-6 ml-[15.2rem] p-2  max-w-7xl">
+      <div className="relative overflow-x-auto pt-6 ml-[15.2rem] p-2 max-w-7xl">
         <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
-          All employee details
+          All Employee Details
         </h1>
-        <div className="overflow-hidden bg-white shadow-md rounded-lg">
+
+        {/*---employee----table--------*/}
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <table className="min-w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
               <tr>
@@ -64,12 +92,9 @@ const FrontPage = () => {
               {getallUser.length > 0 ? (
                 getallUser.map((user, index) => (
                   <tr key={index} className="bg-white border-b">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
+                    <td className="px-6 py-4 font-medium text-gray-900">
                       {user.firstName} {user.lastName}
-                    </th>
+                    </td>
                     <td className="px-6 py-4">{user.location}</td>
                     <td className="px-6 py-4">{user.department}</td>
                     <td className="px-6 py-4">{user.role}</td>
@@ -95,6 +120,15 @@ const FrontPage = () => {
             </tbody>
           </table>
         </div>
+        {/* Display Chart */}
+        {chartData && (
+          <div className="mb-6 max-w-md mx-auto">
+            <h2 className="text-lg p-4 font-bold text-center">
+              Employees by Department
+            </h2>
+            <Pie data={chartData} />
+          </div>
+        )}
       </div>
     </>
   );
