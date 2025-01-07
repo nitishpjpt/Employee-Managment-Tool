@@ -10,13 +10,25 @@ import * as XLSX from "xlsx";
 const EmpAllAttendence = () => {
   const { employees } = useContext(EmployeeContext);
   const [selectedDate, setSelectedDate] = useState(new Date()); // Default to current date
+  const [selectedDepartment, setSelectedDepartment] = useState("All"); // Default department filter
 
-  // Filter employees by the selected month
-  const filteredEmployees = employees.filter((employee) =>
-    employee.attendance?.some((att) =>
+  // Get unique departments for filtering
+  const uniqueDepartments = [
+    "All",
+    ...new Set(employees.map((emp) => emp.department)),
+  ];
+
+  // Filter employees by selected month and department
+  const filteredEmployees = employees.filter((employee) => {
+    const isInMonth = employee.attendance?.some((att) =>
       isSameMonth(new Date(att.date), selectedDate)
-    )
-  );
+    );
+    const isInDepartment =
+      selectedDepartment === "All" ||
+      employee.department === selectedDepartment;
+
+    return isInMonth && isInDepartment;
+  });
 
   // Export to Excel
   const handleExport = () => {
@@ -52,7 +64,10 @@ const EmpAllAttendence = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
     XLSX.writeFile(
       workbook,
-      `Attendance_${format(selectedDate, "MMMM_yyyy")}.xlsx`
+      `Attendance_${format(
+        selectedDate,
+        "MMMM_yyyy"
+      )}_${selectedDepartment}.xlsx`
     );
   };
 
@@ -61,10 +76,8 @@ const EmpAllAttendence = () => {
       <MainDashboard />
 
       {/* Header */}
-      <div className="flex justify-between items-center px-4 pt-6 ml-[14rem]">
-        <h1 className="text-2xl ml-[7rem] font-bold">
-          All Employee Attendance
-        </h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center px-4 pt-6 ml-[14rem] gap-4">
+        <h1 className="text-2xl font-bold">All Employee Attendance</h1>
         <div className="flex items-center gap-4">
           <label htmlFor="month-picker" className="text-gray-700">
             Filter by Month:
@@ -77,6 +90,23 @@ const EmpAllAttendence = () => {
             className="border rounded-lg px-2 py-1"
           />
         </div>
+        <div className="flex items-center gap-4">
+          <label htmlFor="department-picker" className="text-gray-700">
+            Filter by Department:
+          </label>
+          <select
+            id="department-picker"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className="border rounded-lg px-2 py-1"
+          >
+            {uniqueDepartments.map((dept) => (
+              <option key={dept} value={dept}>
+                {dept}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Attendance Table */}
@@ -85,7 +115,7 @@ const EmpAllAttendence = () => {
           <thead className="text-xs uppercase bg-gray-100 text-gray-700">
             <tr>
               <th className="px-6 py-3">Name</th>
-
+              <th className="px-6 py-3">Location</th>
               <th className="px-6 py-3">Department</th>
               <th className="px-6 py-3">Role</th>
               <th className="px-6 py-3">Salary</th>
@@ -129,11 +159,11 @@ const EmpAllAttendence = () => {
                     <td className="px-6 py-4 font-medium text-gray-900">
                       {item.firstName} {item.lastName}
                     </td>
-
+                    <td className="px-6 py-4">{item.location}</td>
                     <td className="px-6 py-4">{item.department}</td>
                     <td className="px-6 py-4">{item.role}</td>
                     <td className="px-6 py-4">{item.salary}</td>
-                    <td className="px-6 py-4">{presentDays} </td>
+                    <td className="px-6 py-4">{presentDays}</td>
                     <td className="px-6 py-4">{absentDays}</td>
                     <td className="px-6 py-4"></td>
                   </tr>
@@ -142,7 +172,7 @@ const EmpAllAttendence = () => {
             ) : (
               <tr>
                 <td colSpan="9" className="text-center py-6 text-gray-500">
-                  No attendance data found for the selected month
+                  No attendance data found for the selected filters
                 </td>
               </tr>
             )}
