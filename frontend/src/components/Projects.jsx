@@ -70,7 +70,7 @@ const Projects = () => {
     <>
       <MainDashboard />
       {/*------select----options-----------*/}
-      <div className="px-[8rem] flex justify-end items-center gap-4 text-center shadow-lg rounded-lg">
+      <div className="lg:px-[8rem] xs:ml-[5rem] xs:flex-wrap lg:flex lg:flex-row justify-end items-center gap-4 text-center shadow-lg rounded-lg">
         <p className="font-semibold">Select date range</p>
         <input type="date" />
 
@@ -224,7 +224,7 @@ const Projects = () => {
 
       {/*--------Table-------------*/}
       <div className="">
-        <div class="relative overflow-x-auto ml-[15rem] pt-10 p-4 bg-white shadow-md rounded-lg ">
+        <div class="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] xs:mt-5 lg:pt-10 p-4 bg-white shadow-md rounded-lg ">
           <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>

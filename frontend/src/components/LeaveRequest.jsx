@@ -62,7 +62,7 @@ const LeaveRequest = () => {
   return (
     <div>
       <MainDashboard />
-      <div className="relative overflow-x-auto ml-[15rem]">
+      <div className="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem]">
         <h1 className="text-center text-lg font-bold p-5">
           Employee Leave Approval
         </h1>

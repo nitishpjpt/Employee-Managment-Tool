@@ -100,12 +100,12 @@ const EmployeeTable = () => {
 
   return (
     <>
-      <div className="relative overflow-x-auto pt-6 ml-[15rem] p-2 max-w-7xl">
+      <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl">
         <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
           Employee Details
         </h1>
-        <div className="overflow-hidden bg-white shadow-md rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+        <div className=" bg-white shadow-md rounded-lg">
+          <table className="w-full overflow-x-auto  text-sm text-left rtl:text-right text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th className="px-6 py-3">Full Name</th>

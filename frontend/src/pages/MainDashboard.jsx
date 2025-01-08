@@ -40,6 +40,8 @@ import { FcMoneyTransfer } from "react-icons/fc";
 import { MdCoPresent } from "react-icons/md";
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { TbReportMoney } from "react-icons/tb";
+import { RiMenu5Fill } from "react-icons/ri";
+import { RxCross2 } from "react-icons/rx";
 
 const drawerWidth = 240;
 
@@ -127,6 +129,13 @@ export default function Dashboard() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [presentCount, setPresentCount] = useState(0); // State to store present count
   const [absentCount, setAbsentCount] = useState(0); // State to store the absent count
+
+  const [open, setOpen] = useState(true);
+
+  // Function to toggle the open state of the drawer
+  const toggleDrawer = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
 
   // function to get the total present employee count
   useEffect(() => {
@@ -300,9 +309,9 @@ export default function Dashboard() {
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
-          <Toolbar className="bg-[#ffffff]">
+          <Toolbar className="bg-[#ffffff] ">
             <IconButton
-              color="inherit"
+              color="primary"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
@@ -324,7 +333,8 @@ export default function Dashboard() {
                   className="flex gap-2"
                   to="/employee/request/leave/approval"
                 >
-                  Pending Requests{" "}
+                  {" "}
+                  {/*--------Pending request------------*/}
                   <MdOutlinePendingActions className="text-2xl " />
                 </Link>
               </h3>
@@ -400,25 +410,41 @@ export default function Dashboard() {
             </div>
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader className="bg-[#FFFFFF] object-fit flex justify-center items-center ">
+
+        <Drawer
+          open={open}
+          variant="permanent"
+          sx={{
+            width: { xs: 60, sm: 100, md: 240 }, // Adjust drawer width for different screen sizes
+            flexShrink: 0,
+            transition: "width 0.3s ease", // Smooth transition for resizing
+          }}
+        >
+          <DrawerHeader className="bg-[#FFFFFF] object-fit flex justify-center  items-center">
             <img
-              className="w-[5vw] "
+              className="lg:w-[5vw] xs:w-[15vw]"
               src="data:image/jpeg;base64,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"
             />
-            <h5 className="pr-7 font-semibold">
+            <h5 className="pr-[2rem] font-semibold">
               <Link to="/home">Deepnap Softech</Link>
             </h5>
-            {/* <h1 className="text-xl font-extrabold text-center p-[1rem] text-black">
-              <Link to="/home">Deepnap Softech</Link>
-            </h1> */}
+            {/* Toggle Button to open/close list items */}
+            <div className="lg:hidden flex flex-col items-center justify-center">
+              <IconButton
+                onClick={toggleDrawer}
+                sx={{ position: "absolute", right: 8 }}
+              >
+                <MenuIcon className="text-black font-bold" />
+              </IconButton>
+            </div>
           </DrawerHeader>
 
-          <List className="border-none  text-3xl  bg-[#F5F9FE] dark:bg-[#1F2937]">
+          <List className="border-none text-3xl bg-[#F5F9FE] dark:bg-[#1F2937]">
             {menuItems.map(({ text, icon, path, onClick }) => (
               <ListItem
                 className="p-1"
                 key={text}
+                
                 disablePadding
                 sx={{ display: "block" }}
               >
@@ -453,7 +479,7 @@ export default function Dashboard() {
                         minWidth: 0,
                         justifyContent: "center",
                         color: "#6B7280",
-                      }, // Default icon color
+                      },
                       open ? { mr: 2 } : { mr: "auto" },
                     ]}
                   >
@@ -461,16 +487,15 @@ export default function Dashboard() {
                   </ListItemIcon>
                   <ListItemText
                     primary={text}
-                    className="MuiListItemText-primary text-[#333333]" // Default text color
+                    className="MuiListItemText-primary text-[#333333]"
                     sx={[open ? { opacity: 1 } : { opacity: 0 }]}
                   />
                 </ListItemButton>
               </ListItem>
             ))}
           </List>
-
-          <Divider />
         </Drawer>
+
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Typography sx={{ marginBottom: 2 }}>

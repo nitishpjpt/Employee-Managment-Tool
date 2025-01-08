@@ -63,7 +63,7 @@ const TimeSheet = () => {
 
       {/* Select Options */}
       <div className="shadow-lg ml-[10rem]">
-        <form className="max-w-sm lg:mx-[15rem] md:mx-auto flex lg:flex-row md:flex-col sm:flex-col lg:gap-10">
+        <form className="max-w-sm lg:mx-[15rem] xs:hidden md:mx-auto flex lg:flex-row md:flex-col sm:flex-col lg:gap-10">
           <label
             htmlFor="small"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -106,7 +106,7 @@ const TimeSheet = () => {
       </div>
 
       {/* Table */}
-      <div className="relative overflow-x-auto ml-[15rem] pt-10 p-2 bg-white shadow-md rounded-lg">
+      <div className="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] pt-10 p-2 bg-white shadow-md rounded-lg">
         <h1 className="text-center text-2xl font-bold pb-4">Timesheet</h1>
         <table className="w-full text-sm text-left rtl:text-right  text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-400">

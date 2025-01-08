@@ -230,7 +230,7 @@ const EmployeeDetails = () => {
       <MainDashboard />
       <div>
         <div className="w-[100vw]">
-          <div className=" ml-[15rem] flex lg:flex-row sm:flex-col gap-4 items-center justify-center ">
+          <div className=" lg:ml-[15rem] xs:ml-[5rem] flex lg:flex-row sm:flex-col gap-4 items-center justify-center ">
             <Button variant="contained" onClick={() => setRegisterModal(true)}>
               Register Employee
             </Button>

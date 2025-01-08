@@ -43,7 +43,7 @@ const Reports = () => {
         {/*--------Table-------------*/}
         <div>
         <h1 className="text-center text-2xl font-bold ">Reports</h1>
-          <div class="relative ml-[14rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8  p-4 ">
+          <div class="relative lg:ml-[14rem] xs:ml-[5rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8  p-4 ">
             <table class="w-full  p-4 bg-white text-sm text-left text-gray-600 dark:text-gray-400 border-collapse rounded-lg shadow-lg">
               <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>

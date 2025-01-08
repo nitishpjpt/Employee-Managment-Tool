@@ -76,7 +76,7 @@ const EmpAllAttendence = () => {
       <MainDashboard />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-center px-4 pt-6 ml-[14rem] gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center px-4 pt-6 lg:ml-[14rem] xs:ml-[5rem] gap-4">
         <h1 className="text-2xl font-bold">All Employee Attendance</h1>
         <div className="flex items-center gap-4">
           <label htmlFor="month-picker" className="text-gray-700">
@@ -110,7 +110,7 @@ const EmpAllAttendence = () => {
       </div>
 
       {/* Attendance Table */}
-      <div className="relative ml-[14rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8 p-4">
+      <div className="relative lg:ml-[14rem] xs:ml-[5rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8 p-4">
         <table className="w-full bg-white text-sm text-left text-gray-600 rounded-lg shadow-lg">
           <thead className="text-xs uppercase bg-gray-100 text-gray-700">
             <tr>

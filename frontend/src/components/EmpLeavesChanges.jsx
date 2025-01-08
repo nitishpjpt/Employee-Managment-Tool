@@ -51,7 +51,7 @@ const EmpLeavesChanges = () => {
     <>
       <ToastContainer />
       <MainDashBoard />
-      <div className="ml-[15rem] p-10">
+      <div className="lg:ml-[15rem] xs:ml-[5rem] p-10">
         <h2 className="text-2xl font-bold mb-4">
           Update Employee Leave Balance
         </h2>
