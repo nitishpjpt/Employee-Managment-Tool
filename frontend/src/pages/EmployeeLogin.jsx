@@ -113,7 +113,7 @@ const EmployeeLogin = () => {
   return (
     <>
       <ToastContainer />
-      <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
+      <div className="h-screen  flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
         <div className="flex flex-col lg:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
           {/* Left Section with Illustration */}
           <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">

@@ -30,7 +30,6 @@ import EmpForgotPassword from "./pages/EmpForgotPassword";
 import EmpResetPassword from "./pages/EmpResetPassword";
 import AdminForgotPassword from "./pages/AdminForgotPassword";
 import AdminResetPassword from "./pages/AdminResetPassword";
-import EmpChart from "./components/EmpChart";
 import EmpAllAttendence from "./components/EmpAllAttendence";
 
 const App = () => {
@@ -99,7 +98,7 @@ const App = () => {
       <Routes>
         {/* Admin Protected Routes */}
         <Route path="/" element={<Login />} />
-        <Route path="/employee/chart" element={<EmpChart />}></Route>
+
         <Route
           path="/employee/forgot/password"
           element={

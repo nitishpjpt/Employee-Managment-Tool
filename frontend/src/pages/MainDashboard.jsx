@@ -42,6 +42,7 @@ import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { TbReportMoney } from "react-icons/tb";
 import { RiMenu5Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import { FaFingerprint } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -298,7 +299,7 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">All Attendance</span>,
-      icon: <MdCoPresent className="text-2xl " />,
+      icon: <FaFingerprint className="text-2xl " />,
       path: "/employee/all/attendence",
     },
   ];
@@ -389,6 +390,8 @@ export default function Dashboard() {
                     <Link
                       to="/employee/Login"
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       Login as employee
                     </Link>
@@ -444,14 +447,13 @@ export default function Dashboard() {
               <ListItem
                 className="p-1"
                 key={text}
-                
                 disablePadding
                 sx={{ display: "block" }}
               >
                 <ListItemButton
                   sx={[
                     {
-                      minHeight: 65,
+                      minHeight: 55,
                       px: 1.5,
                       transition: "all 0.3s ease-in-out",
                       color: "#333333", // Default text and icon color

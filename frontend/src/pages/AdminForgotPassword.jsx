@@ -39,7 +39,7 @@ const AdminForgotPassword = ({ onRequestSuccess }) => {
   };
 
   return (
-    <div className="h-screen pb-[6rem] flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
+    <div className="h-screen  flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
       <div className="flex flex-col  bg-white rounded-2xl shadow-2xl overflow-hidden  max-w-2xl">
         {/* Left Section with Illustration */}
         <div className="hidden lg:flex  bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">

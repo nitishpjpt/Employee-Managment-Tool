@@ -15,7 +15,9 @@ const EmpDocuments = () => {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser.data.userResponse);
         setBankDetails(parsedUser.data.userResponse.bankVerification);
-        setBackgroundDetails(parsedUser.data.userResponse.backgroundVerification);
+        setBackgroundDetails(
+          parsedUser.data.userResponse.backgroundVerification
+        );
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -30,13 +32,14 @@ const EmpDocuments = () => {
 
       {/* Conditional Rendering */}
       {isDataAvailable ? (
-        <div className="relative pt-4 ">
+        <div className="relative overflow-x-auto pt-10">
           <table className="w-full text-sm text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-xs uppercase bg-[#1F2937] text-white dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th className="px-6 py-3">Name</th>
                 <th className="px-6 py-3">Email-id</th>
-                <th className="px-6 py-3">Aadhar Number</th>
+                <th className="px-6 py-3">Salary</th>
+                <th className="px-6 py-3">Aadhar No.</th>
                 <th className="px-6 py-3">PAN Number</th>
                 <th className="px-6 py-3">Driving License</th>
                 <th className="px-6 py-3">Voter Card</th>
@@ -52,6 +55,7 @@ const EmpDocuments = () => {
                   {user.firstName}
                 </td>
                 <td className="px-6 py-4">{user.email}</td>
+                <td className="px-6 py-4">{user.salary}</td>
                 <td className="px-6 py-4">{backgroundDetails.addhar}</td>
                 <td className="px-6 py-4">{backgroundDetails.pan}</td>
                 <td className="px-6 py-4">{backgroundDetails.driving}</td>

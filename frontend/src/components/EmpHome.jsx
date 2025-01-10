@@ -26,7 +26,7 @@ const EmpHome = () => {
         const userData = JSON.parse(presentUser);
         setPresentDates(userData.data.userResponse.attendance || []);
         console.log(userData.data.userResponse.attendance || []);
-        console.log(userData.data.userResponse.attendance)
+        console.log(userData.data.userResponse.attendance);
       } catch (error) {
         console.log("User data not found", error);
       }
@@ -58,7 +58,7 @@ const EmpHome = () => {
       <div>
         <div className="relative overflow-x-auto pt-10">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-xs bg-[#1F2937] text-white uppercase  dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Name
@@ -89,7 +89,9 @@ const EmpHome = () => {
               {presentDates.length > 0 ? (
                 presentDates.map((item, index) => {
                   // Assuming the logged-in employee has an ID or email stored
-                  const presentUser = JSON.parse(localStorage.getItem("employeeLogin"));
+                  const presentUser = JSON.parse(
+                    localStorage.getItem("employeeLogin")
+                  );
                   const employeeId = presentUser?.data?.userResponse?._id;
                   const employee = employees.find(
                     (emp) => emp._id === employeeId
@@ -111,7 +113,9 @@ const EmpHome = () => {
                         scope="row"
                         className="px-6 py-4 capitalize font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {employee ? `${employee.firstName} ${employee.lastName}` : "N/A"}
+                        {employee
+                          ? `${employee.firstName} ${employee.lastName}`
+                          : "N/A"}
                       </th>
                       <td className="px-6 py-4">{item.date}</td>
                       <td className="px-6 py-4">
@@ -149,7 +153,8 @@ const EmpHome = () => {
                             <FaTimesCircle className="text-red-500" /> Rejected
                           </>
                         )}
-                        {(!leaveRequest || leaveRequest.status === "Pending") && (
+                        {(!leaveRequest ||
+                          leaveRequest.status === "Pending") && (
                           <span className="text-yellow-500">Pending</span>
                         )}
                       </td>
