@@ -1,28 +1,43 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 
-const login = () => {
+const Login = () => {
   const navigate = useNavigate();
-  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const getLocation = () =>
+    new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        return reject(new Error("Geolocation is not supported by your browser."));
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ latitude, longitude });
+        },
+        (error) => reject(error)
+      );
+    });
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const userData = {
-      username,
-      email,
-      password,
-    };
-
     try {
+      // Capture user's location
+      const location = await getLocation();
+
+      const userData = {
+        email,
+        password,
+        location, // Send the location (latitude, longitude) to the backend
+      };
+
       const response = await axios.post(
         `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/Login`,
         userData,
@@ -32,39 +47,40 @@ const login = () => {
           },
         }
       );
+
       console.log(response.data);
 
       // Store user data in local storage
       localStorage.setItem("userLogin", JSON.stringify(response.data));
 
-      toast.success("Admin Login successfully!", {
+      toast.success("Login successful!", {
         position: "top-right",
         autoClose: 1000,
       });
 
-      // Fallback in case toast onClose doesn't work as expected
+      // Navigate to the home page
       setTimeout(() => {
         navigate("/home");
-        window.location.reload(); // Ensures page reloads after login
-      }, 3100); // Slight delay to let the toast autoClose first
+        window.location.reload(); // Ensures the page reloads after login
+      }, 3100);
     } catch (error) {
-      console.log("Admin login failed", error);
-      setLoading(false);
-      toast.error("Admin login failed. Please try again.", {
+      console.log("Login failed", error);
+      toast.error("Login failed. Please try again.", {
         position: "top-right",
         autoClose: 1000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <ToastContainer />
-      <div className="h-screen  flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#d9e8ff]">
         <div className="flex flex-col lg:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
           {/* Left Section with Illustration */}
           <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-tr from-[#6c63ff] to-[#b993d6] justify-center items-center relative">
-            {/* Decorative Circle */}
             <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
             <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
             <img
@@ -80,23 +96,22 @@ const login = () => {
               Welcome Back!
             </h1>
             <p className="text-gray-500 text-center mb-6">
-              Please login to access your admin account.
+              Please login to access your account.
             </p>
             <form onSubmit={submitHandler} className="space-y-6">
-              {/* Username Field */}
+              {/* Email Field */}
               <div>
                 <label
-                  htmlFor="username"
+                  htmlFor="email"
                   className="block text-sm font-medium text-gray-600"
                 >
                   Email
                 </label>
                 <input
-                  type="text"
-                  id="username"
-                  name="username"
+                  type="email"
+                  id="email"
                   required
-                  placeholder="Enter your email/username"
+                  placeholder="Enter your email"
                   className="mt-2 block w-full px-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -113,7 +128,6 @@ const login = () => {
                 <input
                   type="password"
                   id="password"
-                  name="password"
                   required
                   placeholder="Enter your password"
                   className="mt-2 block w-full px-4 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-400"
@@ -131,7 +145,7 @@ const login = () => {
             </form>
             <div className="text-center text-sm text-gray-500 mt-6">
               <h1>
-                Don't have an account then{" "}
+                Don't have an account?{" "}
                 <Link to="/register" className="text-[#586EF1]">
                   Register
                 </Link>
@@ -150,4 +164,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

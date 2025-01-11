@@ -114,21 +114,24 @@ const employeeLogin = async (req, res) => {
     }
 
     // Check if the password matches
-   // Compare the provided password with the hashed password stored in the database
-   console.log(existingUser.password)
-   const isValidPassword = await bcrypt.compare(password, existingUser.password);
-   console.log('Password entered:', password);
-console.log('Stored password hash:', existingUser.password);
-console.log("Password comparison result:", isValidPassword);
-   if (!isValidPassword) {
-     return res.status(401).json({ success: false, message: "Invalid password. Please try again." });
-   }
+    const isValidPassword = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isValidPassword) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Invalid password. Please try again.",
+        });
+    }
 
-    // Get today's date
+    // Get today's date and login time
     const today = moment().format("YYYY-MM-DD");
     const currentLoginTime = moment().format("HH:mm:ss");
 
-    // Find today's attendance record
+    // Find or create today's attendance record
     let attendanceRecord = existingUser.attendance.find(
       (att) => att.date === today
     );
@@ -138,39 +141,39 @@ console.log("Password comparison result:", isValidPassword);
       existingUser.attendance.push({
         date: today,
         status: "Present",
-        loginTime: currentLoginTime, // Set login time on first login
+        loginTime: currentLoginTime,
       });
-    } else {
-      // If attendance record exists, check if loginTime is already set
-      if (!attendanceRecord.loginTime) {
-        // If loginTime is not set, update it with the current time (first login today)
-        attendanceRecord.loginTime = currentLoginTime;
-      }
+    } else if (!attendanceRecord.loginTime) {
+      // If attendance record exists but loginTime is not set, update it
+      attendanceRecord.loginTime = currentLoginTime;
     }
 
-    // Update the `lastLoginTime` field outside the attendance array
+    // Update the `lastLoginTime` field
     existingUser.lastLoginTime = currentLoginTime;
 
-    // If location is provided, reverse geocode it to get the address
+    // Use Mapbox API to reverse geocode the location
     let address = "";
     if (location && location.latitude && location.longitude) {
       try {
+        const mapboxAccessToken = process.env.MAPBOX_ACCESS_TOKEN; // Store your Mapbox token in the .env file
         const response = await axios.get(
-          `https://nominatim.openstreetmap.org/reverse`,
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.longitude},${location.latitude}.json`,
           {
             params: {
-              lat: location.latitude,
-              lon: location.longitude,
-              format: "json",
+              access_token: mapboxAccessToken,
+              limit: 1,
             },
           }
         );
-        address = response.data.display_name || "Location not available";
+        const place = response.data.features[0];
+        address = place ? place.place_name : "Location not available";
       } catch (error) {
-        console.error("Error fetching address from coordinates:", error);
+        console.error("Error fetching address from Mapbox:", error.message);
         address = "Unable to fetch address";
       }
     }
+
+    console.log(address)
 
     // Update the user's location in the database if an address is available
     if (address) {
@@ -183,7 +186,7 @@ console.log("Password comparison result:", isValidPassword);
     // Generate and send the access token as a cookie
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set secure flag for production
+      secure: process.env.NODE_ENV === "production",
     };
 
     res
