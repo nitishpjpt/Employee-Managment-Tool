@@ -101,7 +101,6 @@ const EmployeeDetails = () => {
         }
       );
       setEmployee(response.data);
-      console.log(response.data.data.date);
 
       // Store user data in local storage
       localStorage.setItem(
@@ -142,7 +141,6 @@ const EmployeeDetails = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -155,7 +153,6 @@ const EmployeeDetails = () => {
     if (storedUser) {
       try {
         var parsedUser = JSON.parse(storedUser);
-        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -175,7 +172,7 @@ const EmployeeDetails = () => {
           },
         }
       );
-      console.log(response);
+
       toast.success(
         "Employee background verification details added successfully",
         {
@@ -196,7 +193,6 @@ const EmployeeDetails = () => {
     if (storedUser) {
       try {
         var parsedUser = JSON.parse(storedUser);
-        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -214,7 +210,7 @@ const EmployeeDetails = () => {
           },
         }
       );
-      console.log(response);
+
       toast.success("Employee bank details added successfully", {
         position: "top-right",
         autoClose: 1000,

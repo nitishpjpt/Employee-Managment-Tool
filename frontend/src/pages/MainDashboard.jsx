@@ -43,6 +43,7 @@ import { TbReportMoney } from "react-icons/tb";
 import { RiMenu5Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { FaFingerprint } from "react-icons/fa";
+import { TbListDetails } from "react-icons/tb";
 
 const drawerWidth = 240;
 
@@ -142,7 +143,6 @@ export default function Dashboard() {
   useEffect(() => {
     const getPresentEmployee = async () => {
       try {
-        console.log("Fetching present employee count..."); // Ensure this log is printed
         const response = await axios.get(
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
@@ -160,13 +160,12 @@ export default function Dashboard() {
   useEffect(() => {
     const getAbsentEmployee = async () => {
       try {
-        console.log("Fetching present employee count..."); // Ensure this log is printed
         const response = await axios.get(
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
           }/api/v1/user/employee/attendance/absent/count`
         );
-        console.log(response.data); // Log the response here
+
         setAbsentCount(response.data.absentCount);
       } catch (err) {
         console.error("Error fetching present employees:", err);
@@ -178,7 +177,6 @@ export default function Dashboard() {
   //toggle drop down
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-    console.log("user is clicked");
   };
 
   const navigate = useNavigate();
@@ -208,7 +206,6 @@ export default function Dashboard() {
           name: parsedUser.data.userResponse.username || "Unknown User",
           email: parsedUser.data.userResponse.email || "unknown@example.com",
         });
-        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
@@ -301,6 +298,11 @@ export default function Dashboard() {
       text: <span className="text-[1rem] font-semibold">All Attendance</span>,
       icon: <FaFingerprint className="text-2xl " />,
       path: "/employee/all/attendence",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">All Leave</span>,
+      icon: <TbListDetails className="text-2xl " />,
+      path: "/employee/all/leave",
     },
   ];
 

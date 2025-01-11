@@ -13,10 +13,11 @@ export const EmployeeProvider = ({ children }) => {
   const fetchEmployees = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/user/employee/all/registerDetails`
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/all/registerDetails`
       );
       setEmployees(response.data.data.user || []);
-      console.log(response.data.data.user || []);
 
       // state to get total numbers of employee
       setTotalEmployee(response.data.data.totalEmployees);

@@ -6,7 +6,7 @@ import EmployeeDetails from "./components/employeeDetails";
 import TimeSheet from "./components/TimeSheet";
 import Projects from "./components/Projects";
 import Reports from "./components/Reports";
-import Dlp from "./components/Dlp";
+
 import Setting from "./components/Setting";
 import Behaviour from "./components/Behaviour";
 import SalaryPage from "./components/salaryPage";
@@ -31,6 +31,7 @@ import EmpResetPassword from "./pages/EmpResetPassword";
 import AdminForgotPassword from "./pages/AdminForgotPassword";
 import AdminResetPassword from "./pages/AdminResetPassword";
 import EmpAllAttendence from "./components/EmpAllAttendence";
+import EmpAllLeave from "./components/EmpAllLeave";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -129,6 +130,15 @@ const App = () => {
           }
         />
         <Route
+          path="/employee/all/leave"
+          element={
+            <ProtectedRoute
+              element={<EmpAllLeave />}
+              isAuthenticated={isAuthenticated}
+            ></ProtectedRoute>
+          }
+        ></Route>
+        <Route
           path="/employee/all/attendence"
           element={
             <ProtectedRoute
@@ -182,15 +192,7 @@ const App = () => {
             />
           }
         />
-        <Route
-          path="/dlp"
-          element={
-            <ProtectedRoute
-              element={<Dlp />}
-              isAuthenticated={isAuthenticated}
-            />
-          }
-        />
+
         <Route
           path="/setting"
           element={
