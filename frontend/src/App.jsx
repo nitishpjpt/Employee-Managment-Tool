@@ -32,6 +32,7 @@ import AdminForgotPassword from "./pages/AdminForgotPassword";
 import AdminResetPassword from "./pages/AdminResetPassword";
 import EmpAllAttendence from "./components/EmpAllAttendence";
 import EmpAllLeave from "./components/EmpAllLeave";
+import EmpLocation from "./components/EmpLocation";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -147,6 +148,17 @@ const App = () => {
             ></ProtectedRoute>
           }
         ></Route>
+        <Route
+        path="/employee/location"
+        element={
+          <ProtectedRoute
+           element={<EmpLocation/>}
+           isAuthenticated={isAuthenticated}
+          ></ProtectedRoute>
+        } 
+        >
+
+        </Route>
         <Route
           path="/home"
           element={

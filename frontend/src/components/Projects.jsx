@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainDashboard from "../pages/MainDashboard";
 import Button from "@mui/material/Button";
 import { Modal } from "flowbite-react";
@@ -10,21 +10,35 @@ import { IoIosSettings } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Select from "react-select";
 
 const Projects = () => {
-  //project modal for opeinig modals
+  // Project modal for opening modals
   const [projectModal, setProjectModal] = useState(false);
-  //state for handle the form filed
+  // State for handling form fields
   const [projectName, setProjectName] = useState("");
   const [managerName, setManagerName] = useState("");
-  const [selectMember, setSelectMember] = useState("");
+  const [selectMember, setSelectMember] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
-  //state for stored the response
+  const [managers, setManagers] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [deleteProject, setDeleteProject] = useState("");
+  // State for storing the response
   const [project, setProject] = useState("");
-  //useContext
+  const [filterStartDate, setFilterStartDate] = useState(""); // For filtering
+  const [filterEndDate, setFilterEndDate] = useState(""); // For filtering
+
+  // Function to handle the change in member selection
+  const handleMemberChange = (selectedOptions) => {
+    // Update state with selected member IDs
+    setSelectMember(selectedOptions.map((option) => option.value));
+  };
+
+  // useContext
   const { projectDetails } = useContext(ProjectContext);
+
   const projectObj = {
     projectName,
     managerName,
@@ -34,8 +48,31 @@ const Projects = () => {
     description,
   };
 
-  // function for handle the form
-  const submitHanlder = async (e) => {
+  const getAllUserRegisterDetails = async () => {
+    try {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/all/registerDetails`
+      );
+      const allUsers = response.data.data.user;
+      const filteredManagers = allUsers.filter(
+        (user) => user.role === "Manager"
+      );
+      setManagers(filteredManagers); // Set filtered managers
+      setMembers(allUsers);
+      console.log(filteredManagers);
+    } catch (error) {
+      console.log("Error fetching registered users:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllUserRegisterDetails();
+  }, []);
+
+  // Function for handling the form submission
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
@@ -51,8 +88,11 @@ const Projects = () => {
         }
       );
       setProject(response.data.data.project);
-      // console.log(response.data.data.project);
-      //handle the response
+      console.log(response.data.data.project);
+      // Store user data in local storage
+      localStorage.setItem("projectDetails", JSON.stringify(response.data));
+
+      // handle the response
       toast.success("Project Added Successfully!", {
         position: "top-right",
         autoClose: 1000,
@@ -66,33 +106,38 @@ const Projects = () => {
     }
   };
 
+  // Filter projects based on selected dates
+  const filteredProjects = projectDetails.filter((item) => {
+    const projectStartDate = new Date(item.startDate);
+    const projectEndDate = new Date(item.endDate);
+    const filterStart = filterStartDate ? new Date(filterStartDate) : null;
+    const filterEnd = filterEndDate ? new Date(filterEndDate) : null;
+
+    return (
+      (!filterStart || projectStartDate >= filterStart) &&
+      (!filterEnd || projectEndDate <= filterEnd)
+    );
+  });
+
   return (
     <>
+      {/* <ToastContainer /> */}
       <MainDashboard />
       {/*------select----options-----------*/}
-      <div className="lg:px-[8rem] xs:ml-[5rem] xs:flex-wrap lg:flex lg:flex-row justify-end items-center gap-4 text-center shadow-lg rounded-lg">
+      <div className="lg:px-[8rem] xs:ml-[5rem] pb-6 xs:flex-wrap lg:flex lg:flex-row justify-end items-center gap-4 text-center shadow-lg rounded-lg">
         <p className="font-semibold">Select date range</p>
-        <input type="date" />
+        <input
+          type="date"
+          value={filterStartDate}
+          onChange={(e) => setFilterStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          value={filterEndDate}
+          onChange={(e) => setFilterEndDate(e.target.value)}
+        />
 
-        <form class="text-center flex flex-col">
-          <label
-            for="small"
-            class=" font-semibold text-sm  text-gray-900 dark:text-white"
-          >
-            Select Status
-          </label>
-          <select
-            id="small"
-            class="p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected>Choose a Location</option>
-            <option value="US">See all</option>
-            <option value="CA">Not started</option>
-            <option value="FR">In progress</option>
-            <option value="DE">Hold</option>
-            <option value="DE">Completed</option>
-          </select>
-        </form>
+        <form className="text-center flex flex-col"></form>
         <Button variant="contained" onClick={() => setProjectModal(true)}>
           Add Project Details
         </Button>
@@ -104,70 +149,87 @@ const Projects = () => {
           onClose={() => setProjectModal(false)}
         >
           <Modal.Body>
-            <div class=" max-w-4xl mx-auto bg-white p-16">
-              <form onSubmit={submitHanlder}>
+            <div className="max-w-4xl mx-auto bg-white p-16">
+              <form onSubmit={submitHandler}>
                 <div className="pb-5">
                   <label
-                    for="first_name"
-                    class=" block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    htmlFor="first_name"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
                     Project Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="first_name"
-                    class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Enter Project Name"
                     required
                     onChange={(e) => setProjectName(e.target.value)}
                   />
                 </div>
-                <div class="grid gap-8 mb-6 lg:grid-cols-2">
+                <div className="grid gap-8 mb-6 lg:grid-cols-2">
                   <div>
                     <label
-                      for="company"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="company"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
                       Manager's name <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
-                      id="company"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter manager name"
-                      required
+                    <select
+                      value={managerName}
                       onChange={(e) => setManagerName(e.target.value)}
-                    />
+                      className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900"
+                      required
+                    >
+                      <option value="">Select Manager</option>
+                      {managers.map((manager) => (
+                        <option key={manager._id} value={manager.firstName}>
+                          {manager.firstName} {manager.lastName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label
-                      for="phone"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="phone"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
                       Select Member <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="number"
-                      id="number"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter number of members"
+                    <Select
+                      isMulti
+                      name="members"
+                      options={members.map((member) => ({
+                        value: member._id,
+                        label: `${member.firstName} ${member.lastName}`,
+                      }))}
+                      onChange={handleMemberChange}
+                      value={members
+                        .filter((member) => selectMember.includes(member._id))
+                        .map((member) => ({
+                          value: member._id,
+                          label: `${member.firstName} ${member.lastName}`,
+                        }))}
+                      className="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-gray-900"
                       required
-                      onChange={(e) => setSelectMember(e.target.value)}
                     />
+                    <p className="mt-2 text-sm text-gray-500">
+                      Selected Members: {selectMember.length}{" "}
+                      {selectMember.length === 1 ? "member" : "members"}
+                    </p>
                   </div>
 
                   <div>
                     <label
-                      for="visitors"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="visitors"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
                       Start Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
                       id="visitors"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Enter employee code"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required
                       onChange={(e) => setStartDate(e.target.value)}
                     />
@@ -175,16 +237,15 @@ const Projects = () => {
 
                   <div>
                     <label
-                      for="visitors"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="visitors"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
                       End Date <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
                       id="visitors"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Select shift"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       required
                       onChange={(e) => setEndDate(e.target.value)}
                     />
@@ -193,35 +254,35 @@ const Projects = () => {
 
                 <div>
                   <label
-                    for="description"
+                    htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
                     Project Description
                   </label>
                   <textarea
-                    className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500border rounded-lg"
-                    cols={53}
-                    rows={4}
-                    placeholder="Write Description Here..."
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Project Description"
+                    required
                     onChange={(e) => setDescription(e.target.value)}
-                  ></textarea>
+                  />
                 </div>
 
-                <button
-                  type="submit"
-                  class="text-white mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Add Project
-                </button>
+                <div className="pt-6 text-center">
+                  <button
+                    type="submit"
+                    className="px-8 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                  >
+                    Submit
+                  </button>
+                </div>
               </form>
             </div>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className="xs:pl-[4rem]">
             <Button onClick={() => setProjectModal(false)}>Closed</Button>
           </Modal.Footer>
         </Modal>
       </div>
-
       {/*--------Table-------------*/}
       <div className="">
         <div class="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] xs:mt-5 lg:pt-10 p-4 bg-white shadow-md rounded-lg ">
@@ -250,21 +311,33 @@ const Projects = () => {
                 </th>
               </tr>
             </thead>
-            {projectDetails.length > 0 ? (
-              projectDetails.map((item, index) => (
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((item, index) => (
                 <tbody key={index}>
-                  <tr class=" bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {item.projectName}
                     </th>
-                    <td class="px-6 py-4">{item.selectMember}</td>
+                    <td class="px-6 py-4">
+                      {item.selectMember && item.selectMember.length > 0
+                        ? item.selectMember
+                            .map((memberId) => {
+                              const member = members.find(
+                                (m) => m._id === memberId
+                              );
+                              return member
+                                ? `${member.firstName} ${member.lastName}`
+                                : "Unknown";
+                            })
+                            .join(", ")
+                        : "No members assigned"}
+                    </td>
                     <td class="px-6 py-4">{item.managerName}</td>
-                    <td class="px-6 py-4">{item.startDate || "not found"} </td>
-                    <td class="px-6 py-4">{item.startDate || "not found"}</td>
-
+                    <td class="px-6 py-4">{item.startDate || "Not Found"}</td>
+                    <td class="px-6 py-4">{item.endDate || "Not Found"}</td>
                     <td className="px-6 py-4 text-center">
                       <RiDeleteBin6Line className="text-red-500" />
                     </td>
@@ -272,7 +345,7 @@ const Projects = () => {
                 </tbody>
               ))
             ) : (
-              <p>Data not found</p>
+              <p className="text-center">Data not found</p>
             )}
           </table>
         </div>

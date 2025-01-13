@@ -304,6 +304,11 @@ export default function Dashboard() {
       icon: <TbListDetails className="text-2xl " />,
       path: "/employee/all/leave",
     },
+    {
+      text: <span className="text-[1rem] font-semibold">Emp Location</span>,
+      icon: <TbListDetails className="text-2xl " />,
+      path: "/employee/location",
+    },
   ];
 
   return (

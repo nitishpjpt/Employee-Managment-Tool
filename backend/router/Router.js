@@ -14,6 +14,7 @@ import { getAllUser } from "../controller/employee_controller.js";
 import {
   projectDetails,
   getAllProject,
+  deleteProject,
 } from "../controller/projectController.js";
 import { addBackgroundVerification } from "../controller/bgVerificationController.js";
 import { addBankVerification } from "../controller/bankVerification_controller.js";
@@ -55,6 +56,7 @@ userRouter.route("/reset-password/verify").post(resetPassword);
 userRouter.route("/admin/reset-password/request").post(adminRequestPasswordReset);
 userRouter.route("/admin/reset-password/verify").post(adminResetPassword);
 userRouter.route("/employee/:id").put(editEmployeeDetails);
+userRouter.route("/project/delete/:deleteProject}").delete(deleteProject);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);
