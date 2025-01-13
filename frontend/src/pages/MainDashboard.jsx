@@ -44,6 +44,8 @@ import { RiMenu5Fill } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { FaFingerprint } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoLocationOutline } from "react-icons/io5";
 
 const drawerWidth = 240;
 
@@ -306,7 +308,7 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">Emp Location</span>,
-      icon: <TbListDetails className="text-2xl " />,
+      icon: <IoLocationOutline className="text-2xl " />,
       path: "/employee/location",
     },
   ];
