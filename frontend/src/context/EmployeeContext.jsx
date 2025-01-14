@@ -32,7 +32,7 @@ export const EmployeeProvider = ({ children }) => {
 
   return (
     <EmployeeContext.Provider
-      value={{ employees, fetchEmployees, totalEmployee }}
+      value={{ employees, fetchEmployees, totalEmployee ,setEmployees}}
     >
       {children}
     </EmployeeContext.Provider>

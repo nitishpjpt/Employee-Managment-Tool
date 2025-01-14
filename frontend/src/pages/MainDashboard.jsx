@@ -46,6 +46,8 @@ import { FaFingerprint } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoLocationOutline } from "react-icons/io5";
+import { GiLaptop } from "react-icons/gi";
+import { MdOutlineBlock } from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -310,6 +312,16 @@ export default function Dashboard() {
       text: <span className="text-[1rem] font-semibold">Emp Location</span>,
       icon: <IoLocationOutline className="text-2xl " />,
       path: "/employee/location",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">Assets</span>,
+      icon: <GiLaptop className="text-2xl " />,
+      path: "/company/assets",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">Terminated Emp</span>,
+      icon: <MdOutlineBlock  className="text-2xl " />,
+      path: "/employee/termination",
     },
   ];
 

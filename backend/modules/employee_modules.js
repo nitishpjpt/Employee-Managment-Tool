@@ -106,9 +106,9 @@ const employeeSchema = new mongoose.Schema(
       type: String, // Stores the most recent login time (HH:mm:ss format)
       default: null,
     },
-    otp: String,            // Store the generated OTP
-    otpExpires: Date,       // Store the expiration time of the OTP
-    
+    otp: String, // Store the generated OTP
+    otpExpires: Date, // Store the expiration time of the OTP
+
     loginDate: { type: String }, // Store the last login date
     loginTime: { type: String },
     logoutTime: { type: String },
@@ -134,6 +134,17 @@ const employeeSchema = new mongoose.Schema(
     fullDayLeavesThisMonth: { type: Number, default: 0 }, // Track full-day leaves for the current month
     halfDayLeavesThisMonth: { type: Number, default: 0 }, // Track half-day leaves for the current month
     attendance: [attendanceSchema], // Add the attendance array to track the attendance history
+    // other fields
+    assets: [
+      {
+        type: String, // Store asset names as strings
+      },
+    ],
+    Empstatus: {
+      type: String,
+      enum: ["active", "terminated"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );

@@ -100,10 +100,9 @@ const EmployeeLogin = () => {
         window.location.reload(); // Ensure page state is fresh
       }, 3100); // Slight delay beyond toast autoClose
     } catch (error) {
-      console.error("Employee login failed:", error);
       setLoading(false);
       // Show error toast
-      toast.error("Employee login failed. Please try again.", {
+      toast.error("Access denied. Your account has been terminated.", {
         position: "top-right",
         autoClose: 1000,
       });

@@ -107,6 +107,11 @@ const employeeLogin = async (req, res) => {
       throw new ApiError(404, "Employee not found with this email");
     }
 
+    // check his status terminated or active
+    if (existingUser.Empstatus === "terminated") {
+      throw new ApiError(400, "Employee account is terminated");
+    }
+
     // Existing user is valid, generate access token
     const { accessToken } = await generateAccessToken(existingUser._id);
     if (!accessToken) {
@@ -119,12 +124,10 @@ const employeeLogin = async (req, res) => {
       existingUser.password
     );
     if (!isValidPassword) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Invalid password. Please try again.",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password. Please try again.",
+      });
     }
 
     // Get today's date and login time
@@ -173,7 +176,7 @@ const employeeLogin = async (req, res) => {
       }
     }
 
-    console.log(address)
+    console.log(address);
 
     // Update the user's location in the database if an address is available
     if (address) {
