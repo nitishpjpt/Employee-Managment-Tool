@@ -120,7 +120,14 @@ const EmployeeTable = () => {
             <tbody>
               {getallUser.length > 0 ? (
                 getallUser.map((user, index) => (
-                  <tr key={index} className="bg-white border-b transition-all">
+                  <tr
+                    key={index}
+                    className={`border-b transition-all ${
+                      user.Empstatus === "terminated"
+                        ? "bg-gray-100 text-gray-400"
+                        : "bg-white"
+                    }`}
+                  >
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       {user.firstName} {user.lastName}
                     </td>
@@ -134,7 +141,7 @@ const EmployeeTable = () => {
                         className="text-blue-500 cursor-pointer"
                         onClick={() => handleEditClick(user)}
                       >
-                        <FaRegEdit />
+                        {user.Empstatus == "terminated" ? "" : <FaRegEdit />}
                       </button>
                       <RiDeleteBin6Line
                         className="text-red-500 cursor-pointer"

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
+
 // Create the context
 export const EmployeeContext = createContext();
 
@@ -8,6 +9,7 @@ export const EmployeeContext = createContext();
 export const EmployeeProvider = ({ children }) => {
   const [employees, setEmployees] = useState([]);
   const [totalEmployee, setTotalEmployee] = useState("");
+  const [refresh,setRefresh] = useState("");
 
   // Function to fetch employee data
   const fetchEmployees = async () => {
@@ -28,11 +30,11 @@ export const EmployeeProvider = ({ children }) => {
 
   useEffect(() => {
     fetchEmployees();
-  }, []);
+  }, [refresh]);
 
   return (
     <EmployeeContext.Provider
-      value={{ employees, fetchEmployees, totalEmployee ,setEmployees}}
+      value={{ employees, fetchEmployees, totalEmployee ,setEmployees ,setRefresh}}
     >
       {children}
     </EmployeeContext.Provider>

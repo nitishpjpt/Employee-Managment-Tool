@@ -135,8 +135,12 @@ const TimeSheet = () => {
 
                 return (
                   <tr
-                    key={index}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 transition-all hover:bg-gray-50 dark:hover:bg-gray-600"
+                    key={employee._id}
+                    className={`border-b transition-all ${
+                      employee.Empstatus === "terminated"
+                        ? "bg-gray-100 text-gray-400"
+                        : "bg-white"
+                    }`}
                   >
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {employee.firstName ?? ""}

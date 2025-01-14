@@ -67,7 +67,7 @@ const EmpLocation = () => {
       <div>
         <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl">
           <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
-            Employee Details
+           All Employee Location
           </h1>
           <div className="bg-white shadow-md rounded-lg">
             <table className="w-full overflow-x-auto text-sm text-left rtl:text-right text-gray-500">
@@ -79,15 +79,19 @@ const EmpLocation = () => {
                   <th className="px-6 py-3">Department</th>
                   <th className="px-6 py-3">Role</th>
                   <th className="px-6 py-3">Emp-code</th>
-                  <th className="px-6 py-3">Action</th>
+                  
                 </tr>
               </thead>
               <tbody>
                 {getallUser.length > 0 ? (
                   getallUser.map((user, index) => (
                     <tr
-                      key={index}
-                      className="bg-white border-b transition-all"
+                      key={user._id}
+                      className={`border-b transition-all ${
+                        user.Empstatus === "terminated"
+                          ? "bg-gray-100 text-gray-400"
+                          : "bg-white"
+                      }`}
                     >
                       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         {user.firstName} {user.lastName}

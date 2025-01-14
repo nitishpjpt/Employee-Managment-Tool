@@ -78,7 +78,11 @@ const EmpAllLeave = () => {
               allUsers.map((user) => (
                 <tr
                   key={user._id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  className={`border-b transition-all ${
+                    user.Empstatus === "terminated"
+                      ? "bg-gray-100 text-gray-400"
+                      : "bg-white"
+                  }`}
                 >
                   <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                     {user.firstName} {user.lastName}

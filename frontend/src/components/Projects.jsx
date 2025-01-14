@@ -56,11 +56,17 @@ const Projects = () => {
         }/api/v1/user/employee/all/registerDetails`
       );
       const allUsers = response.data.data.user;
-      const filteredManagers = allUsers.filter(
+
+      // Filter out terminated users
+      const activeUsers = allUsers.filter(
+        (user) => user.Empstatus !== "terminated"
+      );
+
+      const filteredManagers = activeUsers.filter(
         (user) => user.role === "Manager"
       );
       setManagers(filteredManagers); // Set filtered managers
-      setMembers(allUsers);
+      setMembers(activeUsers);
       console.log(filteredManagers);
     } catch (error) {
       console.log("Error fetching registered users:", error);

@@ -92,7 +92,12 @@ const FrontPage = () => {
               <tbody>
                 {getallUser.length > 0 ? (
                   getallUser.map((user, index) => (
-                    <tr key={index} className="bg-white border-b">
+                    <tr  key={user._id}
+                    className={`border-b transition-all ${
+                      user.Empstatus === "terminated"
+                        ? "bg-gray-100 text-gray-400"
+                        : "bg-white"
+                    }`}>
                       <td className="px-6 py-4 font-medium text-gray-900">
                         {user.firstName} {user.lastName}
                       </td>
