@@ -13,7 +13,9 @@ const Login = () => {
   const getLocation = () =>
     new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        return reject(new Error("Geolocation is not supported by your browser."));
+        return reject(
+          new Error("Geolocation is not supported by your browser.")
+        );
       }
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -65,10 +67,13 @@ const Login = () => {
       }, 3100);
     } catch (error) {
       console.log("Login failed", error);
-      toast.error("Login failed. Please try again.", {
-        position: "top-right",
-        autoClose: 1000,
-      });
+      toast.error(
+        error.response.data.message || "Login failed. Please try again.",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
     } finally {
       setLoading(false);
     }

@@ -35,6 +35,7 @@ import EmpAllLeave from "./components/EmpAllLeave";
 import EmpLocation from "./components/EmpLocation";
 import Assets from "./components/Assets";
 import Termination from "./components/Termination";
+import EmpAdvanced from "./components/EmpAdvanced";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -330,6 +331,16 @@ const App = () => {
             />
           }
         />
+
+        <Route
+          path="/employee/advanced"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpAdvanced />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            ></EmployeeProtectedRoute>
+          }
+        ></Route>
 
         <Route
           path="/employee/forgot/password"

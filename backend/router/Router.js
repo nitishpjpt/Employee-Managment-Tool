@@ -35,6 +35,9 @@ import { adminResetPassword, adminRequestPasswordReset} from "../controller/admi
 import editEmployeeDetails from "../controller/empEditDetails_controller.js";
 import {assets,fetchAllAssets} from "../controller/assets.controller.js";
 import terminateEmployee from "../controller/Terminated_controller.js";
+import { getAllEmployees, getEligibleEmployees, updateSalaries } from "../controller/payroll_controller.js";
+import { get } from "mongoose";
+import { approveAdvanceRequest, getAdvanceRequests, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -62,6 +65,12 @@ userRouter.route("/project/delete/:deleteProject}").delete(deleteProject);
 userRouter.route("/assign/assets").post(assets);
 userRouter.route("/employeeWithAssets").get(fetchAllAssets)
 userRouter.route("/terminate/:employeeId").patch(terminateEmployee);
+// userRouter.route("/update/salary/:employeeId").put(updateSalaries);
+// userRouter.route("/eligible/emploees").get(getEligibleEmployees);
+// userRouter.route("/all/employees").get(getAllEmployees);
+userRouter.route("/request/advance/:employeeId").post(requestAdvance);
+userRouter.route("/requests/advance/:employeeId").get(getAdvanceRequests);
+userRouter.route("/request/advance/approve/:employeeId/:requestId").put(approveAdvanceRequest)
 
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);

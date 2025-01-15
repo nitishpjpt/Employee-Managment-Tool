@@ -196,6 +196,11 @@ function EmpDashboard() {
                       Documents
                     </Link>
                   </MenuItem>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/employee/adanced" className="block px-4 py-2">
+                      Advanced
+                    </Link>
+                  </MenuItem>
                 </Menu>
               </Box>
 
@@ -215,6 +220,9 @@ function EmpDashboard() {
                 </Link>
                 <Link to="/employee/documents" className="block px-4 py-2">
                   Documents
+                </Link>
+                <Link to="/employee/advanced" className="block px-4 py-2">
+                  Advanced
                 </Link>
               </Box>
 

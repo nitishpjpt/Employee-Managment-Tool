@@ -145,6 +145,21 @@ const employeeSchema = new mongoose.Schema(
       enum: ["active", "terminated"],
       default: "active",
     },
+    lastSalaryIncrementDate: { type: Date, default: null }, // field for salary increment
+    advanceRequests: [
+      {
+        amount: { type: Number, required: true },
+        reason: { type: String, required: true },
+        status: {
+          type: String,
+          enum: ["pending", "approved", "rejected"],
+          default: "pending",
+        },
+        requestDate: { type: Date, default: Date.now },
+        responseDate: { type: Date },
+      },
+    ],
+    
   },
   { timestamps: true }
 );

@@ -94,16 +94,17 @@ const userLogin = async (req, res) => {
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 
     if (!existingUser) {
-      throw new ApiError(
-        401,
-        "User not found. Please check your username or email."
-      );
+      return res
+        .status(401)
+        .json({ message: "User with this email does not exist" });
     }
 
     const isValidPassword = await existingUser.isPasswordCorrect(password);
 
     if (!isValidPassword) {
-      throw new ApiError(401, "Invalid password. Please try again.");
+      return res
+      .status(401)
+      .json({ message: "User password is incorrect" });
     }
 
     const { accessToken } = await generateAccessToken(existingUser._id);
