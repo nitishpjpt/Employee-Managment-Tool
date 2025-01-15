@@ -77,13 +77,13 @@ const Assets = () => {
     <>
       <MainDashboard />
       <div>
-        <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl">
-          <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
-            Assign assets to employee
-          </h1>
+        <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl min-h-screen bg-gray-100">
+          <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold">Assign Assets</h2>
+          </div>
           <div className="bg-white shadow-md rounded-lg">
             <table className="w-full overflow-x-auto text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
                   <th className="px-6 py-3">Name</th>
                   <th className="px-6 py-3">Department</th>
@@ -106,33 +106,41 @@ const Assets = () => {
                       }`}
                     >
                       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        {user.firstName} 
+                        {user.firstName}
                       </td>
                       <td className="px-6 py-4">{user.department}</td>
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>
                       <td className="px-6 py-4">{user.assets || []}</td>
                       <td className="px-2 py-4">
-                        <Select
-                          options={assetOptions}
-                          isMulti
-                          value={selectedAssets[user._id] || []}
-                          onChange={(selected) =>
-                            handleAssetChange(selected, user._id)
-                          }
-                          placeholder="Assign assets"
-                          className="w-60"
-                        />
+                        {user.Empstatus == "terminated" ? (
+                          ""
+                        ) : (
+                          <Select
+                            options={assetOptions}
+                            isMulti
+                            value={selectedAssets[user._id] || []}
+                            onChange={(selected) =>
+                              handleAssetChange(selected, user._id)
+                            }
+                            placeholder="Assign assets"
+                            className="w-60"
+                          />
+                        )}
                       </td>
                       <td className="px-6 py-4">
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => assignAssets(user._id)}
-                          disabled={assigning[user._id]} // Disable button for the specific employee when assigning
-                        >
-                          {assigning[user._id] ? "Assigning..." : "Add"}
-                        </Button>
+                        {user.Empstatus == "terminated" ? (
+                          ""
+                        ) : (
+                          <Button
+                            variant="contained"
+                            color="success"
+                            onClick={() => assignAssets(user._id)}
+                            disabled={assigning[user._id]} // Disable button for the specific employee when assigning
+                          >
+                            {assigning[user._id] ? "Assigning..." : "Add"}
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   ))

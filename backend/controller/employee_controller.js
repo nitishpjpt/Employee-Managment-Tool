@@ -107,9 +107,11 @@ const employeeLogin = async (req, res) => {
       throw new ApiError(404, "Employee not found with this email");
     }
 
-    // check his status terminated or active
+    // check if the emp status is terminated or active
     if (existingUser.Empstatus === "terminated") {
-      throw new ApiError(400, "Employee account is terminated");
+      return res
+        .status(401)
+        .json({ message: "Employee is terminated by admin" });
     }
 
     // Existing user is valid, generate access token

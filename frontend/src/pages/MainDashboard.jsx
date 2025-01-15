@@ -320,8 +320,13 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">Terminated Emp</span>,
-      icon: <MdOutlineBlock  className="text-2xl " />,
+      icon: <MdOutlineBlock className="text-2xl " />,
       path: "/employee/termination",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">Payroll</span>,
+      icon: <MdOutlineBlock className="text-2xl " />,
+      path: "/employee/payroll",
     },
   ];
 
@@ -519,7 +524,7 @@ export default function Dashboard() {
           </List>
         </Drawer>
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }} > 
           <DrawerHeader />
           <Typography sx={{ marginBottom: 2 }}>
             {/* <!-- Statistics Cards --> */}

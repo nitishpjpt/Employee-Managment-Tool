@@ -70,7 +70,7 @@ const EmployeeLogin = () => {
 
       // Log response for debugging
       console.log("Login response:", response);
-
+         
       // Handle time data
       const date = new Date(response.data.data.createdAt);
       console.log(
@@ -84,6 +84,7 @@ const EmployeeLogin = () => {
       localStorage.setItem("employeeLogin", JSON.stringify(response.data));
       console.log("Employee data stored in localStorage:", response.data);
 
+    
       // Show success toast and navigate to home page after it completes
       toast.success("Employee Login successfully!", {
         position: "top-right",
@@ -102,7 +103,8 @@ const EmployeeLogin = () => {
     } catch (error) {
       setLoading(false);
       // Show error toast
-      toast.error("Access denied. Your account has been terminated.", {
+      
+      toast.error(error.response.data.message || "Access denied. Your account has been terminated.", {
         position: "top-right",
         autoClose: 1000,
       });

@@ -42,10 +42,12 @@ const Reports = () => {
         <MainDashboard />
         {/*--------Table-------------*/}
         <div>
-        <h1 className="text-center text-2xl font-bold ">Reports</h1>
-          <div class="relative lg:ml-[14rem] xs:ml-[5rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8  p-4 ">
+          <div class="relative lg:ml-[14rem] xs:ml-[5rem] overflow-x-auto pt-10 px-4 sm:px-6 lg:px-8 p-4 min-h-screen bg-gray-100">
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold">Employees Report</h2>
+        </div>
             <table class="w-full  p-4 bg-white text-sm text-left text-gray-600 dark:text-gray-400 border-collapse rounded-lg shadow-lg">
-              <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+              <thead class="text-xs uppercase bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>
                   <th
                     scope="col"

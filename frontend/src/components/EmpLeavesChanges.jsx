@@ -51,10 +51,10 @@ const EmpLeavesChanges = () => {
     <>
       <ToastContainer />
       <MainDashBoard />
-      <div className="lg:ml-[15rem] xs:ml-[5rem] p-10">
-        <h2 className="text-2xl font-bold mb-4">
-          Update Employee Leave Balance
-        </h2>
+      <div className="lg:ml-[15rem] xs:ml-[5rem] p-10 bg-gray-100 min-h-screen">
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold">Update Employee Leave Balance</h2>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">

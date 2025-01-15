@@ -43,13 +43,13 @@ const Termination = () => {
     <>
       <MainDashboard />
       <div>
-        <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl">
-          <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
-            Terminated Employee
-          </h1>
+        <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100 min-h-screen">
+          <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold">Terminated Employee</h2>
+          </div>
           <div className=" bg-white shadow-md rounded-lg">
             <table className="w-full overflow-x-auto  text-sm text-left rtl:text-right text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
                   <th className="px-6 py-3">Full Name</th>
                   <th className="px-6 py-3">Department</th>

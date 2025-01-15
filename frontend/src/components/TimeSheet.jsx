@@ -106,10 +106,12 @@ const TimeSheet = () => {
       </div>
 
       {/* Table */}
-      <div className="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] pt-10 p-2 bg-white shadow-md rounded-lg">
-        <h1 className="text-center text-2xl font-bold pb-4">Timesheet</h1>
+      <div className="relative min-h-screen overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] pt-10 p-2 bg-gray-100  shadow-md rounded-lg">
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold">Timesheet</h2>
+        </div>
         <table className="w-full text-sm text-left rtl:text-right  text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-800 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-800 dark:text-gray-400">
             <tr>
               <th className="px-6 py-3">Name</th>
               <th className="px-6 py-3">Employee Code</th>

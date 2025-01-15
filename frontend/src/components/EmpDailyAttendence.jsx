@@ -34,12 +34,12 @@ const EmpDailyAttendance = () => {
     return <div className="text-center text-xl text-red-500">{error}</div>;
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-100 min-h-screen">
       <MainDashboard />
       <div className="max-w-7xl mx-auto lg:ml-[15rem] xs:ml-[5rem] mt-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Daily Attendance
-        </h2>
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold">Daily Attendence</h2>
+        </div>
 
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <table className="min-w-full table-auto text-sm text-left text-gray-700">

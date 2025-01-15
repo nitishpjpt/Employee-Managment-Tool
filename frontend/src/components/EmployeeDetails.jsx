@@ -223,6 +223,7 @@ const EmployeeDetails = () => {
   return (
     <>
       {/* <ToastContainer /> */}
+      <div className="bg-gray-100">
       <MainDashboard />
       <div>
         <div className="w-[100vw]">
@@ -846,6 +847,7 @@ const EmployeeDetails = () => {
           </div>
           <EmployeeTable />
         </div>
+      </div>
       </div>
     </>
   );

@@ -133,6 +133,15 @@ const App = () => {
           }
         />
         <Route
+          path="/employee/payroll"
+          element={
+            <ProtectedRoute
+              element={<Payroll />}
+              isAuthenticated={isAuthenticated}
+            ></ProtectedRoute>
+          }
+        ></Route>
+        <Route
           path="/employee/all/leave"
           element={
             <ProtectedRoute
