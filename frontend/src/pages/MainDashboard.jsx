@@ -48,6 +48,10 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoLocationOutline } from "react-icons/io5";
 import { GiLaptop } from "react-icons/gi";
 import { MdOutlineBlock } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -253,6 +257,13 @@ export default function Dashboard() {
   //context for total registered user
   const { totalEmployee } = useContext(EmployeeContext);
 
+  // for the attendece dropdown menu item
+  const [attendanceOpen, setAttendanceOpen] = useState(false);
+
+  const handleAttendanceToggle = () => {
+    setAttendanceOpen(!attendanceOpen);
+  };
+
   const menuItems = [
     {
       text: <span className="text-[1rem]  font-semibold">Dashboard</span>,
@@ -294,20 +305,32 @@ export default function Dashboard() {
       path: "/employee/salary/management",
     },
     {
-      text: <span className="text-[1rem] font-semibold">Daily Attendance</span>,
-      icon: <MdCoPresent className="text-2xl " />,
-      path: "/employee/daily/attendance",
+      text: <span className="text-[1rem] font-semibold">Attendence</span>,
+      icon: <MdCoPresent className="text-2xl" />,
+      onClick: handleAttendanceToggle,
+      subMenu: [
+        {
+          text: (
+            <span className="text-[1rem] font-semibold">Daily Attendence</span>
+          ),
+          icon: <MdCoPresent className="text-xl " />,
+          path: "/employee/daily/attendance",
+        },
+        {
+          text: (
+            <span className="text-[1rem] font-semibold">All Attendance</span>
+          ),
+          icon: <FaFingerprint className="text-2xl " />,
+          path: "/employee/all/attendence",
+        },
+        {
+          text: <span className="text-[1rem] font-semibold">All Leave</span>,
+          icon: <TbListDetails className="text-2xl " />,
+          path: "/employee/all/leave",
+        },
+      ],
     },
-    {
-      text: <span className="text-[1rem] font-semibold">All Attendance</span>,
-      icon: <FaFingerprint className="text-2xl " />,
-      path: "/employee/all/attendence",
-    },
-    {
-      text: <span className="text-[1rem] font-semibold">All Leave</span>,
-      icon: <TbListDetails className="text-2xl " />,
-      path: "/employee/all/leave",
-    },
+
     {
       text: <span className="text-[1rem] font-semibold">Emp Location</span>,
       icon: <IoLocationOutline className="text-2xl " />,
@@ -324,7 +347,7 @@ export default function Dashboard() {
       path: "/employee/termination",
     },
     {
-      text: <span className="text-[1rem] font-semibold">Payroll</span>,
+      text: <span className="text-[1rem] font-semibold">Advanced Money</span>,
       icon: <TbReportMoney className="text-2xl " />,
       path: "/employee/payroll",
     },
@@ -336,7 +359,7 @@ export default function Dashboard() {
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
-          <Toolbar className="bg-[#ffffff] ">
+          <Toolbar className="bg-[#ffffff]">
             <IconButton
               color="primary"
               aria-label="open drawer"
@@ -469,57 +492,102 @@ export default function Dashboard() {
           </DrawerHeader>
 
           <List className="border-none text-3xl bg-[#F5F9FE] dark:bg-[#1F2937]">
-            {menuItems.map(({ text, icon, path, onClick }) => (
-              <ListItem
-                className="p-1"
-                key={text}
-                disablePadding
-                sx={{ display: "block" }}
-              >
-                <ListItemButton
-                  sx={[
-                    {
-                      minHeight: 55,
-                      px: 1.5,
-                      transition: "all 0.3s ease-in-out",
-                      color: "#333333", // Default text and icon color
-                      "&:hover": {
-                        backgroundColor: "#0080FC",
-                        cursor: "pointer",
-                        color: "white", // Hover text and icon color
-                        borderRadius: "8px", // Rounded corners
-                      },
-                      "&:hover .MuiListItemIcon-root, &:hover .MuiListItemText-primary":
-                        {
-                          color: "white",
-                        },
-                    },
-                    open
-                      ? { justifyContent: "initial" }
-                      : { justifyContent: "center" },
-                  ]}
-                  onClick={onClick || (() => handleNavigation(path))}
+            {menuItems.map(({ text, icon, path, subMenu, onClick }) => (
+              <React.Fragment key={text}>
+                <ListItem
+                  className="p-1"
+                  key={text}
+                  disablePadding
+                  sx={{ display: "block" }}
                 >
-                  <ListItemIcon
-                    className="MuiListItemIcon-root"
+                  <ListItemButton
                     sx={[
                       {
-                        minWidth: 0,
-                        justifyContent: "center",
-                        color: "#6B7280",
+                        minHeight: 55,
+                        px: 1.5,
+                        transition: "all 0.3s ease-in-out",
+                        color: "#333333", // Default text and icon color
+                        "&:hover": {
+                          backgroundColor: "#0080FC",
+                          cursor: "pointer",
+                          color: "white", // Hover text and icon color
+                          borderRadius: "8px", // Rounded corners
+                        },
+                        "&:hover .MuiListItemIcon-root, &:hover .MuiListItemText-primary":
+                          {
+                            color: "white",
+                          },
                       },
-                      open ? { mr: 2 } : { mr: "auto" },
+                      open
+                        ? { justifyContent: "initial" }
+                        : { justifyContent: "center" },
                     ]}
+                    onClick={onClick || (() => handleNavigation(path))}
                   >
-                    {icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={text}
-                    className="MuiListItemText-primary text-[#333333]"
-                    sx={[open ? { opacity: 1 } : { opacity: 0 }]}
-                  />
-                </ListItemButton>
-              </ListItem>
+                    <ListItemIcon
+                      className="MuiListItemIcon-root"
+                      sx={[
+                        {
+                          minWidth: 0,
+                          justifyContent: "center",
+                          color: "#6B7280",
+                        },
+                        open ? { mr: 2 } : { mr: "auto" },
+                      ]}
+                    >
+                      {icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      className="MuiListItemText-primary text-[#333333]"
+                      sx={[open ? { opacity: 1 } : { opacity: 0 }]}
+                    />
+                    {subMenu &&
+                      (attendanceOpen ? (
+                        <MdOutlineKeyboardArrowUp className="text-2xl" />
+                      ) : (
+                        <MdOutlineKeyboardArrowDown className="text-2xl" />
+                      ))}
+                  </ListItemButton>
+                </ListItem>
+                {subMenu && attendanceOpen && (
+                  <List className="pl-6">
+                    {subMenu.map(({ text, icon, path }) => (
+                      <ListItem key={text} disablePadding>
+                        <ListItemButton
+                          sx={{
+                            px: 3,
+                            transition: "all 0.3s ease-in-out",
+                            color: "#333333", // Default text and icon color
+                            "&:hover": {
+                              backgroundColor: "#0080FC",
+                              cursor: "pointer",
+                              color: "white", // Hover text and icon color
+                              borderRadius: "8px", // Rounded corners
+                            },
+                            "&:hover .MuiListItemIcon-root, &:hover .MuiListItemText-primary":
+                              {
+                                color: "white",
+                              },
+                          }}
+                          onClick={() => handleNavigation(path)}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              minWidth: 0,
+                              justifyContent: "center",
+                              color: "#6B7280",
+                            }}
+                          >
+                            {icon}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                )}
+              </React.Fragment>
             ))}
           </List>
         </Drawer>

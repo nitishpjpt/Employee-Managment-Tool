@@ -10,34 +10,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const getLocation = () =>
-    new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        return reject(
-          new Error("Geolocation is not supported by your browser.")
-        );
-      }
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          resolve({ latitude, longitude });
-        },
-        (error) => reject(error)
-      );
-    });
-
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Capture user's location
-      const location = await getLocation();
-
       const userData = {
         email,
         password,
-        location, // Send the location (latitude, longitude) to the backend
       };
 
       const response = await axios.post(
@@ -98,7 +78,7 @@ const Login = () => {
           {/* Right Section with Form */}
           <div className="flex flex-col justify-center p-8 lg:w-1/2">
             <h1 className="text-3xl font-bold text-gray-800 text-center mb-4">
-              Welcome Back!
+              Welcome Back Admin!
             </h1>
             <p className="text-gray-500 text-center mb-6">
               Please login to access your account.

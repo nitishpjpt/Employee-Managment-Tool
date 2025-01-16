@@ -77,7 +77,10 @@ const Payroll = () => {
       await axios.put(
         `${baseUrl}/api/v1/user/request/advance/approve/${employeeId}/${requestId}`
       );
-      toast.success("Advance request approved!");
+      toast.success("Advance request approved!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
       setAdvanceRequests((prevRequests) => ({
         ...prevRequests,
         [employeeId]: prevRequests[employeeId].map((req) =>
@@ -88,7 +91,13 @@ const Payroll = () => {
       }));
     } catch (error) {
       console.error("Error approving advance request:", error);
-      toast.error("Failed to approve advance request.");
+      toast.error(
+        error.response.data.message || "Failed to approve advance request.",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
     }
   };
 
@@ -140,7 +149,7 @@ const Payroll = () => {
 
       toast.success("Advance request updated successfully!", {
         position: true,
-        autoClose: 2000,
+        autoClose: 1000,
       });
       setAdvanceRequests((prevRequests) => ({
         ...prevRequests,

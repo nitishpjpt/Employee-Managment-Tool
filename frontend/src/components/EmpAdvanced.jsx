@@ -93,7 +93,7 @@ const EmpAdvanced = ({ employee }) => {
       <div className="p-6 bg-gray-100 min-h-screen">
         <div className="max-w-4xl mx-auto">
           <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md mb-6">
-            <h2 className="text-2xl font-bold">Advance Request</h2>
+            <h2 className="text-2xl font-bold">Advance Money Request</h2>
           </div>
 
           <div className="bg-white shadow-lg rounded-lg p-6">

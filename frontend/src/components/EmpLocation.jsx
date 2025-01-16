@@ -8,6 +8,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 const EmpLocation = () => {
   const [getallUser, setAllUser] = useState([]);
   const [selectedUserLocation, setSelectedUserLocation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getAllUserRegisterDetails = async () => {
     try {
@@ -18,7 +19,7 @@ const EmpLocation = () => {
       );
       setAllUser(response.data.data.user);
     } catch (error) {
-      console.log("Error fetching registered users:", error);
+      console.error("Error fetching registered users:", error);
     }
   };
 
@@ -27,37 +28,46 @@ const EmpLocation = () => {
   }, []);
 
   const openMapPopup = async (location) => {
-    const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        location
-      )}.json?access_token=${import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}`
-    );
-    const data = await response.json();
-    console.log(data);
-    const place = data.features[0];
-    if (place) {
-      const coordinates = place.center;
-      setSelectedUserLocation(coordinates); // Set the location to be displayed on the map
-      console.log(coordinates);
-    } else {
-      setSelectedUserLocation(null);
+    try {
+      const response = await axios(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          location
+        )}.json?access_token=${import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}`
+      );
+      console.log(response.data);
+
+      const data = await response.data;
+      const place = data.features[0];
+      if (place) {
+        const coordinates = place.center;
+        setSelectedUserLocation(coordinates);
+        setIsModalOpen(true);
+      } else {
+        console.error("Location not found.");
+        setSelectedUserLocation(null);
+      }
+      console.log({ data, place });
+    } catch (error) {
+      console.error("Error fetching location:", error);
     }
   };
 
   useEffect(() => {
     if (selectedUserLocation) {
-      // Initialize Mapbox map when a location is selected
+      mapboxgl.accessToken = `${import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}`;
       const map = new mapboxgl.Map({
-        container: "map", // The ID of the container where the map will be rendered
-        style: "mapbox://styles/mapbox/streets-v11", // Map style
-        center: [selectedUserLocation[0], selectedUserLocation[1]], // Set the center of the map based on coordinates
-        zoom: 13, // Initial zoom level
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [selectedUserLocation[0], selectedUserLocation[1]],
+        zoom: 13,
       });
 
-      // Add a marker for the user's location
+      console.log(selectedUserLocation);
       new mapboxgl.Marker()
         .setLngLat([selectedUserLocation[0], selectedUserLocation[1]])
         .addTo(map);
+
+      return () => map.remove(); // Cleanup map on unmount
     }
   }, [selectedUserLocation]);
 
@@ -67,7 +77,7 @@ const EmpLocation = () => {
       <div>
         <div className="relative overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100 min-h-screen">
           <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold">All Employee Location</h2>
+            <h2 className="text-2xl font-bold">All Employee Locations</h2>
           </div>
           <div className="bg-white shadow-md rounded-lg">
             <table className="w-full overflow-x-auto text-sm text-left rtl:text-right text-gray-500">
@@ -83,7 +93,7 @@ const EmpLocation = () => {
               </thead>
               <tbody>
                 {getallUser.length > 0 ? (
-                  getallUser.map((user, index) => (
+                  getallUser.map((user) => (
                     <tr
                       key={user._id}
                       className={`border-b transition-all ${
@@ -124,31 +134,37 @@ const EmpLocation = () => {
           </div>
         </div>
 
-        {selectedUserLocation && (
-          <div
-            style={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "80%",
-              height: "70%",
-              zIndex: 1000,
-              backgroundColor: "white",
-              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <h2 className="text-center pb-4 font-semibold text-xl text-gray-800">
-              Employee Location
-            </h2>
+        {isModalOpen && (
+          <>
             <div
-              id="map" // This is the container ID for the map
+              className="fixed inset-0 bg-black bg-opacity-50 z-50"
+              onClick={() => setIsModalOpen(false)}
+            ></div>
+            <div
               style={{
-                width: "100%",
-                height: "100%",
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "80%",
+                height: "70%",
+                zIndex: 1000,
+                backgroundColor: "white",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+                borderRadius: "10px",
+                overflow: "hidden",
+                marginLeft: "8rem",
               }}
-            />
-          </div>
+            >
+              <button
+                className="absolute top-3 right-3 text-gray-700"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </button>
+              <div id="map" style={{ width: "100%", height: "100%" }} />
+            </div>
+          </>
         )}
       </div>
     </>
