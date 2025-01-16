@@ -56,9 +56,9 @@ const FrontPage = () => {
     <>
       <MainDashboard />
       <div className="relative overflow-x pt-6 lg:ml-[15.2rem] xs:ml-[4rem] p-2 max-w-7xl">
-        <h1 className="text-center pb-4 font-semibold text-2xl text-gray-800">
-          All Employee Details
-        </h1>
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold">Employee Dashboard</h2>
+        </div>
 
         {/*---employee----table--------*/}
         <div>
@@ -92,12 +92,14 @@ const FrontPage = () => {
               <tbody>
                 {getallUser.length > 0 ? (
                   getallUser.map((user, index) => (
-                    <tr  key={user._id}
-                    className={`border-b transition-all ${
-                      user.Empstatus === "terminated"
-                        ? "bg-gray-100 text-gray-400"
-                        : "bg-white"
-                    }`}>
+                    <tr
+                      key={user._id}
+                      className={`border-b transition-all ${
+                        user.Empstatus === "terminated"
+                          ? "bg-gray-100 text-gray-400"
+                          : "bg-white"
+                      }`}
+                    >
                       <td className="px-6 py-4 font-medium text-gray-900">
                         {user.firstName} {user.lastName}
                       </td>

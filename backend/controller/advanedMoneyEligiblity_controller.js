@@ -27,7 +27,6 @@ const advancedEligibility = async (req, res) => {
   }
 };
 
-
 const getEligiblityPolicy = async (req, res) => {
   try {
     const settings = await Employee.findOne();
@@ -42,6 +41,42 @@ const getEligiblityPolicy = async (req, res) => {
   }
 };
 
+const updateAdvanceAmount = async (req, res) => {
+  const { employeeId, requestId, amount, status } = req.body;
 
+  if (!employeeId || !requestId || amount === undefined || !status) {
+    return res.status(400).send({ message: "Missing required fields." });
+  }
 
-export { advancedEligibility, getEligiblityPolicy };
+  try {
+    // Find the employee by ID
+    const employee = await Employee.findById(employeeId);
+
+    if (!employee) {
+      return res.status(404).send({ message: "Employee not found." });
+    }
+
+    // Find the specific advance request to update
+    const advanceRequest = employee.advanceRequests.id(requestId);
+
+    if (!advanceRequest) {
+      return res.status(404).send({ message: "Advance request not found." });
+    }
+    console.log(advanceRequest);
+
+    // Update the fields of the advance request
+    advanceRequest.amount = amount;
+    advanceRequest.status = status;
+    advanceRequest.responseDate = new Date();
+
+    // Save the updated employee document
+    await employee.save();
+    console.log(employee);
+    res.status(200).send({ message: "Advance request updated successfully." });
+  } catch (error) {
+    console.error("Error updating advance request:", error);
+    res.status(500).send({ message: "Error updating request." });
+  }
+};
+
+export { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount };

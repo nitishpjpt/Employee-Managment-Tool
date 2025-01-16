@@ -10,6 +10,8 @@ const Payroll = () => {
   const { employees } = useContext(EmployeeContext);
   const [advanceRequests, setAdvanceRequests] = useState({});
   const [advanceEligibilityYears, setAdvanceEligibilityYears] = useState(0);
+  const [editingRequest, setEditingRequest] = useState(null); // Track request being edited
+  const [editedAmount, setEditedAmount] = useState(""); // Track the new amount
 
   // Fetch advance requests and eligibility settings
   useEffect(() => {
@@ -112,6 +114,61 @@ const Payroll = () => {
     }
   };
 
+  const handleEditRequest = (employeeId, requestId, currentAmount) => {
+    setEditingRequest({ employeeId, requestId });
+    setEditedAmount(currentAmount); // Set the initial value for editing
+  };
+
+  const handleUpdateRequest = async () => {
+    if (!editingRequest) return;
+
+    const { employeeId, requestId } = editingRequest;
+    console.log(employeeId, requestId);
+    try {
+      const response = await axios.put(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/edit/advanced/amount`,
+        {
+          employeeId,
+          requestId,
+          amount: editedAmount,
+          status: "approved",
+        }
+      );
+      console.log(response.data);
+
+      toast.success("Advance request updated successfully!", {
+        position: true,
+        autoClose: 2000,
+      });
+      setAdvanceRequests((prevRequests) => ({
+        ...prevRequests,
+        [employeeId]: prevRequests[employeeId].map((req) =>
+          req._id === requestId
+            ? {
+                ...req,
+                amount: editedAmount,
+                status: "approved",
+                responseDate: new Date(),
+              }
+            : req
+        ),
+      }));
+      setEditingRequest(null);
+      setEditedAmount("");
+    } catch (error) {
+      console.error("Error updating advance request:", error);
+      toast.error(
+        error.response.data.message || "Failed to update advance request.",
+        {
+          position: true,
+          autoClose: 2000,
+        }
+      );
+    }
+  };
+
   return (
     <>
       <MainDashboard />
@@ -180,13 +237,13 @@ const Payroll = () => {
                         </td>
 
                         {/* Advance Requests */}
-                        <td className="py-4 px-4 border-b text-gray-800">
+                        <td className="py-4 px-4  border-b text-gray-800">
                           {requests.length > 0 ? (
                             <div className="space-y-4">
                               {requests.map((req) => (
                                 <div
                                   key={req._id}
-                                  className="p-3 border rounded-lg bg-gray-50 shadow-sm"
+                                  className="lg:p-3 xs:p-8 xs:px-[2rem] border rounded-lg bg-gray-50 shadow-sm"
                                 >
                                   <p>
                                     <strong>Amount:</strong> ₹ {req.amount}
@@ -228,15 +285,35 @@ const Payroll = () => {
                                         Approve
                                       </button>
                                       <button
-                                        className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition-all w-full sm:w-auto"
+                                        className="bg-yellow-600 text-white py-1 px-3 rounded-lg hover:bg-yellow-700 transition-all w-full sm:w-auto"
                                         onClick={() =>
-                                          handleRejectRequest(
+                                          handleEditRequest(
                                             employee._id,
-                                            req._id
+                                            req._id,
+                                            req.amount
                                           )
                                         }
                                       >
-                                        Reject
+                                        Edit
+                                      </button>
+                                    </div>
+                                  )}
+                                  {editingRequest?.requestId === req._id && (
+                                    <div className="mt-4 space-y-2">
+                                      <input
+                                        type="number"
+                                        value={editedAmount}
+                                        onChange={(e) =>
+                                          setEditedAmount(e.target.value)
+                                        }
+                                        className="border rounded-lg py-2 px-3 text-gray-700 w-full sm:w-32"
+                                        min="0"
+                                      />
+                                      <button
+                                        className="bg-blue-600 text-white py-1 px-3 rounded-lg hover:bg-blue-700 transition-all w-full sm:w-auto"
+                                        onClick={handleUpdateRequest}
+                                      >
+                                        Save Changes
                                       </button>
                                     </div>
                                   )}

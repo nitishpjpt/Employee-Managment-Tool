@@ -38,7 +38,7 @@ import terminateEmployee from "../controller/Terminated_controller.js";
 import { getAllEmployees, getEligibleEmployees, updateSalaries } from "../controller/payroll_controller.js";
 import { get } from "mongoose";
 import { approveAdvanceRequest, getAdvanceRequests, rejectAdvanceRequest, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
-import { advancedEligibility, getEligiblityPolicy } from "../controller/advanedMoneyEligiblity_controller.js";
+import { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount } from "../controller/advanedMoneyEligiblity_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -75,6 +75,7 @@ userRouter.route("/request/advance/approve/:employeeId/:requestId").put(approveA
 userRouter.route("/request/advance/rejected/:employeeId/:requestId").put(rejectAdvanceRequest);
 userRouter.route("/get/advanced/eligiblity").get(getEligiblityPolicy);
 userRouter.route("/set/eligibility/policy").post(advancedEligibility);
+userRouter.route("/edit/advanced/amount").put(updateAdvanceAmount);
 
 
 // employee login
