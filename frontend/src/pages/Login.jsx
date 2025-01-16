@@ -55,7 +55,7 @@ const Login = () => {
       // Store user data in local storage
       localStorage.setItem("userLogin", JSON.stringify(response.data));
 
-      toast.success("Login successful!", {
+      toast.success("Admin Login successful!", {
         position: "top-right",
         autoClose: 1000,
       });

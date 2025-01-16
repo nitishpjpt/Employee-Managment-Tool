@@ -12,6 +12,7 @@ const EmpAdvanced = ({ employee }) => {
   const [employeeId, setEmployeeId] = useState("");
   const [user, setUser] = useState("");
   const [eligibilityDate, setEligibilityDate] = useState(""); // New state for eligibility date
+  const [advanceEligibilityYears, setAdvanceEligibilityYears] = useState(""); // New state for
 
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
@@ -22,8 +23,11 @@ const EmpAdvanced = ({ employee }) => {
 
       // Calculate the eligibility date (2 years from joining date)
       const joiningDate = new Date(parsedUser.data.userResponse.date); // Assuming `date` is the joining date field
-      joiningDate.setFullYear(joiningDate.getFullYear() + 2); // Add 2 years
+      joiningDate.setFullYear(
+        joiningDate.getFullYear() + advanceEligibilityYears
+      ); // Add 2 years
       setEligibilityDate(joiningDate); // Set the eligibility date
+      console.log(joiningDate);
     }
   }, []);
 
@@ -58,24 +62,24 @@ const EmpAdvanced = ({ employee }) => {
           reason,
         }
       );
-     
+
       setAdvanceRequests(response.data.advanceRequests);
       setAmount("");
       setReason("");
-      
-            toast.success("Advanced money request send for approval!", {
-              position: "top-right",
-              autoClose: 1000,
-            });
+
+      toast.success("Advanced money request send for approval!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     } catch (error) {
       console.error(error);
       toast.error(
-              error.response.data.message || "Advanced request does not send.",
-              {
-                position: "top-right",
-                autoClose: 1000,
-              }
-            );
+        error.response.data.message || "Advanced request does not send.",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
     }
   };
 
@@ -106,12 +110,12 @@ const EmpAdvanced = ({ employee }) => {
               <strong>Joining Date:</strong>{" "}
               {new Date(user.date).toLocaleDateString()}
             </p>
-            <p>
+            {/* <p>
               <strong>Eligible for Advance on:</strong>{" "}
               {eligibilityDate
                 ? eligibilityDate.toLocaleDateString()
                 : "Loading..."}
-            </p>
+            </p> */}
           </div>
 
           <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
@@ -171,7 +175,7 @@ const EmpAdvanced = ({ employee }) => {
                             req.status === "approved"
                               ? "text-gray-100"
                               : req.status === "rejected"
-                              ? "text-red-600"
+                              ? "bg-red-600"
                               : "text-gray-100"
                           }
                         >

@@ -9,8 +9,9 @@ import { EmployeeContext } from "../context/EmployeeContext";
 const Payroll = () => {
   const { employees } = useContext(EmployeeContext);
   const [advanceRequests, setAdvanceRequests] = useState({});
+  const [advanceEligibilityYears, setAdvanceEligibilityYears] = useState(0);
 
-  // Fetch advance requests for all employees
+  // Fetch advance requests and eligibility settings
   useEffect(() => {
     const fetchAdvanceRequests = async () => {
       try {
@@ -30,134 +31,229 @@ const Payroll = () => {
       }
     };
 
+    const fetchEligibilityYears = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+          }/api/v1/user/get/advanced/eligiblity`
+        );
+        setAdvanceEligibilityYears(response.data.advanceEligibilityYears || 0);
+        console.log(response.data.advanceEligibilityYears || 0);
+      } catch (error) {
+        console.error("Error fetching advance eligibility years:", error);
+        toast.error("Failed to load eligibility settings.");
+      }
+    };
+
     if (employees.length > 0) {
       fetchAdvanceRequests();
     }
+    fetchEligibilityYears();
   }, [employees]);
+
+  // Update advance eligibility years
+  const handleUpdateEligibilityYears = async () => {
+    try {
+      await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/set/eligibility/policy`,
+        { advanceEligibilityYears }
+      );
+      toast.success("Eligibility years updated successfully!");
+    } catch (error) {
+      console.error("Error updating eligibility years:", error);
+      toast.error("Failed to update eligibility settings.");
+    }
+  };
 
   // Approve an advance request
   const handleApproveRequest = async (employeeId, requestId) => {
     try {
       const baseUrl = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
-      const response = await axios.put(
+      await axios.put(
         `${baseUrl}/api/v1/user/request/advance/approve/${employeeId}/${requestId}`
       );
       toast.success("Advance request approved!");
-      // Update the local state after approval
-      setAdvanceRequests((prevRequests) => {
-        return {
-          ...prevRequests,
-          [employeeId]: prevRequests[employeeId].map((req) =>
-            req._id === requestId
-              ? { ...req, status: "approved", responseDate: new Date() }
-              : req
-          ),
-        };
-      });
+      setAdvanceRequests((prevRequests) => ({
+        ...prevRequests,
+        [employeeId]: prevRequests[employeeId].map((req) =>
+          req._id === requestId
+            ? { ...req, status: "approved", responseDate: new Date() }
+            : req
+        ),
+      }));
     } catch (error) {
       console.error("Error approving advance request:", error);
       toast.error("Failed to approve advance request.");
     }
   };
 
+  // Reject an advance request
+  const handleRejectRequest = async (employeeId, requestId) => {
+    try {
+      const baseUrl = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+      await axios.put(
+        `${baseUrl}/api/v1/user/request/advance/rejected/${employeeId}/${requestId}`
+      );
+      toast.success("Advance request rejected!");
+      setAdvanceRequests((prevRequests) => ({
+        ...prevRequests,
+        [employeeId]: prevRequests[employeeId].map((req) =>
+          req._id === requestId
+            ? { ...req, status: "rejected", responseDate: new Date() }
+            : req
+        ),
+      }));
+    } catch (error) {
+      console.error("Error rejecting advance request:", error);
+      toast.error("Failed to reject advance request.");
+    }
+  };
+
   return (
     <>
       <MainDashboard />
-      <div className="lg:ml-[15rem] xs:ml-[2rem] xs:p-[2rem] p-6 bg-gray-100 min-h-screen">
+      <div className="lg:ml-[15rem] sm:ml-[2rem] sm:p-[1rem] xs:ml-[5rem] p-6 bg-gray-100 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
             <h2 className="text-3xl font-semibold">Payroll Summary</h2>
           </div>
 
+          {/* Update Advance Eligibility Years */}
+          <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold text-gray-700">
+              Set Eligibility Criteria For Advance Money Request
+            </h3>
+            <div className="flex flex-col sm:flex-row items-center mt-4 space-y-4 sm:space-y-0 sm:space-x-4">
+              <input
+                type="number"
+                value={advanceEligibilityYears}
+                onChange={(e) => setAdvanceEligibilityYears(e.target.value)}
+                className="border rounded-lg py-2 px-3 text-gray-700 w-full sm:w-20"
+                min="0"
+              />
+              <button
+                onClick={handleUpdateEligibilityYears}
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-all w-full sm:w-auto"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+
           {employees.length > 0 ? (
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {employees.map((employee) => {
-                const requests = advanceRequests[employee._id] || [];
-                return (
-                  <div
-                    key={employee._id}
-                    className="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between border-4 border-gray-200 hover:shadow-xl transition-shadow duration-300"
-                  >
-                    {/* Employee Info */}
-                    <div className="text-center mb-4">
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        {employee.firstName} {employee.lastName}
-                      </h3>
-                      <p className="text-gray-500">{employee.role}</p>
-                    </div>
-
-                    {/* Salary Details */}
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-gray-600">
-                        <p>Basic Salary</p>
-                        <p className="font-medium text-gray-800">
+            <div className="mt-6 overflow-x-auto">
+              <table className="min-w-full bg-white border-collapse border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                  <tr className="bg-blue-600 text-white">
+                    <th className="py-3 px-4 border-b">Employee Name</th>
+                    <th className="py-3 px-4 border-b">Role</th>
+                    <th className="py-3 px-4 border-b">Basic Salary</th>
+                    <th className="py-3 px-4 border-b">Joining Date</th>
+                    <th className="py-3 px-4 border-b">
+                      Advance Money Requests
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {employees.map((employee) => {
+                    const requests = advanceRequests[employee._id] || [];
+                    return (
+                      <tr
+                        key={employee._id}
+                        className="hover:bg-gray-100 transition-colors"
+                      >
+                        {/* Employee Details */}
+                        <td className="py-4 px-4 border-b text-gray-800 text-center">
+                          {employee.firstName} {employee.lastName}
+                        </td>
+                        <td className="py-4 px-4 border-b text-gray-500 text-center">
+                          {employee.role}
+                        </td>
+                        <td className="py-4 px-4 border-b text-gray-800 text-center">
                           ₹ {employee.salary}
-                        </p>
-                      </div>
-                      <div className="flex justify-between text-gray-600">
-                        <p>Joining Date</p>
-                        <p className="text-gray-500">
+                        </td>
+                        <td className="py-4 px-4 border-b text-gray-500 text-center">
                           {dayjs(employee.date).format("DD MMM YYYY")}
-                        </p>
-                      </div>
-                    </div>
+                        </td>
 
-                    <hr className="my-4" />
-
-                    {/* Advanced Requests Section */}
-                    <div>
-                      <h4 className="text-lg font-semibold mb-2 text-gray-800">
-                        Advance Requests
-                      </h4>
-                      {requests.length > 0 ? (
-                        requests.map((req) => (
-                          <div
-                            key={req._id}
-                            className="bg-gray-50 border rounded-lg p-4 mb-2 shadow-sm"
-                          >
-                            <p>
-                              <strong>Amount:</strong> ₹ {req.amount}
+                        {/* Advance Requests */}
+                        <td className="py-4 px-4 border-b text-gray-800">
+                          {requests.length > 0 ? (
+                            <div className="space-y-4">
+                              {requests.map((req) => (
+                                <div
+                                  key={req._id}
+                                  className="p-3 border rounded-lg bg-gray-50 shadow-sm"
+                                >
+                                  <p>
+                                    <strong>Amount:</strong> ₹ {req.amount}
+                                  </p>
+                                  <p>
+                                    <strong>Reason:</strong> {req.reason}
+                                  </p>
+                                  <p>
+                                    <strong>Status:</strong>{" "}
+                                    <span
+                                      className={
+                                        req.status === "approved"
+                                          ? "text-green-600"
+                                          : req.status === "rejected"
+                                          ? "text-red-600"
+                                          : "text-yellow-600"
+                                      }
+                                    >
+                                      {req.status}
+                                    </span>
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    Requested on:{" "}
+                                    {dayjs(req.requestDate).format(
+                                      "DD MMM YYYY"
+                                    )}
+                                  </p>
+                                  {req.status === "pending" && (
+                                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-3">
+                                      <button
+                                        className="bg-green-600 text-white py-1 px-3 rounded-lg hover:bg-green-700 transition-all w-full sm:w-auto"
+                                        onClick={() =>
+                                          handleApproveRequest(
+                                            employee._id,
+                                            req._id
+                                          )
+                                        }
+                                      >
+                                        Approve
+                                      </button>
+                                      <button
+                                        className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-700 transition-all w-full sm:w-auto"
+                                        onClick={() =>
+                                          handleRejectRequest(
+                                            employee._id,
+                                            req._id
+                                          )
+                                        }
+                                      >
+                                        Reject
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-gray-500 text-center">
+                              No advance requests.
                             </p>
-                            <p>
-                              <strong>Reason:</strong> {req.reason}
-                            </p>
-                            <p>
-                              <strong>Status:</strong>{" "}
-                              <span
-                                className={
-                                  req.status === "approved"
-                                    ? "text-green-600"
-                                    : req.status === "rejected"
-                                    ? "text-red-600"
-                                    : "text-yellow-600"
-                                }
-                              >
-                                {req.status}
-                              </span>
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              Requested on:{" "}
-                              {dayjs(req.requestDate).format("DD MMM YYYY")}
-                            </p>
-                            {req.status === "pending" && (
-                              <button
-                                className="bg-green-600 text-white py-1 px-3 rounded-lg mt-2 hover:bg-green-700 transition-all"
-                                onClick={() =>
-                                  handleApproveRequest(employee._id, req._id)
-                                }
-                              >
-                                Approve
-                              </button>
-                            )}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-500">No advance requests.</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           ) : (
             <h1 className="text-center text-gray-600 mt-6">
@@ -166,8 +262,6 @@ const Payroll = () => {
           )}
         </div>
       </div>
-
-      <ToastContainer />
     </>
   );
 };

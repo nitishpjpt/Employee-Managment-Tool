@@ -159,6 +159,11 @@ const employeeSchema = new mongoose.Schema(
         responseDate: { type: Date },
       },
     ],
+    advanceEligibilityYears: {
+      type: Number,
+      required: true,
+      default: 2, // Default policy: 2 years
+    },
     
   },
   { timestamps: true }

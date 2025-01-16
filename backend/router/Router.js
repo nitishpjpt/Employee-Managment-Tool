@@ -37,7 +37,8 @@ import {assets,fetchAllAssets} from "../controller/assets.controller.js";
 import terminateEmployee from "../controller/Terminated_controller.js";
 import { getAllEmployees, getEligibleEmployees, updateSalaries } from "../controller/payroll_controller.js";
 import { get } from "mongoose";
-import { approveAdvanceRequest, getAdvanceRequests, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
+import { approveAdvanceRequest, getAdvanceRequests, rejectAdvanceRequest, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
+import { advancedEligibility, getEligiblityPolicy } from "../controller/advanedMoneyEligiblity_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -70,7 +71,11 @@ userRouter.route("/terminate/:employeeId").patch(terminateEmployee);
 // userRouter.route("/all/employees").get(getAllEmployees);
 userRouter.route("/request/advance/:employeeId").post(requestAdvance);
 userRouter.route("/requests/advance/:employeeId").get(getAdvanceRequests);
-userRouter.route("/request/advance/approve/:employeeId/:requestId").put(approveAdvanceRequest)
+userRouter.route("/request/advance/approve/:employeeId/:requestId").put(approveAdvanceRequest);
+userRouter.route("/request/advance/rejected/:employeeId/:requestId").put(rejectAdvanceRequest);
+userRouter.route("/get/advanced/eligiblity").get(getEligiblityPolicy);
+userRouter.route("/set/eligibility/policy").post(advancedEligibility);
+
 
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);

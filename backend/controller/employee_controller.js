@@ -104,7 +104,9 @@ const employeeLogin = async (req, res) => {
     const existingUser = await Employee.findOne({ email });
 
     if (!existingUser) {
-      throw new ApiError(404, "Employee not found with this email");
+      return res
+        .status(401)
+        .json({ message: "Employee with this email not found" });
     }
 
     // check if the emp status is terminated or active
