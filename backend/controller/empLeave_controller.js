@@ -14,8 +14,8 @@ const getLeaveLimits = async (req, res) => {
 
     // Ensure leave counters exist
     const leaveLimits = {
-      fullDayLeaves: employee.fullDayLeavesThisMonth || 0,
-      halfDayLeaves: employee.halfDayLeavesThisMonth || 0,
+      fullDayLeaves: employee.leaveBalance.halfDay || 0,
+      halfDayLeaves: employee.leaveBalance.fullDay || 0,
     };
 
     // Respond with the current leave limits
@@ -41,35 +41,29 @@ const addRequestLeave = async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
 
-    // Initialize leave counters if they don't exist
-    if (employee.halfDayLeavesThisMonth === undefined) {
-      employee.halfDayLeavesThisMonth = 5;
-    }
-    if (employee.fullDayLeavesThisMonth === undefined) {
-      employee.fullDayLeavesThisMonth = 3;
-    }
+    // Fetch admin-approved leave limits (fallback to default values if not set)
+    const maxHalfDayLeaves = employee.fullDayLeavesThisMonth || 5; // Default 5 half-day leaves
+    const maxFullDayLeaves = employee.halfDayLeavesThisMonth || 3; // Default 3 full-day leaves
 
-    // Fetch admin-approved leave limits (these should be set in the employee record)
-    const maxHalfDayLeaves = employee.maxHalfDayLeaves || 5; // Maximum half-day leaves set by the admin
-    const maxFullDayLeaves = employee.maxFullDayLeaves || 3; // Maximum full-day leaves set by the admin
-
-    // Validate the leave request based on half leave or full leave
+    // Validate the leave request
     if (halfLeave) {
-      if (employee.halfDayLeavesThisMonth >= maxHalfDayLeaves) {
+      if (employee.leaveBalance.halfDay >= maxHalfDayLeaves) {
         return res.status(400).json({
           message: `You have exhausted your ${maxHalfDayLeaves} half-day leaves for this month.`,
         });
       }
+
       // Update the leave balance
-      await employee.updateLeaveBalance("halfDay", 1, "increase");
+      employee.leaveBalance.halfDay += 1; // Increment half-day leaves
     } else if (fullLeave) {
-      if (employee.fullDayLeavesThisMonth >= maxFullDayLeaves) {
+      if (employee.leaveBalance.fullDay >= maxFullDayLeaves) {
         return res.status(400).json({
           message: `You have exhausted your ${maxFullDayLeaves} full-day leaves for this month.`,
         });
       }
+
       // Update the leave balance
-      await employee.updateLeaveBalance("fullDay", 1, "increase");
+      employee.leaveBalance.fullDay += 1; // Increment full-day leaves
     } else {
       return res.status(400).json({ message: "Invalid leave type." });
     }

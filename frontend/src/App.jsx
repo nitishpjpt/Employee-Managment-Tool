@@ -36,6 +36,8 @@ import EmpLocation from "./components/EmpLocation";
 import Assets from "./components/Assets";
 import Termination from "./components/Termination";
 import EmpAdvanced from "./components/EmpAdvanced";
+import EmpPayslip from "./components/EmpPayslip";
+import EmpPaymentSlip from "./components/EmpPaymentSlip";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -134,10 +136,19 @@ const App = () => {
           }
         />
         <Route
-          path="/employee/payroll"
+          path="/employee/advance/money/request"
           element={
             <ProtectedRoute
               element={<Payroll />}
+              isAuthenticated={isAuthenticated}
+            ></ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/generate/employee/payslip"
+          element={
+            <ProtectedRoute
+              element={<EmpPayslip />}
               isAuthenticated={isAuthenticated}
             ></ProtectedRoute>
           }
@@ -339,6 +350,16 @@ const App = () => {
               element={<EmpAdvanced />}
               isEmployeeAuthenticated={isEmployeeAuthenticated}
             ></EmployeeProtectedRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/employee/payslip"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpPaymentSlip />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            />
           }
         ></Route>
 

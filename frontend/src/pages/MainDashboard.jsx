@@ -349,7 +349,12 @@ export default function Dashboard() {
     {
       text: <span className="text-[1rem] font-semibold">Advanced Money</span>,
       icon: <TbReportMoney className="text-2xl " />,
-      path: "/employee/payroll",
+      path: "/employee/advance/money/request",
+    },
+    {
+      text: <span className="text-[1rem] font-semibold">Emp Payslip</span>,
+      icon: <TbReportMoney className="text-2xl " />,
+      path: "/generate/employee/payslip",
     },
   ];
 

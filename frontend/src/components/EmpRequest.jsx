@@ -42,7 +42,7 @@ const EmpRequest = () => {
       try {
         const response = await axios.get(url);
         setLeaveLimits(response.data.leaveLimits);
-        console.log("Leave limits fetched:", response.data);
+        console.log(response.data.leaveLimits);
       } catch (error) {
         console.error(
           "Error fetching leave limits:",
