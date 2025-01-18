@@ -30,6 +30,7 @@ const EmpRequest = () => {
 
   // Fetch the leave limits when employeeId is available
   useEffect(() => {
+    console.log(employeeId);
     const fetchLeaveLimits = async () => {
       if (!employeeId) {
         console.warn("Employee ID is not set yet.");

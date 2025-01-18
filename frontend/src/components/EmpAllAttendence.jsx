@@ -151,10 +151,12 @@ const EmpAllAttendence = () => {
 
                 return (
                   <tr
-                    key={index}
-                    className={`${
-                      index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                    } hover:bg-gray-100 transition-colors`}
+                  key={item.employeeId}
+                  className={`border-b transition-all ${
+                    item.Empstatus === "terminated"
+                      ? "bg-gray-100 text-gray-400"
+                      : "bg-white"
+                  }`}
                   >
                     <td className="px-6 py-4 font-medium text-gray-900">
                       {item.firstName} {item.lastName}

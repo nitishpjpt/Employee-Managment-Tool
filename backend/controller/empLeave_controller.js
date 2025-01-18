@@ -14,8 +14,8 @@ const getLeaveLimits = async (req, res) => {
 
     // Ensure leave counters exist
     const leaveLimits = {
-      fullDayLeaves: employee.leaveBalance.halfDay || 0,
-      halfDayLeaves: employee.leaveBalance.fullDay || 0,
+      fullDayLeaves: employee.fullDayLeavesThisMonth || 0,
+      halfDayLeaves: employee.halfDayLeavesThisMonth || 0,
     };
 
     // Respond with the current leave limits
@@ -47,23 +47,23 @@ const addRequestLeave = async (req, res) => {
 
     // Validate the leave request
     if (halfLeave) {
-      if (employee.leaveBalance.halfDay >= maxHalfDayLeaves) {
+      if (employee.halfDayLeavesThisMonth >= maxHalfDayLeaves) {
         return res.status(400).json({
           message: `You have exhausted your ${maxHalfDayLeaves} half-day leaves for this month.`,
         });
       }
 
       // Update the leave balance
-      employee.leaveBalance.halfDay += 1; // Increment half-day leaves
+      employee.halfDayLeavesThisMonth += 1; // Increment half-day leaves
     } else if (fullLeave) {
-      if (employee.leaveBalance.fullDay >= maxFullDayLeaves) {
+      if (employee.fullDayLeavesThisMonth >= maxFullDayLeaves) {
         return res.status(400).json({
           message: `You have exhausted your ${maxFullDayLeaves} full-day leaves for this month.`,
         });
       }
 
       // Update the leave balance
-      employee.leaveBalance.fullDay += 1; // Increment full-day leaves
+      employee.fullDayLeavesThisMonth += 1; // Increment full-day leaves
     } else {
       return res.status(400).json({ message: "Invalid leave type." });
     }

@@ -61,7 +61,14 @@ const EmpDailyAttendance = () => {
                 </tr>
               ) : (
                 dailyAttendance.map((attendance) => (
-                  <tr key={attendance.employeeId} className="hover:bg-gray-50">
+                  <tr
+                    key={attendance.employeeId}
+                    className={`border-b transition-all ${
+                      attendance.Empstatus === "terminated"
+                        ? "bg-gray-100 text-gray-400"
+                        : "bg-white"
+                    }`}
+                  >
                     <td className="px-4 py-2 border-b">
                       {attendance.firstName}
                     </td>

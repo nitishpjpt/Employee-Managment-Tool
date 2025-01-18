@@ -87,17 +87,17 @@ const EmpPayslip = () => {
         <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold">Generate Employee Payslip</h2>
         </div>
-        <div className="bg-white shadow-md rounded-lg p-4">
+        <div className="bg-white shadow-md rounded-lg p-4 overflow-x-auto">
           <div className="mb-4 flex justify-end">
             <Button variant="contained" color="primary" onClick={exportToPDF}>
               Export to PDF
             </Button>
           </div>
           <table className="w-full overflow-x-auto text-sm text-left rtl:text-right text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-200 overflow-x-auto ">
               <tr>
                 <th className="px-6 py-3">Full Name</th>
-                <th className="px-6 py-3">Email</th>
+
                 <th className="px-6 py-3">Department</th>
                 <th className="px-6 py-3">Role</th>
                 <th className="px-6 py-3">Actual Salary</th>
@@ -120,7 +120,7 @@ const EmpPayslip = () => {
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap capitalize">
                       {user.firstName} {user.lastName}
                     </td>
-                    <td className="px-6 py-4">{user.email}</td>
+
                     <td className="px-6 py-4">{user.department}</td>
                     <td className="px-6 py-4">{user.role}</td>
                     <td className="px-6 py-4">{user.salary.toFixed(2)}</td>

@@ -63,7 +63,10 @@ const Payroll = () => {
         }/api/v1/user/set/eligibility/policy`,
         { advanceEligibilityYears }
       );
-      toast.success("Eligibility years updated successfully!");
+      toast.success("Eligibility years updated successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     } catch (error) {
       console.error("Error updating eligibility years:", error);
       toast.error("Failed to update eligibility settings.");
@@ -148,7 +151,7 @@ const Payroll = () => {
       console.log(response.data);
 
       toast.success("Advance request updated successfully!", {
-        position: true,
+        position: "top-right",
         autoClose: 1000,
       });
       setAdvanceRequests((prevRequests) => ({
