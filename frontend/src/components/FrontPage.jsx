@@ -20,10 +20,17 @@ const FrontPage = () => {
         }/api/v1/user/employee/all/registerDetails`
       );
       const users = response.data.data.user;
+
+      // Set all users for the table
       setAllUser(users);
 
-      // Process data for the chart
-      const departmentCounts = users.reduce((acc, user) => {
+      // Filter out terminated employees for the graph
+      const activeUsers = users.filter(
+        (user) => user.Empstatus !== "terminated"
+      );
+
+      // Process data for the chart using only active users
+      const departmentCounts = activeUsers.reduce((acc, user) => {
         acc[user.department] = (acc[user.department] || 0) + 1;
         return acc;
       }, {});

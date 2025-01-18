@@ -40,9 +40,17 @@ const EmpLeavesChanges = () => {
       );
       // Set the success message from the response
       setMessage(response.data.message);
+      toast.success("Employee leave balance is updated", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     } catch (error) {
       // Handle error and set an error message if any
       console.error(error);
+      toast.error("Employee leaves balance does not updated", {
+        position: "top-right",
+        autoClose: 1000,
+      });
       setMessage("Error updating leave balance. Please try again.");
     }
   };
