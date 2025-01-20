@@ -6,6 +6,7 @@ import "jspdf-autotable";
 
 const EmpPaymentSlip = () => {
   const [employee, setEmployee] = useState("");
+  const [employeeDetails, setEmployeeDetails] = useState("");
 
   const companyDetails = {
     name: "Deepnap Softech",
@@ -21,6 +22,7 @@ const EmpPaymentSlip = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       const userData = parsedUser.data.userResponse;
+      setEmployeeDetails(userData);
 
       // Calculate working days and fund
       const presentDays = userData.attendance
@@ -36,10 +38,9 @@ const EmpPaymentSlip = () => {
     }
   }, []);
 
-  const exportToPDF = (employee) => {
+  const exportToPDF = (employeeDetails) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-    console.log(employee.firstName);
 
     // Add Company Logo (Optional)
     const companyLogo =

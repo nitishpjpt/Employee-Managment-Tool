@@ -222,7 +222,7 @@ const Payroll = () => {
                     <th className="py-3 px-4 border-b">Basic Salary</th>
                     <th className="py-3 px-4 border-b">Joining Date</th>
                     <th className="py-3 px-4 border-b">
-                      Advance Money Requests
+                      Advance Money Requests 
                     </th>
                   </tr>
                 </thead>

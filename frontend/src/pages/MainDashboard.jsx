@@ -277,7 +277,7 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">Timesheet</span>,
-      icon: <SlCalender className="text-2xl " />,
+      icon: <SlCalender className="text-2xl "/>,
       path: "/timesheet",
     },
     {

@@ -5,6 +5,7 @@ import ApiResponse from "../utlis/ApiResponse.js";
 // Get Leave Limits from Admin
 const getLeaveLimits = async (req, res) => {
   const { employeeId } = req.params; // Ensure employeeId is passed as a route parameter
+
   try {
     // Fetch employee details by ID
     const employee = await Employee.findById(employeeId);
@@ -17,6 +18,7 @@ const getLeaveLimits = async (req, res) => {
       fullDayLeaves: employee.fullDayLeavesThisMonth || 0,
       halfDayLeaves: employee.halfDayLeavesThisMonth || 0,
     };
+
 
     // Respond with the current leave limits
     res.status(200).json({
