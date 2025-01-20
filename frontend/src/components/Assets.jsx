@@ -111,7 +111,9 @@ const Assets = () => {
                       <td className="px-6 py-4">{user.department}</td>
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>
-                      <td className="px-6 py-4">{user.assets || []}</td>
+                      <td className="px-6 py-4">
+                        <span>{user.assets || []} </span>
+                      </td>
                       <td className="px-2 py-4">
                         {user.Empstatus == "terminated" ? (
                           ""

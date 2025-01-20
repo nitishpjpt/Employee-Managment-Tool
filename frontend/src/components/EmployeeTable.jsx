@@ -6,12 +6,15 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaRegEdit } from "react-icons/fa";
+import { Button } from "flowbite-react";
 
 const EmployeeTable = () => {
   const [getallUser, setAllUser] = useState([]);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [updatedData, setUpdatedData] = useState({});
+  const [locationModalVisible, setLocationModalVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   // Fetch all employee details
   const getAllUserRegisterDetails = async () => {
@@ -98,10 +101,15 @@ const EmployeeTable = () => {
     getAllUserRegisterDetails();
   }, []);
 
+  const handleViewLocation = (location) => {
+    setSelectedLocation(location);
+    setLocationModalVisible(true);
+  };
+
   return (
     <>
       <div className="relative min-h-screen  overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100">
-      <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold">Employee Details</h2>
         </div>
         <div className=" bg-white shadow-md rounded-lg">
@@ -132,7 +140,16 @@ const EmployeeTable = () => {
                       {user.firstName} {user.lastName}
                     </td>
                     <td className="px-6 py-4">{user.email}</td>
-                    <td className="px-6 py-4">{user.location}</td>
+                    <td className="px-6 py-4">
+                      <td className="px-6 py-4 flex justify-center gap-3 items-center">
+                        <button
+                          className="text-blue-500"
+                          onClick={() => handleViewLocation(user.location)}
+                        >
+                          View Location
+                        </button>
+                      </td>
+                    </td>
                     <td className="px-6 py-4">{user.department}</td>
                     <td className="px-6 py-4">{user.role}</td>
                     <td className="px-6 py-4">{user.employeeCode}</td>
@@ -164,6 +181,26 @@ const EmployeeTable = () => {
           </table>
         </div>
       </div>
+
+      {/* Location Modal */}
+      {locationModalVisible && (
+        <div className="xs:pl-[4rem] fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-md p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Employee Location
+            </h3>
+            <p className="text-gray-600">{selectedLocation}</p>
+            <div className="flex justify-end space-x-4 mt-4">
+              <button
+                onClick={() => setLocationModalVisible(false)}
+                className="bg-gray-500 text-white rounded px-4 py-2 hover:bg-gray-600 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Modal */}
       {editModalVisible && (

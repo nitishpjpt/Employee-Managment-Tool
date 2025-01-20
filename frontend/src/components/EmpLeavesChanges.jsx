@@ -113,7 +113,7 @@ const EmpLeavesChanges = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Amount
+              Days
             </label>
             <input
               type="number"

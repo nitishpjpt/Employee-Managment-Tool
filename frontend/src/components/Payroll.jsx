@@ -187,7 +187,9 @@ const Payroll = () => {
       <div className="lg:ml-[15rem] sm:ml-[2rem] sm:p-[1rem] xs:ml-[5rem] p-6 bg-gray-100 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
-            <h2 className="text-3xl font-semibold">Employee Advance Money Request</h2>
+            <h2 className="text-3xl font-semibold">
+              Employee Advance Money Request
+            </h2>
           </div>
 
           {/* Update Advance Eligibility Years */}
@@ -222,7 +224,7 @@ const Payroll = () => {
                     <th className="py-3 px-4 border-b">Basic Salary</th>
                     <th className="py-3 px-4 border-b">Joining Date</th>
                     <th className="py-3 px-4 border-b">
-                      Advance Money Requests 
+                      Advance Money Requests
                     </th>
                   </tr>
                 </thead>

@@ -16,7 +16,8 @@ const EmpRequest = () => {
     halfDayLeaves: 0,
     fullDayLeaves: 0,
   });
-
+  const [presentDates, setPresentDates] = useState("");
+  const [employees, setEmployee] = useState("");
   // Load user information from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
@@ -24,7 +25,7 @@ const EmpRequest = () => {
       const parsedUser = JSON.parse(storedUser);
       setUserName(parsedUser.data.firstName);
       setEmployeeId(parsedUser.data.userResponse._id);
-      console.log("Employee ID:", parsedUser.data.userResponse._id);
+      console.log(parsedUser.data);
     }
   }, []);
 
@@ -123,6 +124,12 @@ const EmpRequest = () => {
     }
   };
 
+  // Function to format dates
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Formats the date to a readable string
+  };
+
   return (
     <>
       <ToastContainer />
@@ -132,6 +139,102 @@ const EmpRequest = () => {
           <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
             <h2 className="text-3xl font-semibold">Employee Leave Request</h2>
           </div>
+
+          <div className="bg-white shadow-md rounded-lg p-4 mt-6 overflow-x-auto">
+            <table className="w-full text-sm text-left text-gray-500 overflow-x-auto">
+              <thead className="text-xs bg-[#E5E7EB] text-black uppercase  dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Request Leave Half Day{" "}
+                    <span className="text-red-500">{halfLeave}</span>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Request Leave Full Day{" "}
+                    <span className="text-red-500">{fullLeave}</span>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Reason For Leave Request
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Leave Approve Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {presentDates.length > 0 ? (
+                  presentDates.map((item, index) => {
+                    // Assuming the logged-in employee has an ID or email stored
+                    const presentUser = JSON.parse(
+                      localStorage.getItem("employeeLogin")
+                    );
+                    const employeeId = presentUser?.data?.userResponse?._id;
+                    const employee = employees.find(
+                      (emp) => emp._id === employeeId
+                    );
+
+                    // Find the leave request for the employee based on the present date
+                    const leaveRequest = employee?.requestLeave?.find(
+                      (leave) =>
+                        new Date(leave.fromDate).toLocaleDateString() ===
+                        new Date(item.date).toLocaleDateString()
+                    );
+
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                      >
+                        {/* Display Half Day Leave */}
+                        <td className="px-6 py-4">
+                          {leaveRequest && leaveRequest.halfLeave
+                            ? formatDate(leaveRequest.fromDate)
+                            : "N/A"}
+                        </td>
+
+                        {/* Display Full Day Leave */}
+                        <td className="px-6 py-4">
+                          {leaveRequest && leaveRequest.fullLeave
+                            ? formatDate(leaveRequest.fromDate)
+                            : "N/A"}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          {leaveRequest?.reason || "N/A"}
+                        </td>
+
+                        {/* Display Leave Approval Status from EmployeeContext */}
+                        <td className="px-6 py-4 flex justify-center items-center gap-1">
+                          {leaveRequest?.status === "Approved" && (
+                            <>
+                              <FaCheckCircle className="text-green-500" />{" "}
+                              Approved
+                            </>
+                          )}
+                          {leaveRequest?.status === "Rejected" && (
+                            <>
+                              <FaTimesCircle className="text-red-500" />{" "}
+                              Rejected
+                            </>
+                          )}
+                          {(!leaveRequest ||
+                            leaveRequest.status === "Pending") && (
+                            <span className="text-yellow-500">Pending</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-4 text-center">
+                      Data not found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
           <div className="max-w-2xl mx-auto shadow-lg p-12 mt-[2rem]">
             <h1 className="pb-10 flex justify-center items-center gap-2 font-bold">
               Request Leave <span className="text-gray-400">{username}</span>
