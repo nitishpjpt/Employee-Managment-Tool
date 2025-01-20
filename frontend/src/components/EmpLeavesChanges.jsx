@@ -57,7 +57,6 @@ const EmpLeavesChanges = () => {
 
   return (
     <>
-      <ToastContainer />
       <MainDashBoard />
       <div className="lg:ml-[15rem] xs:ml-[5rem] p-10 bg-gray-100 min-h-screen">
         <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">

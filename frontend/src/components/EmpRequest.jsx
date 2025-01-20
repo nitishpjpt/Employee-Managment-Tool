@@ -127,108 +127,118 @@ const EmpRequest = () => {
     <>
       <ToastContainer />
       <EmpDashboard />
-      <div className="max-w-2xl mx-auto shadow-lg p-12 mt-[6rem]">
-        <h1 className="pb-10 flex justify-center items-center gap-2 font-bold">
-          Request Leave <span className="text-gray-400">{username}</span>
-        </h1>
-        <form onSubmit={submitHandler}>
-          <div className="grid gap-6 mb-6 lg:grid-cols-2">
-            <div>
-              <label
-                htmlFor="fromDate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                From Date<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="fromDate"
-                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-                required
-                onChange={(e) => setFromDate(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="toDate"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                To Date<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="toDate"
-                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-                onChange={(e) => setToDate(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="halfLeave"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Request leave for half day <br />
-                <span className="text-gray-400">
-                  You can get only {leaveLimits.halfDayLeaves} half-day leaves
-                </span>
-              </label>
-              <input
-                type="checkbox"
-                id="halfLeave"
-                className="mr-2"
-                onChange={(e) => setHalfLeave(e.target.checked)}
-              />
-              <span className="text-gray-900 dark:text-gray-300">Half Day</span>
-            </div>
-
-            <div>
-              <label
-                htmlFor="leaveType"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Leave Type<span className="text-red-500">*</span>
-              </label>
-              <select
-                id="leaveType"
-                className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-                required
-                onChange={(e) => setLeaveType(e.target.value)}
-              >
-                <option value="">Select Leave Type</option>
-                <option value="sick">Sick Leave</option>
-                <option value="casual">Casual Leave</option>
-                <option value="emergency">Emergency Leave</option>
-                <option value="vacation">Vacation</option>
-              </select>
-            </div>
+      <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
+            <h2 className="text-3xl font-semibold">Employee Leave Request</h2>
           </div>
+          <div className="max-w-2xl mx-auto shadow-lg p-12 mt-[2rem]">
+            <h1 className="pb-10 flex justify-center items-center gap-2 font-bold">
+              Request Leave <span className="text-gray-400">{username}</span>
+            </h1>
+            <form onSubmit={submitHandler}>
+              <div className="grid gap-6 mb-6 lg:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="fromDate"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    From Date<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="fromDate"
+                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                    required
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
 
-          <div>
-            <label
-              htmlFor="fullLeave"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Reason for leave
-            </label>
-            <textarea
-              id="fullLeave"
-              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-              cols={53}
-              rows={4}
-              placeholder="Write Reason Here..."
-              onChange={(e) => setFullLeave(e.target.value)}
-            ></textarea>
+                <div>
+                  <label
+                    htmlFor="toDate"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    To Date<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="toDate"
+                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="halfLeave"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Request leave for half day <br />
+                    <span className="text-gray-400">
+                      You can get only {leaveLimits.halfDayLeaves} half-day
+                      leaves
+                    </span>
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="halfLeave"
+                    className="mr-2"
+                    onChange={(e) => setHalfLeave(e.target.checked)}
+                  />
+                  <span className="text-gray-900 dark:text-gray-300">
+                    Half Day
+                  </span>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="leaveType"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Leave Type<span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="leaveType"
+                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                    required
+                    onChange={(e) => setLeaveType(e.target.value)}
+                  >
+                    <option value="">Select Leave Type</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="casual">Casual Leave</option>
+                    <option value="emergency">Emergency Leave</option>
+                    <option value="vacation">Vacation</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="fullLeave"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Reason for leave
+                </label>
+                <textarea
+                  id="fullLeave"
+                  className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                  cols={53}
+                  rows={4}
+                  placeholder="Write Reason Here..."
+                  onChange={(e) => setFullLeave(e.target.value)}
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                className="text-white bg-blue-700 mt-4 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
+              >
+                Submit
+              </button>
+            </form>
           </div>
-
-          <button
-            type="submit"
-            className="text-white bg-blue-700 mt-4 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5"
-          >
-            Submit
-          </button>
-        </form>
+        </div>
       </div>
     </>
   );

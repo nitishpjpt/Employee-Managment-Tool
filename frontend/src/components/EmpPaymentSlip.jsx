@@ -147,7 +147,7 @@ const EmpPaymentSlip = () => {
   return (
     <>
       <EmpDashboard />
-      <div className=" p-6 bg-gray-100 min-h-screen">
+      <div className="p-6 bg-gray-100 min-h-screen">
         <div className="max-w-6xl mx-auto">
           <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
             <h2 className="text-3xl font-semibold">Payroll Summary</h2>

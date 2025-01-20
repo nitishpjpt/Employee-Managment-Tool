@@ -79,7 +79,7 @@ const EmpLocation = () => {
           <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold">All Employee Locations</h2>
           </div>
-          <div className="bg-white shadow-md rounded-lg">
+          <div className="bg-white shadow-md rounded-lg overflow-x-auto">
             <table className="w-full overflow-x-auto text-sm text-left rtl:text-right text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
@@ -137,7 +137,7 @@ const EmpLocation = () => {
         {isModalOpen && (
           <>
             <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-50"
+              className="fixed overflow-x-auto inset-0 bg-black bg-opacity-50 z-50"
               onClick={() => setIsModalOpen(false)}
             ></div>
             <div
