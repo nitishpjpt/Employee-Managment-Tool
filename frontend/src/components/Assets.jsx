@@ -83,14 +83,15 @@ const Assets = () => {
           <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold">Assign Assets</h2>
           </div>
-          <div className="bg-white shadow-md rounded-lg">
-            <table className="w-full overflow-x-auto text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+          <div className="bg-white  shadow-md rounded-lg">
+            <table className="w-full  text-sm text-left text-gray-500">
+              <thead className="text-xs overflow-x-auto  text-gray-700 uppercase bg-gray-200">
                 <tr>
                   <th className="px-6 py-3">Name</th>
                   <th className="px-6 py-3">Department</th>
                   <th className="px-6 py-3">Role</th>
                   <th className="px-6 py-3">Emp-code</th>
+
                   <th className="px-6 py-3">Added Assets</th>
                   <th className="px-6 py-3">Assets</th>
                   <th className="px-6 py-3">Add</th>
@@ -113,6 +114,7 @@ const Assets = () => {
                       <td className="px-6 py-4">{user.department}</td>
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>
+
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-2">
                           {(user.assets || []).map((asset, index) => (

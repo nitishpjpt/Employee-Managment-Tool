@@ -38,6 +38,7 @@ import Termination from "./components/Termination";
 import EmpAdvanced from "./components/EmpAdvanced";
 import EmpPayslip from "./components/EmpPayslip";
 import EmpPaymentSlip from "./components/EmpPaymentSlip";
+import EmpAssetsSubmit from "./components/EmpAssetsSubmit";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -360,6 +361,16 @@ const App = () => {
               element={<EmpPaymentSlip />}
               isEmployeeAuthenticated={isEmployeeAuthenticated}
             />
+          }
+        ></Route>
+
+        <Route
+          path="/employee/assets"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpAssetsSubmit />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            ></EmployeeProtectedRoute>
           }
         ></Route>
 

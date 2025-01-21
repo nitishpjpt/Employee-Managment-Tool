@@ -206,6 +206,11 @@ function EmpDashboard() {
                       Payslip
                     </Link>
                   </MenuItem>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Link to="/employee/assets" className="block px-4 py-2">
+                      Assets
+                    </Link>
+                  </MenuItem>
                 </Menu>
               </Box>
 
@@ -231,6 +236,9 @@ function EmpDashboard() {
                 </Link>
                 <Link to="/employee/payslip" className="block px-4 py-2">
                   Payslip
+                </Link>
+                <Link to="/employee/assets" className="block px-4 py-2">
+                  Assets
                 </Link>
               </Box>
 

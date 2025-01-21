@@ -14,7 +14,7 @@ const Termination = () => {
       const response = await axios.patch(
         `${
           import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-        }/api/v1/user//terminate/${employeeId}`
+        }/api/v1/user/terminate/${employeeId}`
       );
 
       // Update the employees state to reflect the change
