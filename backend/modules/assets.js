@@ -11,15 +11,13 @@ const assetSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["Laptop", "Bike", "Mobile","Headset","Other"], // Add "Other" here
+      enum: ["Laptop", "Bike", "Mobile", "Headset", "Other"], // Add "Other" here
     },
   },
   {
-    timestamps: true,  // Automatically add createdAt and updatedAt fields
+    timestamps: true, // Automatically add createdAt and updatedAt fields
   }
 );
 
 // Create the Assets model based on the schema
 export const Assets = mongoose.model("Assets", assetSchema);
-
-
