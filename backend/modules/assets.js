@@ -5,15 +5,13 @@ const assetSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,  // Make sure the asset name is required
+      required: true,
+      unique: true,
     },
     type: {
       type: String,
-      required: true,  // Make sure the asset type is required
-    },
-    availability: {
-      type: Boolean,
-      default: true,  // Set availability to true by default
+      required: true,
+      enum: ["Laptop", "Bike", "Mobile","Headset","Other"], // Add "Other" here
     },
   },
   {

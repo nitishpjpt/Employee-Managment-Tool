@@ -2,61 +2,63 @@ import React, { useContext, useState } from "react";
 import MainDashboard from "../pages/MainDashboard";
 import { EmployeeContext } from "../context/EmployeeContext";
 import { Button } from "@mui/material";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable"; // Use CreatableSelect for custom assets
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Assets = () => {
   const { employees, setRefresh } = useContext(EmployeeContext);
-  const [selectedAssets, setSelectedAssets] = useState({}); // Track selected assets per employee
-  const [assigning, setAssigning] = useState({}); // Track loading state for each employee
-
-  // Example assets (You can fetch this data from the backend)
-  const assetOptions = [
+  const [selectedAssets, setSelectedAssets] = useState({});
+  const [assetOptions, setAssetOptions] = useState([
     { value: "Laptop", label: "Laptop" },
     { value: "Bike", label: "Bike" },
     { value: "Mobile", label: "Mobile" },
     { value: "Headset", label: "Headset" },
-  ];
+  ]);
+  const [assigning, setAssigning] = useState({});
 
-  // Handle asset selection
+  // Handle asset selection, including custom ones
   const handleAssetChange = (selected, employeeId) => {
-    console.log(selected, employeeId);
     setSelectedAssets((prev) => ({
       ...prev,
       [employeeId]: selected,
     }));
   };
 
-  // Handle API call to assign assets
-  const assignAssets = async (employeeId) => {
-    console.log("Employee ID:", employeeId); // Check if employeeId is correct
+  // Add new custom assets to the global asset options
+  const handleCreateAsset = (inputValue) => {
+    const newAsset = { value: inputValue, label: inputValue };
+    setAssetOptions((prevOptions) => [...prevOptions, newAsset]);
+    toast.success(`Custom asset "${inputValue}" added!`, {
+      position: "top-right",
+      autoClose: 1000,
+    });
+  };
 
+  // Assign selected assets to an employee
+  const assignAssets = async (employeeId) => {
     const assets =
       selectedAssets[employeeId]?.map((asset) => asset.value) || [];
 
     if (assets.length === 0) {
-      alert("Please select at least one asset to assign.");
+      alert("Please select or add at least one asset to assign.");
       return;
     }
 
     setAssigning((prev) => ({ ...prev, [employeeId]: true }));
 
     try {
-      console.log("Sending API request:", { employeeId, assetIds: assets });
-
-      const response = await axios.post(
+      await axios.post(
         `${
           import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
         }/api/v1/user/assign/assets`,
         {
-          employeeId, // Ensure employeeId is passed correctly here
+          employeeId,
           assetIds: assets,
         }
       );
       setRefresh();
-      //handle the response
       toast.success("Assets added successfully!", {
         position: "top-right",
         autoClose: 1000,
@@ -64,7 +66,7 @@ const Assets = () => {
 
       setSelectedAssets((prev) => ({ ...prev, [employeeId]: [] }));
     } catch (error) {
-      toast.error("Assets added successfully!", {
+      toast.error("Failed to add assets!", {
         position: "top-right",
         autoClose: 1000,
       });
@@ -112,33 +114,43 @@ const Assets = () => {
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>
                       <td className="px-6 py-4">
-                        <span>{user.assets || []} </span>
+                        <div className="flex flex-wrap gap-2">
+                          {(user.assets || []).map((asset, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full"
+                            >
+                              {asset}
+                            </span>
+                          ))}
+                        </div>
                       </td>
                       <td className="px-2 py-4">
-                        {user.Empstatus == "terminated" ? (
+                        {user.Empstatus === "terminated" ? (
                           ""
                         ) : (
-                          <Select
+                          <CreatableSelect
                             options={assetOptions}
                             isMulti
                             value={selectedAssets[user._id] || []}
                             onChange={(selected) =>
                               handleAssetChange(selected, user._id)
                             }
-                            placeholder="Assign assets"
+                            onCreateOption={handleCreateAsset}
+                            placeholder="Assign or add assets"
                             className="w-60"
                           />
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        {user.Empstatus == "terminated" ? (
+                        {user.Empstatus === "terminated" ? (
                           ""
                         ) : (
                           <Button
                             variant="contained"
                             color="success"
                             onClick={() => assignAssets(user._id)}
-                            disabled={assigning[user._id]} // Disable button for the specific employee when assigning
+                            disabled={assigning[user._id]}
                           >
                             {assigning[user._id] ? "Assigning..." : "Add"}
                           </Button>
