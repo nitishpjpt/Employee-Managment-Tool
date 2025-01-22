@@ -39,6 +39,8 @@ import EmpAdvanced from "./components/EmpAdvanced";
 import EmpPayslip from "./components/EmpPayslip";
 import EmpPaymentSlip from "./components/EmpPaymentSlip";
 import EmpAssetsSubmit from "./components/EmpAssetsSubmit";
+import EmpReqLeaveStatus from "./components/EmpReqLeaveStatus";
+import EmpNotes from "./components/EmpNotes";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -349,6 +351,26 @@ const App = () => {
           element={
             <EmployeeProtectedRoute
               element={<EmpAdvanced />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            ></EmployeeProtectedRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/employee/Leave/status"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpReqLeaveStatus />}
+              isEmployeeAuthenticated={isEmployeeAuthenticated}
+            ></EmployeeProtectedRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/employee/notes"
+          element={
+            <EmployeeProtectedRoute
+              element={<EmpNotes />}
               isEmployeeAuthenticated={isEmployeeAuthenticated}
             ></EmployeeProtectedRoute>
           }

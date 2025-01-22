@@ -164,7 +164,12 @@ const employeeSchema = new mongoose.Schema(
       required: true,
       default: 2, // Default policy: 2 years
     },
-    
+    notes: [
+      {
+        text: String,
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

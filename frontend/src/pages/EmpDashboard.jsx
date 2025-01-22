@@ -63,6 +63,8 @@ function EmpDashboard() {
       console.log(response.data);
       localStorage.removeItem("employeeLogin");
       localStorage.removeItem("reqLeave");
+      localStorage.removeItem("employeeNotes");
+
       toast.success("Employee logout successfully!", {
         position: "top-right",
         autoClose: 1000,

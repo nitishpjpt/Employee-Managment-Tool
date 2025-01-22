@@ -6,54 +6,72 @@ import { useContext } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { SlCalender } from "react-icons/sl";
+import { IoDocuments } from "react-icons/io5";
+import { RiMoneyRupeeCircleLine } from "react-icons/ri";
+import { MdPayment } from "react-icons/md";
+import { FaLaptopHouse } from "react-icons/fa";
+import { BiLogOut } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { LuNotebookPen } from "react-icons/lu";
 
 const EmpHome = () => {
   const [presentDates, setPresentDates] = useState([]);
-  const [fullLeave, setFullLeave] = useState("");
-  const [halfLeave, setHalfLeave] = useState("");
-  const [reqLeave, setRequestLeave] = useState([]);
-  const [reason, setReason] = useState("");
-  const [assets, setAssets] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
+  const [employeeId, setEmployeeId] = useState("");
 
-  // Use EmployeeContext to get the employee data
+  const navigate = useNavigate(); // to navigate after logout
+
+  // // Use EmployeeContext to get the employee data
   const { employees } = useContext(EmployeeContext);
   console.log(employees || []);
 
-  // Get employee data from localStorage
+  // // Get employee data from localStorage
+
+  // Set user data from local storage or other source
   useEffect(() => {
-    const storedUser = localStorage.getItem("reqLeave");
-    const presentUser = localStorage.getItem("employeeLogin");
-
-    if (presentUser) {
-      try {
-        const userData = JSON.parse(presentUser);
-        setPresentDates(userData.data.userResponse.attendance || []);
-        setAssets(userData.data.userResponse.assets || []);
-        console.log(userData.data.userResponse.attendance || []);
-        console.log(userData.data.userResponse.attendance);
-      } catch (error) {
-        console.log("User data not found", error);
-      }
-    }
-
+    const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setFullLeave(parsedUser.data.fullDayLeavesThisMonth);
-        setHalfLeave(parsedUser.data.halfDayLeavesThisMonth);
-        setRequestLeave(parsedUser.data.requestLeave || []);
-        setReason(parsedUser.data.requestLeave[0]?.fullLeave);
+        setEmployeeId(parsedUser.data.userResponse._id);
+        console.log(parsedUser);
       } catch (error) {
         console.error("Error parsing user data from local storage:", error);
       }
     }
   }, []);
 
-  // Function to format dates
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(); // Formats the date to a readable string
+  // In your frontend code (e.g., EmpDashboard.jsx)
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/${employeeId}/logout`
+      );
+      console.log(response.data);
+      localStorage.removeItem("employeeLogin");
+      localStorage.removeItem("reqLeave");
+      toast.success("Employee logout successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+        onClose: () => {
+          navigate("/employee/login"); // Navigate to login page
+          setTimeout(() => {
+            window.location.reload(); // Reload the page after navigation
+          }, 100); // Add a slight delay to ensure navigation is complete
+        },
+      });
+      // Perform any additional actions like redirecting or removing from localStorage
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   // Function to highlight tiles
@@ -102,7 +120,7 @@ const EmpHome = () => {
         <div className=" p-6 bg-gray-100 min-h-screen">
           <div className="max-w-7xl mx-auto">
             <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
-              <h2 className="text-3xl font-semibold">Employee Details</h2>
+              <h2 className="text-3xl font-semibold">Employee Dashboard</h2>
             </div>
             <div className="bg-white shadow-md rounded-lg p-4 mt-4 overflow-x-auto">
               <div className="flex justify-end pb-4">
@@ -113,143 +131,134 @@ const EmpHome = () => {
                   View Attendance Calendar
                 </button>
               </div>
-              <table className="w-full text-center text-sm  text-gray-500 overflow-x-auto">
-                <thead className="text-xs bg-[#E5E7EB] text-black uppercase  dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Name
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Present Dates
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Absent Dates
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Half Day <span className="text-red-500">{halfLeave}</span>
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Full Day <span className="text-red-500">{fullLeave}</span>
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Reason For Leave
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Leave Status
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Assets
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Login Time
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Logout Time
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {presentDates.length > 0 ? (
-                    presentDates.map((item, index) => {
-                      // Assuming the logged-in employee has an ID or email stored
-                      const presentUser = JSON.parse(
-                        localStorage.getItem("employeeLogin")
-                      );
-                      const employeeId = presentUser?.data?.userResponse?._id;
-                      const employee = employees.find(
-                        (emp) => emp._id === employeeId
-                      );
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+                {/* <!-- Card 1 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-blue-500 bg-blue-100 p-4 rounded-full">
+                    <Link to="/employee/attendence">
+                      <SlCalender className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/attendence">
+                    {" "}
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Daily Attendence
+                    </h3>
+                  </Link>
+                </div>
 
-                      // Find the leave request for the employee based on the present date
-                      const leaveRequest = employee?.requestLeave?.find(
-                        (leave) =>
-                          new Date(leave.fromDate).toLocaleDateString() ===
-                          new Date(item.date).toLocaleDateString()
-                      );
+                {/* <!-- Card 1 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-blue-500 bg-blue-100 p-4 rounded-full">
+                    <Link to="/employee/request/leave">
+                      {" "}
+                      <img
+                        className="w-[3vw]"
+                        src="https://cdn-icons-png.flaticon.com/128/3387/3387188.png"
+                      />
+                    </Link>
+                  </div>
+                  <Link to="/employee/request/leave">
+                    {" "}
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Request Leaves
+                    </h3>
+                  </Link>
+                </div>
+                {/* <!-- Card 1 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-blue-500 bg-blue-100 p-4 rounded-full">
+                    <Link to="/employee/Leave/status">
+                      <SlCalender className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
 
-                      return (
-                        <tr
-                          key={index}
-                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 capitalize font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                          >
-                            {employee
-                              ? `${employee.firstName} ${employee.lastName}`
-                              : "N/A"}
-                          </th>
-                          <td className="px-6 py-4">{item.date}</td>
-                          <td className="px-6 py-4">
-                            {item.status === "Absent" ? "Yes" : "No"}
-                          </td>
-                          {/* Display Half Day Leave */}
-                          <td className="px-6 py-4">
-                            {leaveRequest && leaveRequest.halfLeave
-                              ? formatDate(leaveRequest.fromDate)
-                              : "N/A"}
-                          </td>
-                          {/* 
-                          {/* Display Full Day Leave */}
-                          <td className="px-6 py-4">
-                            {leaveRequest && leaveRequest.fullLeave
-                              ? formatDate(leaveRequest.fromDate)
-                              : "N/A"}
-                          </td>
-                          <td className="px-6 py-4">
-                            {leaveRequest?.reason || "N/A"}
-                          </td>
-                          {/* Display Leave Approval Status from EmployeeContext */}
-                          <td className="px-6 py-4 flex justify-center items-center gap-1">
-                            {leaveRequest?.status === "Approved" && (
-                              <>
-                                <FaCheckCircle className="text-green-500" />{" "}
-                                Approved
-                              </>
-                            )}
-                            {leaveRequest?.status === "Rejected" && (
-                              <>
-                                <FaTimesCircle className="text-red-500" />{" "}
-                                Rejected
-                              </>
-                            )}
-                            {(!leaveRequest ||
-                              leaveRequest.status === "Pending") && (
-                              <span className="text-yellow-500">Pending</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-wrap gap-2">
-                              {assets.map((asset, index) => (
-                                <span
-                                  key={index}
-                                  className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full"
-                                >
-                                  {asset}
-                                </span>
-                              ))}
-                            </div>
-                          </td>
+                  <Link to="/employee/Leave/status">
+                    {" "}
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Request Leaves Status
+                    </h3>
+                  </Link>
+                </div>
+                {/* <!-- Card 1 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-blue-500 bg-blue-100 p-4 rounded-full">
+                    <Link to="/employee/documents">
+                      <IoDocuments className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/documents">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Documents
+                    </h3>
+                  </Link>
+                </div>
 
-                          <td className="px-6 py-4">
-                            {employee.lastLoginTime}
-                          </td>
-                          <td className="px-6 py-4">
-                            {employee.lastLogoutTime || "N/A"}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center">
-                        Data not found
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                {/* <!-- Card 2 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-green-500 bg-green-100 p-4 rounded-full">
+                    <Link to="/employee/advanced">
+                      <RiMoneyRupeeCircleLine className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/advanced">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Advance Money Request
+                    </h3>
+                  </Link>
+                </div>
+
+                {/* <!-- Card 3 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-yellow-500 bg-yellow-100 p-4 rounded-full">
+                    <Link to="/employee/payslip">
+                      {" "}
+                      <MdPayment className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/payslip">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Download Payment Slip
+                    </h3>
+                  </Link>
+                </div>
+
+                {/* <!-- Card 4 --> */}
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-red-500 bg-[#E1EFFE] p-4 rounded-full">
+                    <Link to="/employee/assets">
+                      <FaLaptopHouse className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/assets">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      View Assets
+                    </h3>
+                  </Link>
+                </div>
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-red-500 bg-[#E1EFFE] p-4 rounded-full">
+                    <Link to="/employee/notes">
+                      <LuNotebookPen className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/notes">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Notes
+                    </h3>
+                  </Link>
+                </div>
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <button onClick={handleLogout}>
+                    <div class="text-red-500 bg-red-100 p-4 rounded-full">
+                      <BiLogOut className="font-extrabold text-2xl" />
+                    </div>{" "}
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Logout
+                    </h3>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
