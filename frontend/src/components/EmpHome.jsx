@@ -4,6 +4,8 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaTimesCircle } from "react-icons/fa"; // For Rejected status
 import { useContext } from "react";
 import { EmployeeContext } from "../context/EmployeeContext";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const EmpHome = () => {
   const [presentDates, setPresentDates] = useState([]);
@@ -11,6 +13,8 @@ const EmpHome = () => {
   const [halfLeave, setHalfLeave] = useState("");
   const [reqLeave, setRequestLeave] = useState([]);
   const [reason, setReason] = useState("");
+  const [assets, setAssets] = useState("");
+  const [showCalendar, setShowCalendar] = useState(false);
 
   // Use EmployeeContext to get the employee data
   const { employees } = useContext(EmployeeContext);
@@ -25,6 +29,7 @@ const EmpHome = () => {
       try {
         const userData = JSON.parse(presentUser);
         setPresentDates(userData.data.userResponse.attendance || []);
+        setAssets(userData.data.userResponse.assets || []);
         console.log(userData.data.userResponse.attendance || []);
         console.log(userData.data.userResponse.attendance);
       } catch (error) {
@@ -51,19 +56,64 @@ const EmpHome = () => {
     return date.toLocaleDateString(); // Formats the date to a readable string
   };
 
+  // Function to highlight tiles
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const formattedDate = date.toISOString().split("T")[0];
+
+      // Highlight present dates in green
+      if (presentDates.some((item) => item.date === formattedDate)) {
+        return "present-date";
+      }
+
+      // Highlight today's date in blue
+      const today = new Date().toISOString().split("T")[0];
+      if (formattedDate === today) {
+        return "today-date";
+      }
+    }
+    return null;
+  };
+
   return (
     <>
       <EmpDashboard />
+      {showCalendar && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Attendance Calendar</h2>
+            <Calendar
+              tileClassName={tileClassName}
+              onClickDay={(value) =>
+                alert(`Selected date: ${value.toLocaleDateString()}`)
+              }
+            />
+            <button
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+              onClick={() => setShowCalendar(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {/* Table Section */}
       <div>
         <div className=" p-6 bg-gray-100 min-h-screen">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
               <h2 className="text-3xl font-semibold">Employee Details</h2>
             </div>
-
-            <div className="bg-white shadow-md rounded-lg p-4 mt-6 overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-500 overflow-x-auto">
+            <div className="bg-white shadow-md rounded-lg p-4 mt-4 overflow-x-auto">
+              <div className="flex justify-end pb-4">
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow"
+                  onClick={() => setShowCalendar(true)}
+                >
+                  View Attendance Calendar
+                </button>
+              </div>
+              <table className="w-full text-center text-sm  text-gray-500 overflow-x-auto">
                 <thead className="text-xs bg-[#E5E7EB] text-black uppercase  dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
@@ -76,18 +126,25 @@ const EmpHome = () => {
                       Absent Dates
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Request Leave Half Day{" "}
-                      <span className="text-red-500">{halfLeave}</span>
+                      Half Day <span className="text-red-500">{halfLeave}</span>
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Request Leave Full Day{" "}
-                      <span className="text-red-500">{fullLeave}</span>
+                      Full Day <span className="text-red-500">{fullLeave}</span>
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Reason For Leave Request
+                      Reason For Leave
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Leave Approve Status
+                      Leave Status
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Assets
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Login Time
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Logout Time
                     </th>
                   </tr>
                 </thead>
@@ -127,25 +184,22 @@ const EmpHome = () => {
                           <td className="px-6 py-4">
                             {item.status === "Absent" ? "Yes" : "No"}
                           </td>
-
                           {/* Display Half Day Leave */}
                           <td className="px-6 py-4">
                             {leaveRequest && leaveRequest.halfLeave
                               ? formatDate(leaveRequest.fromDate)
                               : "N/A"}
                           </td>
-
+                          {/* 
                           {/* Display Full Day Leave */}
                           <td className="px-6 py-4">
                             {leaveRequest && leaveRequest.fullLeave
                               ? formatDate(leaveRequest.fromDate)
                               : "N/A"}
                           </td>
-
                           <td className="px-6 py-4">
                             {leaveRequest?.reason || "N/A"}
                           </td>
-
                           {/* Display Leave Approval Status from EmployeeContext */}
                           <td className="px-6 py-4 flex justify-center items-center gap-1">
                             {leaveRequest?.status === "Approved" && (
@@ -164,6 +218,25 @@ const EmpHome = () => {
                               leaveRequest.status === "Pending") && (
                               <span className="text-yellow-500">Pending</span>
                             )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-wrap gap-2">
+                              {assets.map((asset, index) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full"
+                                >
+                                  {asset}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4">
+                            {employee.lastLoginTime}
+                          </td>
+                          <td className="px-6 py-4">
+                            {employee.lastLogoutTime || "N/A"}
                           </td>
                         </tr>
                       );
