@@ -52,6 +52,7 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
+import { RiSecurePaymentLine } from "react-icons/ri";
 
 const drawerWidth = 240;
 
@@ -353,7 +354,7 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">Emp Payslip</span>,
-      icon: <TbReportMoney className="text-2xl " />,
+      icon: <RiSecurePaymentLine  className="text-2xl " />,
       path: "/generate/employee/payslip",
     },
   ];

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EmployeeContext } from "../context/EmployeeContext";
+import { capitalize } from "@mui/material";
 
 const Payroll = () => {
   const { employees } = useContext(EmployeeContext);
@@ -263,15 +264,18 @@ const Payroll = () => {
                                     <strong>Amount:</strong> ₹ {req.amount}
                                   </p>
                                   <p>
-                                    <strong>Reason:</strong> {req.reason}
+                                    <strong className="capitalize">
+                                      Reason:
+                                    </strong>{" "}
+                                    {req.reason}
                                   </p>
-                                  <p>
+                                  <p className="capitalize">
                                     <strong>Status:</strong>{" "}
                                     <span
                                       className={
-                                        req.status === "approved"
+                                        req.status === "Approved"
                                           ? "text-green-600"
-                                          : req.status === "rejected"
+                                          : req.status === "Rejected"
                                           ? "text-red-600"
                                           : "text-yellow-600"
                                       }

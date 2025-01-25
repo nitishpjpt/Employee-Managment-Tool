@@ -45,4 +45,6 @@ const fetchAllAssets = async (req, res) => {
   }
 };
 
+
+
 export { fetchAllAssets, assets };
