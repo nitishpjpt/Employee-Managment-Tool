@@ -39,7 +39,7 @@ import { getAllEmployees, getEligibleEmployees, updateSalaries } from "../contro
 import { get } from "mongoose";
 import { approveAdvanceRequest, getAdvanceRequests, rejectAdvanceRequest, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
 import { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount } from "../controller/advanedMoneyEligiblity_controller.js";
-import { addNote, getNotes } from "../controller/empNotes_controller.js";
+import { addNote, deleteNote, getNotes } from "../controller/empNotes_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -67,8 +67,9 @@ userRouter.route("/project/delete/:deleteProject}").delete(deleteProject);
 userRouter.route("/assign/assets").post(assets);
 userRouter.route("/employeeWithAssets").get(fetchAllAssets)
 userRouter.route("/terminate/:employeeId").patch(terminateEmployee);
-userRouter.route("/employee/:employeeId/notes").post(addNote);
-userRouter.route("/get/:employeeId/notes").get(getNotes);
+userRouter.route("/employee/:id/notes").post(addNote);
+userRouter.route("/get/:id/notes").get(getNotes);
+userRouter.route("/delete/:id/:noteId").delete(deleteNote);
 
 // userRouter.route("/update/salary/:employeeId").put(updateSalaries);
 // userRouter.route("/eligible/emploees").get(getEligibleEmployees);

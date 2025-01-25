@@ -1,103 +1,116 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import EmpDashboard from "../pages/EmpDashboard";
 
 const EmpNotes = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
 
-  // Load notes from localStorage on component mount
   useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem("employeeNotes")) || [];
-    setNotes(savedNotes);
+    const storedUser = localStorage.getItem("employeeLogin");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setEmployeeId(parsedUser.data.userResponse._id);
+    }
   }, []);
 
-  // Save notes to localStorage when they are updated
   useEffect(() => {
-    localStorage.setItem("employeeNotes", JSON.stringify(notes));
-  }, [notes]);
+    if (employeeId) {
+      const fetchNotes = async () => {
+        try {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+            }/api/v1/user/get/${employeeId}/notes`
+          );
+          setNotes(response.data);
+        } catch (err) {
+          console.error("Error fetching notes:", err);
+        }
+      };
 
-  const handleAddNote = () => {
-    if (newNote.trim() === "") return;
-    setNotes([
-      ...notes,
-      { text: newNote, timestamp: new Date().toLocaleString() },
-    ]);
-    setNewNote("");
+      fetchNotes();
+    }
+  }, [employeeId]);
+
+  const handleAddNote = async () => {
+    if (!newNote.trim()) return;
+    try {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/${employeeId}/notes`,
+        { text: newNote }
+      );
+      setNotes(response.data);
+      setNewNote("");
+    } catch (err) {
+      console.error("Error adding note:", err);
+    }
   };
 
-  const handleDeleteNote = (index) => {
-    const updatedNotes = notes.filter((_, i) => i !== index);
-    setNotes(updatedNotes);
+  const handleDeleteNote = async (noteId) => {
+    try {
+      const response = await axios.delete(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/delete/${employeeId}/${noteId}`
+      );
+      setNotes(response.data);
+    } catch (err) {
+      console.error("Error deleting note:", err);
+    }
   };
 
   return (
     <>
       <EmpDashboard />
-      <div className=" p-6 bg-gray-100 min-h-screen">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md">
-            <h2 className="text-3xl font-semibold">Employee Notes</h2>
+      <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Notes</h2>
+          <div className="flex items-center gap-4 mb-6">
+            <input
+              type="text"
+              placeholder="Type your note here..."
+              className="flex-1 px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+              value={newNote}
+              onChange={(e) => setNewNote(e.target.value)}
+            />
+            <button
+              className="px-2 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+              onClick={handleAddNote}
+            >
+              Add Note
+            </button>
           </div>
-          <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
-            <div className="max-w-6xl mx-auto">
-              {/* Header */}
-              <div className="mb-8 text-center">
-                <p className="text-gray-600 text-sm sm:text-base">
-                  Keep track of your important thoughts and tasks.
-                </p>
-              </div>
-
-              {/* Input Section */}
-              <div className="bg-white shadow-lg rounded-2xl p-6 mb-6">
-                <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                  Add a New Note
-                </h2>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="text"
-                    placeholder="Write something..."
-                    className="flex-1 px-4 py-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
-                    value={newNote}
-                    onChange={(e) => setNewNote(e.target.value)}
-                  />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {notes.length > 0 ? (
+              notes.map((note) => (
+                <div
+                  key={note._id}
+                  className="p-4 bg-gray-50 border rounded-lg shadow-lg hover:shadow-xl transition"
+                >
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Note Details
+                  </h3>
+                  <p className="text-gray-700 mb-4">{note.text}</p>
+                  <p className="text-sm text-gray-500">
+                    Created On: {new Date(note.timestamp).toLocaleString()}
+                  </p>
                   <button
-                    className="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-                    onClick={handleAddNote}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                    onClick={() => handleDeleteNote(note._id)}
                   >
-                    Add Note
+                    Delete Note
                   </button>
                 </div>
-              </div>
-
-              {/* Notes Section */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {notes.length > 0 ? (
-                  notes.map((note, index) => (
-                    <div
-                      key={index}
-                      className="bg-white shadow-md rounded-lg p-5 transition hover:shadow-lg"
-                    >
-                      <p className="text-gray-800 font-medium mb-2">
-                        {note.text}
-                      </p>
-                      <p className="text-sm text-gray-500">{note.timestamp}</p>
-                      <button
-                        className="mt-3 px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition"
-                        onClick={() => handleDeleteNote(index)}
-                      >
-                        Delete Note
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div className="col-span-full text-center">
-                    <p className="text-gray-600 text-lg">
-                      You don't have any notes yet. Start by adding one!
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center col-span-full">
+                No notes added yet.
+              </p>
+            )}
           </div>
         </div>
       </div>
