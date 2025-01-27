@@ -90,7 +90,6 @@ const Assets = () => {
                   <th className="px-6 py-3">Name</th>
                   <th className="px-6 py-3">Department</th>
                   <th className="px-6 py-3">Role</th>
-                  <th className="px-6 py-3">Status</th>
                   <th className="px-6 py-3">Added Assets</th>
                   <th className="px-6 py-3">Assets</th>
                   <th className="px-6 py-3">Add</th>
@@ -112,7 +111,6 @@ const Assets = () => {
                       </td>
                       <td className="px-6 py-4">{user.department}</td>
                       <td className="px-6 py-4">{user.role}</td>
-                      <td className="px-6 py-4">status</td>
 
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-2">

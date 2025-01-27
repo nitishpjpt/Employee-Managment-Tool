@@ -15,6 +15,24 @@ const markAttendance = async (req, res) => {
     const todayDate = moment().format("YYYY-MM-DD");
     const currentTime = moment().format("HH:mm:ss");
 
+    // Get the last attendance date to fill in absents for missing dates
+    const lastAttendanceDate = employee.attendance.length
+      ? moment(employee.attendance[employee.attendance.length - 1].date)
+      : null;
+
+    if (lastAttendanceDate) {
+      // Fill in absent records for days between lastAttendanceDate and todayDate
+      const diffDays = moment(todayDate).diff(lastAttendanceDate, "days");
+      for (let i = 1; i < diffDays; i++) {
+        const missingDate = lastAttendanceDate.add(1, "days").format("YYYY-MM-DD");
+        employee.attendance.push({
+          date: missingDate,
+          status: "Absent",
+          loginTime: null,
+        });
+      }
+    }
+
     // Check if attendance for today is already marked
     const existingAttendance = employee.attendance.find(
       (att) => att.date === todayDate
@@ -28,28 +46,26 @@ const markAttendance = async (req, res) => {
         loginTime: currentTime, // Save login time only once
       });
 
-      // Only update loginDate and loginTime fields if it's the first login today
-      if (!employee.loginDate || employee.loginDate !== todayDate) {
-        employee.loginDate = todayDate;
-        employee.loginTime = currentTime;
-      }
+      // Update loginDate and loginTime fields for today
+      employee.loginDate = todayDate;
+      employee.loginTime = currentTime;
 
       await employee.save();
     }
 
-    // Fetch the employee's attendance history with login times for each date
+    // Fetch the employee's attendance history
     const attendanceHistory = employee.attendance.map((record) => ({
       date: record.date,
       status: record.status,
-      loginTime: record.date === todayDate ? employee.loginTime : record.loginTime || "N/A", // Use saved loginTime for today or previously recorded
+      loginTime: record.loginTime || "N/A",
     }));
 
     // Response with today's attendance and the complete attendance history
     res.status(200).json({
       today: {
         date: todayDate,
-        loginTime: employee.loginTime, // Use saved login time, not the current time
-        status: existingAttendance ? existingAttendance.status : "Present", // Status remains as "Present" if not marked already
+        loginTime: employee.loginTime,
+        status: existingAttendance ? existingAttendance.status : "Present",
       },
       attendanceHistory,
       message: "Attendance marked and fetched successfully",

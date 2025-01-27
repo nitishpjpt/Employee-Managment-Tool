@@ -33,7 +33,7 @@ import getTodayAttendance from "../controller/dailyAttendence.js";
 import { requestPasswordReset, resetPassword } from "../controller/requestPasswordReset.js";
 import { adminResetPassword, adminRequestPasswordReset} from "../controller/adminRequestPasswordReset.js"
 import editEmployeeDetails from "../controller/empEditDetails_controller.js";
-import {assets,fetchAllAssets} from "../controller/assets.controller.js";
+import {assets,clearAssignedAssets,fetchAllAssets} from "../controller/assets.controller.js";
 import terminateEmployee from "../controller/Terminated_controller.js";
 import { getAllEmployees, getEligibleEmployees, updateSalaries } from "../controller/payroll_controller.js";
 import { get } from "mongoose";
@@ -66,6 +66,7 @@ userRouter.route("/employee/:id").put(editEmployeeDetails);
 userRouter.route("/project/delete/:deleteProject}").delete(deleteProject);
 userRouter.route("/assign/assets").post(assets);
 userRouter.route("/employeeWithAssets").get(fetchAllAssets)
+userRouter.route("/clear/assets").post(clearAssignedAssets)
 userRouter.route("/terminate/:employeeId").patch(terminateEmployee);
 userRouter.route("/employee/:id/notes").post(addNote);
 userRouter.route("/get/:id/notes").get(getNotes);

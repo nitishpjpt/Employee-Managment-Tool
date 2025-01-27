@@ -6,61 +6,95 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EmpAssetsSubmit = () => {
-  const [user, setUser] = useState("");
-  const [assets, setAssets] = useState([]);
+  const [user, setUser] = useState(null); // Holds user data
+  const [assets, setAssets] = useState([]); // Holds assets data
   const [returning, setReturning] = useState(false);
 
-  // Fetch logged-in user from local storage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("employeeLogin");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser.data.userResponse);
-        setAssets(parsedUser.data.userResponse.assets || []);
-      } catch (error) {
-        console.error("Error parsing user data from local storage:", error);
+  // Fetch user and assets from the backend API
+  const fetchAssets = async () => {
+    try {
+      const storedUser = localStorage.getItem("employeeLogin");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser).data.userResponse;
+
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+          }/api/v1/user/employeeWithAssets`
+        );
+
+        const fetchedUser = response.data.find(
+          (employee) => employee._id === parsedUser._id
+        );
+
+        if (fetchedUser) {
+          setUser(fetchedUser);
+          setAssets(fetchedUser.assets || []);
+        } else {
+          toast.error("User not found in the response.", {
+            position: "top-right",
+            autoClose: 1000,
+          });
+        }
       }
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+      toast.error("Failed to fetch assets. Please try again later.", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     }
-  }, []);
-
-  const isDataAvailable = user && assets.length > 0;
-
-  // Function to format dates
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(); // Formats the date to a readable string
   };
 
-  // Handle asset return request
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchAssets();
+  }, []);
+
+  // Handle asset return
   const handleReturnAssets = async () => {
     setReturning(true);
     try {
-      const response = await axios.patch(
+      const response = await axios.post(
         `${
           import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-        }/api/v1/user/updateAssetsStatus`,
+        }/api/v1/user/clear/assets`,
         {
           employeeId: user._id,
-          assets, // Send the list of assets to be returned
         }
       );
-      toast.success("Return request submitted successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
 
-      // Update assets state locally (optional, based on backend logic)
-      setAssets([]);
+      if (response.status === 200) {
+        toast.success("Assets returned successfully!", {
+          position: "top-right",
+          autoClose: 1000,
+        });
+
+        // Refresh data after successful return
+        fetchAssets();
+      } else {
+        toast.error("Failed to return assets. Please try again.", {
+          position: "top-right",
+          autoClose: 1000,
+        });
+      }
     } catch (error) {
-      console.error("Error submitting return request:", error);
-      toast.error("Failed to submit return request.", {
+      console.error("Error returning assets:", error);
+      toast.error("Failed to process the return request.", {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 1000,
       });
     } finally {
       setReturning(false);
     }
+  };
+
+  const isDataAvailable = user && assets.length > 0;
+
+  // Format date helper function
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Converts date to a readable string
   };
 
   return (
@@ -120,7 +154,7 @@ const EmpAssetsSubmit = () => {
           ) : (
             <div className="text-center py-10">
               <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                Data Not Found
+                No assets assigned to you.
               </h2>
             </div>
           )}

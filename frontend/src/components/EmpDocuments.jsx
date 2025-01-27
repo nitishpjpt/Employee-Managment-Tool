@@ -77,7 +77,7 @@ const EmpDocuments = () => {
           ) : (
             <div className="text-center py-10">
               <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                Data Not Found
+                Document not added
               </h2>
             </div>
           )}

@@ -38,6 +38,7 @@ const assets = async (req, res) => {
 const fetchAllAssets = async (req, res) => {
   try {
     const employees = await Employee.find().populate("assets");
+    console.log(employees)
     res.status(200).json(employees);
   } catch (error) {
     console.error("Error fetching employees:", error);
@@ -45,6 +46,53 @@ const fetchAllAssets = async (req, res) => {
   }
 };
 
+// Clear all assigned assets for an employee
+const clearAssignedAssets = async (req, res) => {
+  const { employeeId } = req.body;
 
+  try {
+    // Fetch the employee
+    const employee = await Employee.findById(employeeId);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
 
-export { fetchAllAssets, assets };
+    // Check if the employee has any assigned assets
+    if (!employee.assets || employee.assets.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "No assets assigned to this employee." });
+    }
+
+    // Iterate through the employee's assigned assets
+    const returnedAssets = [];
+    for (const assetName of employee.assets) {
+      // Find the asset in the database
+      const asset = await Assets.findOne({ name: assetName });
+
+      if (asset) {
+        // Mark the asset as "Returned" and clear the `assignedTo` field
+        asset.status = "Returned";
+        asset.assignedTo = null;
+        await asset.save();
+
+        returnedAssets.push(asset.name);
+      }
+    }
+
+    // Clear the employee's assets array
+    employee.assets = [];
+    await employee.save();
+
+    res.status(200).json({
+      message: "All assigned assets have been returned successfully.",
+      returnedAssets,
+      employee,
+    });
+  } catch (error) {
+    console.error("Error clearing assigned assets:", error);
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
+};
+
+export { fetchAllAssets, assets ,clearAssignedAssets};
