@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import adminLogin from "../img/adminLogin.png";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const Register = () => {
             <div className="absolute w-48 h-48 bg-white/20 rounded-full blur-2xl"></div>
             <div className="absolute w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
             <img
-              src="https://www.ubitechsolutions.com/_next/image?url=%2Fimages%2FhrmAutomationIcon.png&w=1920&q=75"
+              src={adminLogin}
               alt="Login Illustration"
               className="relative z-10 w-3/4 object-contain"
             />

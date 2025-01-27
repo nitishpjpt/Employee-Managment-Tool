@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import adminLogin from "../img/adminLogin.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const Login = () => {
             <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
             <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
             <img
-              src="https://www.ubitechsolutions.com/_next/image?url=%2Fimages%2FhrmAutomationIcon.png&w=1920&q=75"
+              src={adminLogin}
               alt="Login Illustration"
               className="w-3/4 object-contain"
             />

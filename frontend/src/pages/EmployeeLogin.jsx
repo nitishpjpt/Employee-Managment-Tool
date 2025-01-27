@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
+import LoginImg from "../img/loginImg.png"
 
 const EmployeeLogin = () => {
   const [email, setEmail] = useState("");
@@ -122,7 +123,7 @@ const EmployeeLogin = () => {
             <div className="absolute w-64 h-64 bg-white/20 rounded-full blur-2xl"></div>
             <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
             <img
-              src="https://cdn.prod.website-files.com/63c50a0cab4c86831ccbeef6/63e5dfffa9332278d24932fc_21404-removebg-preview.png"
+              src={LoginImg}
               alt="Login Illustration"
               className="w-4/4 pr-[4rem] object-contain"
             />
