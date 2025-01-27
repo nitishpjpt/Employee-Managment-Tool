@@ -93,12 +93,7 @@ const Reports = () => {
                   >
                     Present Days
                   </th>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 border-b dark:border-gray-600"
-                  >
-                    Total Active Time
-                  </th>
+
                   <th scope="col" class="px-6 py-3 text-right">
                     <Button
                       onClick={exportToExcel}
@@ -142,7 +137,7 @@ const Reports = () => {
                           (att) => att.status === "Present"
                         ).length || 0}
                       </td>
-                      <td class="px-6 py-4">{item.formattedTotalActiveTime}</td>
+
                       <td class="px-6 py-4"></td>
                     </tr>
                   ))

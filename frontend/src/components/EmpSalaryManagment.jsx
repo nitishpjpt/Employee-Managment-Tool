@@ -14,34 +14,31 @@ const EmpSalaryManagement = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [employeeData, setEmployeeData] = useState({});
   const [updatedSalaries, setUpdatedSalaries] = useState([]);
-  const [companyTotalActiveHours, setCompanyTotalActiveHours] = useState(10); // Default to 10 hours per day
 
-  // Calculate salary using actual days in the month
-  const calculateSalary = (
-    monthlySalary,
-    presentDays,
-    activeMinutes,
-    companyActiveMinutes
-  ) => {
+  // Calculate salary using daily salary minus 12% fund and considering leaves
+  // Updated function to calculate salary deducting fund from the total monthly salary
+  const calculateSalary = (monthlySalary, presentDays, totalLeaves) => {
     if (
       !monthlySalary ||
-      !presentDays ||
-      !activeMinutes ||
-      !companyActiveMinutes
+      presentDays === undefined ||
+      totalLeaves === undefined
     )
       return 0;
+
+    // Deduct 12% fund from the monthly salary
+    const salaryAfterFund = monthlySalary * 0.88;
 
     // Get the actual number of days in the current month
     const totalDaysInMonth = getDaysInMonth();
 
-    // Calculate daily salary based on the actual days in the month
-    const dailySalary = monthlySalary / totalDaysInMonth;
+    // Calculate daily salary based on the reduced monthly salary
+    const dailySalary = salaryAfterFund / totalDaysInMonth;
 
-    // Calculate hourly salary (assuming 8 hours of work per day)
-    const hourlySalary = dailySalary / 10;
+    // Calculate final salary based on present days minus leaves
+    const finalSalary = dailySalary * (presentDays - totalLeaves);
 
-    // Calculate the total salary based on active minutes worked (in hours)
-    return parseFloat((hourlySalary * (activeMinutes / 60)).toFixed(2));
+    // Ensure salary is non-negative
+    return Math.max(0, parseFloat(finalSalary.toFixed(2)));
   };
 
   // Fetch all employees and initialize data
@@ -58,16 +55,12 @@ const EmpSalaryManagement = () => {
 
         const initialEmployeeData = {};
         users.forEach((user) => {
-          const activeMinutes = convertFormattedTimeToMinutes(
-            user.formattedTotalActiveTime
-          );
           initialEmployeeData[user._id] = {
             monthlySalary: user.salary || 10000, // Default to 10,000 if no salary
             presentDays:
               user.attendance?.filter((att) => att.status === "Present")
                 .length || 0,
-
-            activeMinutes,
+            totalLeaves: 0, // Default to 0 leaves
           };
         });
         setEmployeeData(initialEmployeeData);
@@ -79,15 +72,6 @@ const EmpSalaryManagement = () => {
     fetchEmployees();
   }, []);
 
-  // Helper function to convert formatted time (e.g., "5hr 30min") to minutes
-  const convertFormattedTimeToMinutes = (formattedTime) => {
-    if (!formattedTime) return 0;
-    const [hours, minutes] = formattedTime
-      .split(" ")
-      .map((t) => parseInt(t.replace(/\D/g, ""), 10) || 0);
-    return hours * 60 + minutes;
-  };
-
   // Handle input changes for employees
   const handleChange = (e, userId, field) => {
     const { value } = e.target;
@@ -96,23 +80,22 @@ const EmpSalaryManagement = () => {
         ...prevData,
         [userId]: {
           ...prevData[userId],
-          [field]:
-            field === "monthlySalary" ? parseFloat(value) : parseInt(value, 10),
+          [field]: parseInt(value, 10),
         },
       };
 
-      // Recalculate salary after presentDays or monthlySalary changes
+      // Recalculate salary after any relevant field change
       const updatedSalary = calculateSalary(
         newData[userId].monthlySalary,
         newData[userId].presentDays,
-        newData[userId].activeMinutes,
-        companyTotalActiveHours * 60 // Company active hours in minutes
+        newData[userId].totalLeaves || 0
       );
 
-      // Update the salary in updatedSalaries state
       setUpdatedSalaries((prevSalaries) => [
         ...prevSalaries.filter(
-          (entry) => entry.employeeCode !== prevData[userId].employeeCode
+          (entry) =>
+            entry.employeeCode !==
+            allUsers.find((user) => user._id === userId)?.employeeCode
         ),
         {
           name: allUsers.find((user) => user._id === userId).firstName,
@@ -120,42 +103,12 @@ const EmpSalaryManagement = () => {
             .employeeCode,
           salary: updatedSalary,
           presentDays: newData[userId].presentDays,
-          activeTime: newData[userId].activeMinutes,
+          totalLeaves: newData[userId].totalLeaves || 0,
         },
       ]);
+
       return newData;
     });
-  };
-
-  // Handle company active hours change
-  const handleCompanyTotalHoursChange = (e) => {
-    setCompanyTotalActiveHours(parseFloat(e.target.value));
-  };
-
-  // Update salary for an employee
-  const handleSalaryUpdate = (userId) => {
-    const user = allUsers.find((user) => user._id === userId);
-    const { monthlySalary, presentDays, activeMinutes } =
-      employeeData[userId] || {};
-    const companyActiveMinutes = companyTotalActiveHours * 60;
-
-    const salary = calculateSalary(
-      monthlySalary,
-      presentDays,
-      activeMinutes,
-      companyActiveMinutes
-    );
-
-    setUpdatedSalaries((prevData) => [
-      ...prevData.filter((entry) => entry.employeeCode !== user.employeeCode),
-      {
-        name: user.firstName,
-        employeeCode: user.employeeCode,
-        salary,
-        presentDays,
-        activeTime: activeMinutes,
-      },
-    ]);
   };
 
   // Export updated salaries to CSV
@@ -165,13 +118,11 @@ const EmpSalaryManagement = () => {
       Emp_Code: entry.employeeCode,
       Salary: entry.salary,
       Present_Days: entry.presentDays,
-      Active_Time: `${Math.floor(entry.activeTime / 60)}hr ${
-        entry.activeTime % 60
-      }min`,
+      Leaves: entry.totalLeaves,
     }));
 
     const csvContent = [
-      ["Name", "Emp_Code", "Salary", "Present_Days", "Active_Time"].join(","),
+      ["Name", "Emp_Code", "Salary", "Present_Days", "Leaves"].join(","),
       ...data.map((item) => Object.values(item).join(",")),
     ].join("\n");
 
@@ -193,9 +144,8 @@ const EmpSalaryManagement = () => {
               <th className="px-6 py-3">Emp-code</th>
               <th className="px-6 py-3">New Monthly Salary</th>
               <th className="px-6 py-3">Present Days</th>
-              <th className="px-6 py-3">Active Time</th>
+              <th className="px-6 py-3">Leaves</th>
               <th className="px-6 py-3">Calculated Salary</th>
-              <th className="px-6 py-3">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -234,32 +184,26 @@ const EmpSalaryManagement = () => {
                     />
                   </td>
                   <td className="px-6 py-4">
-                    {`${Math.floor(
-                      (employeeData[user._id]?.activeMinutes || 0) / 60
-                    )}hr ${employeeData[user._id]?.activeMinutes % 60}min`}
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      name="totalLeaves"
+                      value={employeeData[user._id]?.totalLeaves || ""}
+                      onChange={(e) => handleChange(e, user._id, "totalLeaves")}
+                    />
                   </td>
                   <td className="px-6 py-4">
                     {calculateSalary(
                       employeeData[user._id]?.monthlySalary,
                       employeeData[user._id]?.presentDays,
-                      employeeData[user._id]?.activeMinutes,
-                      companyTotalActiveHours * 60
+                      employeeData[user._id]?.totalLeaves
                     )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleSalaryUpdate(user._id)}
-                    >
-                      Update Salary
-                    </Button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
                   No data available
                 </td>
               </tr>
@@ -275,16 +219,6 @@ const EmpSalaryManagement = () => {
           >
             Download Salary Report
           </Button>
-        </div>
-        <div className="mt-4 text-center">
-          <TextField
-            label="Company Total Active Hours"
-            type="number"
-            value={companyTotalActiveHours}
-            onChange={handleCompanyTotalHoursChange}
-            variant="outlined"
-            size="small"
-          />
         </div>
       </div>
     </div>
