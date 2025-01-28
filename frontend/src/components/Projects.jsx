@@ -131,7 +131,6 @@ const Projects = () => {
       <MainDashboard />
       {/*------select----options-----------*/}
       <div className="lg:px-[8rem] xs:ml-[5rem] pb-6 xs:flex-wrap lg:flex lg:flex-row justify-end items-center gap-4 text-center shadow-lg rounded-lg">
-       
         <p className="font-semibold">Select date range</p>
         <input
           type="date"
@@ -293,9 +292,9 @@ const Projects = () => {
       {/*--------Table-------------*/}
       <div className="">
         <div class="relative overflow-x-auto lg:ml-[15rem] xs:ml-[5rem] xs:mt-5  p-4 bg-gray-100 min-h-screen shadow-md rounded-lg ">
-        <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold">Add Projects</h2>
-        </div>
+          <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold">Add Projects</h2>
+          </div>
           <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-center text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -314,10 +313,6 @@ const Projects = () => {
                 </th>
                 <th scope="col" class="px-6 py-3">
                   End Date
-                </th>
-
-                <th scope="col" class="px-6 py-3">
-                  Action
                 </th>
               </tr>
             </thead>
@@ -348,9 +343,6 @@ const Projects = () => {
                     <td class="px-6 py-4">{item.managerName}</td>
                     <td class="px-6 py-4">{item.startDate || "Not Found"}</td>
                     <td class="px-6 py-4">{item.endDate || "Not Found"}</td>
-                    <td className="px-6 py-4 text-center">
-                      <RiDeleteBin6Line className="text-red-500" />
-                    </td>
                   </tr>
                 </tbody>
               ))

@@ -79,7 +79,18 @@ const Termination = () => {
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>
                       <td className="px-6 py-4">{user.salary}</td>
-                      <td className="px-6 py-4">{user.assets || []}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-2">
+                          {(user.assets || []).map((asset, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full"
+                            >
+                              {asset}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
 
                       <td className="px-6 py-4">
                         <span
