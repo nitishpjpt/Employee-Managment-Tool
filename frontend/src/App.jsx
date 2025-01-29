@@ -41,6 +41,8 @@ import EmpPaymentSlip from "./components/EmpPaymentSlip";
 import EmpAssetsSubmit from "./components/EmpAssetsSubmit";
 import EmpReqLeaveStatus from "./components/EmpReqLeaveStatus";
 import EmpNotes from "./components/EmpNotes";
+import GatepassApproval from "./components/GatepassApproval";
+import EmpGatePass from "./components/EmpGatePass";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -138,6 +140,15 @@ const App = () => {
             />
           }
         />
+        <Route
+        path="/gatepass/approval"
+        element={
+          <ProtectedRoute
+           element={<GatepassApproval/>}
+           isAuthenticated={isAuthenticated}
+          ></ProtectedRoute>
+        }
+        ></Route>
         <Route
           path="/employee/advance/money/request"
           element={
@@ -395,7 +406,16 @@ const App = () => {
             ></EmployeeProtectedRoute>
           }
         ></Route>
+        <Route
+        path="/employee/gatepass/request"
+        element={
+          <EmployeeProtectedRoute
+           element={<EmpGatePass/>}
+            isEmployeeAuthenticated={isEmployeeAuthenticated}
+          ></EmployeeProtectedRoute>
+        }
 
+        ></Route>
         <Route
           path="/employee/forgot/password"
           element={<EmpForgotPassword />}

@@ -40,6 +40,7 @@ import { get } from "mongoose";
 import { approveAdvanceRequest, getAdvanceRequests, rejectAdvanceRequest, requestAdvance } from "../controller/empAdvancedMoney_controller.js";
 import { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount } from "../controller/advanedMoneyEligiblity_controller.js";
 import { addNote, deleteNote, getNotes } from "../controller/empNotes_controller.js";
+import { gatePassApproval, gatePassRequest, getAllPassRequest } from "../controller/reqGatepass.controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -95,5 +96,11 @@ userRouter.route("/:employeeId/verify").post(addBackgroundVerification);
 userRouter.route("/:employeeId/bankDetails/verify").post(addBankVerification);
 userRouter.route("/:employeeId/request/leave").post(addRequestLeave);
 userRouter.route("/:employeeId/attendence/details").post(markAttendance);
+
+
+//gate pass routes
+userRouter.route("/employee/gatepass/request").post(gatePassRequest);
+userRouter.route("/employee/gatepass/:employeeId/approve").put(gatePassApproval);
+userRouter.route("/employee/gatepass/all/:employeeId").get(getAllPassRequest);
 
 export default userRouter;

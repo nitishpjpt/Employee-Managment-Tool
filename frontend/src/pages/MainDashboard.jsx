@@ -53,6 +53,7 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { RiSecurePaymentLine } from "react-icons/ri";
+import { GiSecurityGate } from "react-icons/gi";
 
 const drawerWidth = 240;
 
@@ -278,7 +279,7 @@ export default function Dashboard() {
     },
     {
       text: <span className="text-[1rem] font-semibold">Timesheet</span>,
-      icon: <SlCalender className="text-2xl "/>,
+      icon: <SlCalender className="text-2xl " />,
       path: "/timesheet",
     },
     {
@@ -353,8 +354,15 @@ export default function Dashboard() {
       path: "/employee/advance/money/request",
     },
     {
+      text: (
+        <span className="text-[1rem] font-semibold">Gatepass Approval</span>
+      ),
+      icon: <GiSecurityGate className="text-2xl " />,
+      path: "/gatepass/approval",
+    },
+    {
       text: <span className="text-[1rem] font-semibold">Emp Payslip</span>,
-      icon: <RiSecurePaymentLine  className="text-2xl " />,
+      icon: <RiSecurePaymentLine className="text-2xl " />,
       path: "/generate/employee/payslip",
     },
   ];

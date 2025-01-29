@@ -170,6 +170,21 @@ const employeeSchema = new mongoose.Schema(
         timestamp: { type: Date, default: Date.now },
       },
     ],
+    // Gate Pass Requests added inside Employee schema
+    gatePassRequests: [
+      {
+        reason: { type: String, required: true },
+        status: {
+          type: String,
+          enum: ["Pending", "Approved", "Rejected"],
+          default: "Pending",
+        },
+        requestedAt: { type: Date, default: Date.now },
+        approvedAt: { type: Date },
+        logoutTime: { type: String }, // Logout time when leaving
+        nextLoginTime: { type: String }, // When employee can log back in
+      },
+    ],
   },
   { timestamps: true }
 );
