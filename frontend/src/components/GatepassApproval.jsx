@@ -29,6 +29,8 @@ const GatepassApproval = () => {
               employeeId: employee._id, // Attach employee ID
               employeeName: employee.firstName, // Attach employee name
               employeeCode: employee.employeeCode,
+              employeeLogout: employee.logoutTime,
+              employeeLogin: employee.lastLoginTime,
             }));
           })
         );
@@ -65,7 +67,7 @@ const GatepassApproval = () => {
         )
       );
 
-      alert(response.data.message);
+      alert(response.data.message); // Show success message from backend
     } catch (error) {
       console.error("Error approving/rejecting gate pass:", error);
     }
@@ -149,12 +151,34 @@ const GatepassApproval = () => {
 
                         <p className="text-gray-600">
                           ⏳ <span className="font-semibold">Logout Time:</span>{" "}
-                          {request.logoutTime}
+                          {request.employeeLogout}
                         </p>
-                        <p className="text-gray-600">
-                          🔄 <span className="font-semibold">Next Login:</span>{" "}
-                          {request.nextLoginTime || "N/A"}
-                        </p>
+
+                        {/* Additional Fields for Company Work */}
+                        {request.reason === "Company Work" && (
+                          <div>
+                            <p className="text-gray-600">
+                              🚗{" "}
+                              <span className="font-semibold">Total KM:</span>{" "}
+                              {request.totalKm}
+                            </p>
+
+                            <p className="text-gray-600">
+                              🏢{" "}
+                              <span className="font-semibold">
+                                Company Work Reason:
+                              </span>{" "}
+                              {request.companyWorkReason}
+                            </p>
+                            <p className="text-gray-600">
+                              💸{" "}
+                              <span className="font-semibold">
+                                Total Payment:
+                              </span>{" "}
+                              ₹{request.totalPayment}
+                            </p>
+                          </div>
+                        )}
 
                         {request.status === "Pending" && (
                           <div className="mt-4 flex gap-3">

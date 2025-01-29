@@ -1,32 +1,54 @@
 import { Employee } from "../modules/employee_modules.js";
 
 const gatePassRequest = async (req, res) => {
-  console.log("Gate pass request received"); // <-- Add this line
   try {
-    const { reason, logoutTime, employeeId } = req.body;
-    console.log("Request body:", req.body);
-
-    console.log(reason, logoutTime, employeeId);
-
-    const employee = await Employee.findById(employeeId);
-    if (!employee)
-      return res.status(404).json({ message: "Employee not found" });
-
-    // Create a new gate pass request inside Employee collection
-    const newRequest = {
+    const {
       reason,
+      logoutTime,
+      employeeId,
+      totalKm,
+      otherReason,
+      companyWorkReason,
+    } = req.body;
+    const paymentPerKm = 5; // ₹5 per km
+
+    // Find employee by ID
+    const employee = await Employee.findById(employeeId);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Create the base request data object
+    let requestData = {
+      reason: reason === "Other" ? otherReason : reason,
       status: "Pending",
       requestedAt: new Date(),
       logoutTime,
     };
 
-    employee.gatePassRequests.push(newRequest);
+    // If reason is "Company Work", include additional details
+    if (reason === "Company Work") {
+      if (!totalKm || !companyWorkReason) {
+        return res
+          .status(400)
+          .json({ message: "All fields for Company Work are required" });
+      }
+      requestData.totalKm = totalKm;
+
+      requestData.companyWorkReason = companyWorkReason;
+      requestData.paymentPerKm = paymentPerKm;
+      requestData.totalPayment = totalKm * paymentPerKm; // Calculate total payment
+    }
+
+    // Add the request to the employee's gate pass requests
+    employee.gatePassRequests.push(requestData);
     await employee.save();
 
     res
       .status(201)
-      .json({ message: "Gate pass requested successfully", newRequest });
+      .json({ message: "Gate pass requested successfully", requestData });
   } catch (error) {
+    console.error(error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
@@ -38,7 +60,6 @@ const gatePassApproval = async (req, res) => {
     const { employeeId } = req.params;
     const { gatePassId, status } = req.body;
 
-    // Ensure the status is either 'Approved' or 'Rejected'
     if (!["Approved", "Rejected"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
@@ -47,16 +68,13 @@ const gatePassApproval = async (req, res) => {
     if (!employee)
       return res.status(404).json({ message: "Employee not found" });
 
-    // Find the gate pass request inside Employee document
     const gatePass = employee.gatePassRequests.id(gatePassId);
     if (!gatePass)
       return res.status(404).json({ message: "Gate pass request not found" });
 
-    // Update the gate pass status
     gatePass.status = status;
     gatePass.approvedAt = new Date();
 
-    // Save the updated employee document
     await employee.save();
 
     res.json({
@@ -64,7 +82,6 @@ const gatePassApproval = async (req, res) => {
       gatePass,
     });
   } catch (error) {
-    console.error("Error in gate pass approval:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
@@ -73,12 +90,9 @@ const gatePassApproval = async (req, res) => {
 
 const getAllPassRequest = async (req, res) => {
   try {
-    const { employeeId } = req.params; // Get employeeId from the URL
-    console.log(employeeId);
+    const { employeeId } = req.params;
+
     const employee = await Employee.findById(employeeId);
-
-    console.log(employee);
-
     if (!employee)
       return res.status(404).json({ message: "Employee not found" });
 

@@ -179,6 +179,12 @@ const employeeSchema = new mongoose.Schema(
           enum: ["Pending", "Approved", "Rejected"],
           default: "Pending",
         },
+        totalKm: { type: Number },
+        paymentPerKm: { type: Number, default: 5 },
+        companyWorkReason: {
+          type: String,
+        },
+        totalPayment: { type: Number },
         requestedAt: { type: Date, default: Date.now },
         approvedAt: { type: Date },
         logoutTime: { type: String }, // Logout time when leaving

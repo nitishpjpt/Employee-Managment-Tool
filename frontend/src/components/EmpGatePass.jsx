@@ -1,168 +1,243 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import EmpDashboard from "../pages/EmpDashboard";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const EmpGatePass = () => {
   const [reason, setReason] = useState("");
-  const [logoutTime, setLogoutTime] = useState("");
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [otherReason, setOtherReason] = useState(""); // Store other reason input
+  const [totalKm, setTotalKm] = useState("");
+  const [companyWorkReason, setCompanyWorkReason] = useState(""); // Reason for going for company work
+  const [paymentPerKm] = useState(5); // Example: ₹5 per km
+  const [loading, setLoading] = useState(false);
+  const [employeeId, setEmployeeId] = useState("");
+  const [previousRequests, setPreviousRequests] = useState([]); // Store previous requests
 
-  // Fetch all previous gate pass requests
+  // ✅ Use useEffect to set employeeId once
   useEffect(() => {
     const storedUser = localStorage.getItem("employeeLogin");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      const employeeId = parsedUser.data.userResponse._id;
+      setEmployeeId(parsedUser.data.userResponse._id);
+    }
+  }, []); // Empty dependency array ensures this runs only once
 
-      axios
-        .get(
+  // Fetch Previous Requests
+  useEffect(() => {
+    const fetchPreviousRequests = async () => {
+      try {
+        const response = await axios.get(
           `${
             import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
           }/api/v1/user/employee/gatepass/all/${employeeId}`
-        )
-        .then((res) => {
-          setRequests(res.data.gatePassRequests);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching gate pass requests:", error);
-          setLoading(false);
-        });
-    }
-  }, []);
-
-  // Submit a new gate pass request
-  const requestGatePass = async () => {
-    const storedUser = localStorage.getItem("employeeLogin");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      const employeeId = parsedUser.data.userResponse._id;
-
-      try {
-        // Send request to the backend
-        const response = await axios.post(
-          `${
-            import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
-          }/api/v1/user/employee/gatepass/request`,
-          {
-            reason,
-            logoutTime,
-            employeeId, // Pass employeeId here
-          }
         );
-
-        // Add the new request to the state immediately after submission
-        setRequests((prevRequests) => [
-          ...prevRequests,
-          response.data.newRequest, // Assuming the backend sends back the newly created request
-        ]);
-
-        // Clear input fields after submission
-        setReason("");
-        setLogoutTime("");
-        toast.success("Gate Pass request send for approval!", {
-          position: "top-right",
-          autoClose: 1000,
-        });
+        setPreviousRequests(response.data.gatePassRequests);
       } catch (error) {
-        console.error("Error requesting gate pass:", error);
-        toast.error(
-          error.response.data.message || "Advanced request does not send.",
-          {
-            position: "top-right",
-            autoClose: 1000,
-          }
-        );
+        console.error("Error fetching previous gate pass requests:", error);
       }
-    } else {
-      console.error("Employee data not found in localStorage");
+    };
+
+    if (employeeId) {
+      fetchPreviousRequests();
+    }
+  }, [employeeId]);
+
+  // Calculate Total Payment
+  const totalPayment = totalKm ? totalKm * paymentPerKm : 0;
+
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const newRequest = {
+        employeeId,
+        reason: reason === "Other" ? otherReason : reason, // If "Other", store the entered reason
+        ...(reason === "Company Work" && {
+          totalKm,
+          companyWorkReason,
+          totalPayment,
+        }),
+        status: "Pending", // Assuming new requests are always "Pending"
+        requestedAt: new Date().toISOString(), // Use current timestamp
+      };
+
+      await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/employee/gatepass/request`,
+        newRequest
+      );
+
+      // ✅ Update UI immediately
+      setPreviousRequests((prevRequests) => [newRequest, ...prevRequests]);
+
+      alert("Gate Pass Request Submitted Successfully!");
+
+      // ✅ Reset the form fields
+      setReason("");
+      setOtherReason("");
+      setTotalKm("");
+      setCompanyWorkReason("");
+    } catch (error) {
+      console.error("Error submitting gate pass:", error);
+      alert("Failed to submit gate pass.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <EmpDashboard />
-      <div className="p-6 max-w-2xl mx-auto space-y-8">
-        <div className="bg-blue-600 text-white text-center py-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-2xl font-bold">Gate Pass Request</h2>
-        </div>
-
-        {/* Request Gate Pass Form */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
-          <h3 className="text-xl font-semibold text-gray-700">
-            Request New Gate Pass
-          </h3>
-          <div className="space-y-4">
-            <input
-              required
-              type="text"
-              placeholder="Enter reason for leaving"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <input
-              required
-              type="time"
-              value={logoutTime}
-              onChange={(e) => setLogoutTime(e.target.value)}
-              className="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={requestGatePass}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Request Gate Pass
-            </button>
+      <div className="p-8 bg-gray-50 min-h-screen">
+        <div className="max-w-2xl mx-auto">
+          {/* Header Section */}
+          <div className="bg-blue-600 text-white text-center py-6 rounded-lg shadow-xl">
+            <h2 className="text-3xl font-semibold">Request Gate Pass</h2>
           </div>
-        </div>
 
-        {/* Display Previous Requests */}
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
-          <h3 className="text-xl font-semibold text-gray-700">
-            Previous Requests
-          </h3>
-          {loading ? (
-            <p className="text-center text-gray-500">
-              Loading previous requests...
-            </p>
-          ) : requests.length === 0 ? (
-            <p className="text-center text-gray-500">
-              No previous requests found.
-            </p>
-          ) : (
-            requests.map((pass) => (
-              <div
-                key={pass._id}
-                className="border-b border-gray-200 py-4 flex justify-between items-center"
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-6 mt-8 rounded-lg shadow-md"
+          >
+            {/* Reason Selection */}
+            <div className="mb-6">
+              <label className="block text-gray-700 font-semibold mb-2">
+                Select Reason
+              </label>
+              <select
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                required
               >
-                <div className="flex flex-col space-y-2">
-                  <p className="font-semibold text-gray-700">{pass.reason}</p>
-                  <p className="text-sm text-gray-500">
-                    <strong>Logout Time:</strong> {pass.logoutTime}
-                  </p>
-                  {pass.nextLoginTime && (
-                    <p className="text-sm text-gray-500">
-                      <strong>Next Login:</strong> {pass.nextLoginTime}
-                    </p>
-                  )}
-                </div>
-                <span
-                  className={`px-4 py-2 text-sm font-semibold rounded-full ${
-                    pass.status === "Approved"
-                      ? "bg-green-500 text-white"
-                      : pass.status === "Rejected"
-                      ? "bg-red-500 text-white"
-                      : "bg-yellow-500 text-white"
-                  }`}
-                >
-                  {pass.status}
-                </span>
+                <option value="">Select</option>
+                <option value="Company Work">Company Work</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            {/* Show Additional Reason Input for "Other" */}
+            {reason === "Other" && (
+              <div className="mb-6">
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Enter Reason
+                </label>
+                <input
+                  type="text"
+                  value={otherReason}
+                  onChange={(e) => setOtherReason(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  required
+                />
               </div>
-            ))
+            )}
+
+            {/* Show Total Kilometer and Reason Fields for "Company Work" */}
+            {reason === "Company Work" && (
+              <div className="mb-6">
+                {/* Total Kilometers */}
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Enter Total Kilometers
+                </label>
+                <input
+                  type="number"
+                  value={totalKm}
+                  onChange={(e) => setTotalKm(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  required
+                />
+
+                {/* Reason for Company Work */}
+                <label className="block text-gray-700 font-semibold mb-2 mt-6">
+                  Reason for Company Work
+                </label>
+                <input
+                  type="text"
+                  value={companyWorkReason}
+                  onChange={(e) => setCompanyWorkReason(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  required
+                />
+
+                {/* Display Total Payment */}
+                <p className="mt-4 text-gray-700">
+                  <strong>Total Payment:</strong> ₹{totalPayment}
+                </p>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit Request"}
+            </button>
+          </form>
+
+          {/* Display Previous Requests */}
+          {previousRequests.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-3xl font-semibold mb-6 text-gray-900">
+                Previous Requests
+              </h3>
+              <div className="space-y-6">
+                {previousRequests.map((request) => (
+                  <div
+                    key={request._id}
+                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out border-l-4 border-blue-500 hover:bg-gray-50"
+                  >
+                    <p className="text-gray-800 font-semibold">
+                      <span className="font-medium text-blue-600">Reason:</span>{" "}
+                      {request.reason}
+                    </p>
+                    {request.status && (
+                      <p className="text-gray-700 mt-2 ">
+                        <span className="font-medium text-blue-600">
+                          Status :
+                        </span>{" "}
+                        <span
+                          className={`px-3 py-1 text-sm font-semibold text-white rounded-full ${
+                            request.status === "Approved"
+                              ? "bg-green-500"
+                              : request.status === "Rejected"
+                              ? "bg-red-500"
+                              : "bg-yellow-500"
+                          }`}
+                        >
+                          {request.status}
+                        </span>{" "}
+                      </p>
+                    )}
+                    {request.totalKm && (
+                      <p className="text-gray-700 mt-2">
+                        <span className="font-medium text-blue-600">
+                          Total Kilometers:
+                        </span>{" "}
+                        {request.totalKm}
+                      </p>
+                    )}
+                    {request.companyWorkReason && (
+                      <p className="text-gray-700 mt-2">
+                        <span className="font-medium text-blue-600">
+                          Company Work Reason:
+                        </span>{" "}
+                        {request.companyWorkReason}
+                      </p>
+                    )}
+                    <p className="text-gray-700 mt-2">
+                      <span className="font-medium text-blue-600">
+                        Request Date:
+                      </span>{" "}
+                      {new Date(request.requestedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>
