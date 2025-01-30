@@ -1,12 +1,13 @@
 import multer from "multer";
 
+// Set up multer storage configuration to save files locally
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/temp");
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the folder where images should be saved
   },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Save the file with a unique name based on the current timestamp
+  }
 });
 
-export const upload = multer({ storage: storage });
+export const upload = multer({ storage: storage }).single('avatar'); // 'avatar' is the field name in the form

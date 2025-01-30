@@ -15,6 +15,7 @@ const EmployeeTable = () => {
   const [updatedData, setUpdatedData] = useState({});
   const [locationModalVisible, setLocationModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [viewModalVisible, setViewModalVisible] = useState(false);
 
   // Fetch all employee details
   const getAllUserRegisterDetails = async () => {
@@ -106,6 +107,12 @@ const EmployeeTable = () => {
     setLocationModalVisible(true);
   };
 
+  // Open view modal
+  const handleViewClick = (employee) => {
+    setSelectedEmployee(employee);
+    setViewModalVisible(true);
+  };
+
   return (
     <>
       <div className="relative min-h-screen  overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100">
@@ -113,14 +120,14 @@ const EmployeeTable = () => {
           <h2 className="text-2xl font-bold">Employee Details</h2>
         </div>
         <div className=" bg-white shadow-md rounded-lg">
-          <table className="w-full overflow-x-auto  text-sm text-left rtl:text-right text-gray-500">
+          <table className="w-full overflow-x-auto  text-sm  text-center text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
               <tr>
                 <th className="px-6 py-3">Full Name</th>
                 <th className="px-6 py-3">Email</th>
                 <th className="px-6 py-3">Location</th>
                 <th className="px-6 py-3">Department</th>
-                <th className="px-6 py-3">Role</th>
+                <th className="px-6 py-3">Designation</th>
                 <th className="px-6 py-3">Emp-code</th>
                 <th className="px-6 py-3">Action</th>
               </tr>
@@ -153,7 +160,12 @@ const EmployeeTable = () => {
                     <td className="px-6 py-4">{user.department}</td>
                     <td className="px-6 py-4">{user.role}</td>
                     <td className="px-6 py-4">{user.employeeCode}</td>
-                    <td className="px-6 py-4 flex justify-center gap-3 items-center">
+
+                    <td className="px-6 pt-10 flex justify-center gap-3 items-center">
+                      <IoEyeSharp
+                        className="text-blue-500"
+                        onClick={() => handleViewClick(user)}
+                      />
                       <button
                         className="text-blue-500 cursor-pointer"
                         onClick={() => handleEditClick(user)}
@@ -181,6 +193,82 @@ const EmployeeTable = () => {
           </table>
         </div>
       </div>
+
+      {/* View Modal */}
+      {viewModalVisible && selectedEmployee && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-xl shadow-lg w-[90%] max-w-lg p-6 transform transition-all scale-100">
+            <h3 className="text-2xl font-bold text-gray-800 text-center mb-4 border-b pb-3">
+              Employee Details
+            </h3>
+
+            <div className="space-y-4">
+              <div className="flex flex-col items-center">
+                <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center text-2xl font-bold text-white">
+                  {selectedEmployee.firstName.charAt(0)}
+                </div>
+                <p className="text-lg font-semibold text-gray-900 mt-2">
+                  {selectedEmployee.firstName} {selectedEmployee.lastName}
+                </p>
+                <p className="text-sm text-gray-500">{selectedEmployee.role}</p>
+              </div>
+
+              <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                <p className="flex justify-between border-b pb-2">
+                  <span className="font-semibold text-gray-700">Email:</span>
+                  <span className="text-gray-600">
+                    {selectedEmployee.email}
+                  </span>
+                </p>
+
+                <p className="flex justify-between border-b py-2">
+                  <span className="font-semibold text-gray-700">
+                    Department:
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEmployee.department}
+                  </span>
+                </p>
+                <p className="flex justify-between border-b py-2">
+                  <span className="font-semibold text-gray-700">
+                    Designation:
+                  </span>
+                  <span className="text-gray-600">{selectedEmployee.role}</span>
+                </p>
+                <p className="flex justify-between border-b py-2">
+                  <span className="font-semibold text-gray-700">
+                    Phone Number:
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEmployee.phoneNumber}
+                  </span>
+                </p>
+                <p className="flex justify-between border-b py-2">
+                  <span className="font-semibold text-gray-700">Emp-Code:</span>
+                  <span className="text-gray-600">
+                    {selectedEmployee.employeeCode}
+                  </span>
+                </p>
+                <p className="flex justify-between border-b py-2">
+                  <span className="font-semibold text-gray-700">
+                    Joinig Date:
+                  </span>
+                  <span className="text-gray-600">{selectedEmployee.date}</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setViewModalVisible(false)}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Location Modal */}
       {locationModalVisible && (

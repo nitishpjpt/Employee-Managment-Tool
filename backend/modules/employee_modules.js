@@ -77,7 +77,10 @@ const employeeSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Password is required"],
     },
-    phnNumber: {
+    phoneNumber: {
+      type: String,
+    },
+    dob:{
       type: String,
     },
     employeeCode: {
@@ -96,7 +99,7 @@ const employeeSchema = new mongoose.Schema(
       type: String,
     },
 
-    avtar: {
+    avatar: {
       type: String,
     },
     salary: {

@@ -221,7 +221,7 @@ const Payroll = () => {
                 <thead>
                   <tr className="bg-blue-600 text-white">
                     <th className="py-3 px-4 border-b">Employee Name</th>
-                    <th className="py-3 px-4 border-b">Role</th>
+                    <th className="py-3 px-4 border-b">Designation</th>
                     <th className="py-3 px-4 border-b">Basic Salary</th>
                     <th className="py-3 px-4 border-b">Joining Date</th>
                     <th className="py-3 px-4 border-b">

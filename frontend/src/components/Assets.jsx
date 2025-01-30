@@ -89,7 +89,7 @@ const Assets = () => {
                 <tr>
                   <th className="px-6 py-3">Name</th>
                   <th className="px-6 py-3">Department</th>
-                  <th className="px-6 py-3">Role</th>
+                  <th className="px-6 py-3">Designation</th>
                   <th className="px-6 py-3">Added Assets</th>
                   <th className="px-6 py-3">Assets</th>
                   <th className="px-6 py-3">Add</th>

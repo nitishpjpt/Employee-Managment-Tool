@@ -4,6 +4,7 @@ import ApiResponse from "../utlis/ApiResponse.js";
 import moment from "moment";
 import axios from "axios";
 import bcrypt from "bcrypt";
+import { upload } from "../middleware/multer.js";
 
 // Generate access token function
 const generateAccessToken = async (userId) => {
@@ -23,7 +24,7 @@ const employeeRegister = async (req, res) => {
     email,
     password,
     confirmPassword,
-    phnNumber,
+    phoneNumber,
     employeeCode,
     location,
     role,
@@ -32,12 +33,13 @@ const employeeRegister = async (req, res) => {
     timezone,
     shift,
     salary,
+    dob
   } = req.body;
 
   console.log("Request Body:", req.body);
   // check if user already register in database
   const existingUser = await Employee.findOne({
-    $or: [{ email, password, phnNumber }],
+    $or: [{ email, password, }],
   });
 
   if (existingUser) {
@@ -60,7 +62,7 @@ const employeeRegister = async (req, res) => {
     email,
     password,
     confirmPassword,
-    phnNumber,
+    phoneNumber,
     employeeCode,
     location,
     role,
@@ -69,6 +71,7 @@ const employeeRegister = async (req, res) => {
     timezone,
     shift,
     salary,
+    dob
   });
 
   console.log("Employee:", employee);

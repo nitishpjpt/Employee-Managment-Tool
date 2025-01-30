@@ -27,7 +27,7 @@ const EmployeeDetails = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [employeeCode, setEmployeeCode] = useState("");
   const [location, setLocation] = useState("");
   const [role, setRole] = useState("");
@@ -39,6 +39,7 @@ const EmployeeDetails = () => {
   const [salary, setSalary] = useState("");
   const [user, setUser] = useState(null);
   const [allUser, setAllUser] = useState("");
+  const [dob, setDOB] = useState("");
   // state for the background verification form
   const [addhar, setAddhar] = useState("");
   const [pan, setPan] = useState("");
@@ -59,7 +60,7 @@ const EmployeeDetails = () => {
     email,
     password,
     confirmPassword,
-    phone,
+    phoneNumber,
     employeeCode,
     location,
     role,
@@ -67,6 +68,7 @@ const EmployeeDetails = () => {
     date,
     salary,
     employee,
+    dob,
   };
   // backgroundVerification form object
   const bgObj = {
@@ -221,6 +223,23 @@ const EmployeeDetails = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("First Name:", firstName);
+    console.log("Phone Number:", phoneNumber);
+    console.log("Date of Birth:", dob);
+
+    if (firstName && phoneNumber && dob) {
+      setTimeout(() => {
+        const dobPart = dob.split("-")[1] + dob.split("-")[2]; // Extracts day and month (e.g., 0507 for May 7th)
+        const code = `${firstName.slice(0, 3).toUpperCase()}${phoneNumber.slice(
+          -4
+        )}${dobPart}`;
+        setEmployeeCode(code);
+        console.log("Generated Employee Code:", code);
+      }, 100); // Small delay to ensure state updates
+    }
+  }, [firstName, phoneNumber, dob]);
+
   return (
     <>
       {/* <ToastContainer /> */}
@@ -336,9 +355,26 @@ const EmployeeDetails = () => {
                           </label>
                           <PhoneInput
                             placeholder="Enter phone number"
-                            value={value}
-                            onChange={setValue}
+                            value={phoneNumber}
+                            onChange={setPhoneNumber}
                             defaultCountry="IN"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="visitors"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            D.O.B (Date of birth){" "}
+                            <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            id="visitors"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter your Date of birth"
+                            required
+                            onChange={(e) => setDOB(e.target.value)}
                           />
                         </div>
                         <div>
@@ -350,12 +386,12 @@ const EmployeeDetails = () => {
                             <span className="text-red-500">*</span>
                           </label>
                           <input
-                            type="number"
-                            id="visitors"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Enter employee code"
-                            required
-                            onChange={(e) => setEmployeeCode(e.target.value)}
+                            type="text"
+                            id="employee_code"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            placeholder="Employee Code"
+                            value={employeeCode} // Ensure this is bound to state
+                            readOnly // Prevent manual edits
                           />
                         </div>
                         <div>
@@ -374,22 +410,7 @@ const EmployeeDetails = () => {
                             onChange={(e) => setLocation(e.target.value)}
                           />
                         </div>
-                        <div>
-                          <label
-                            for="visitors"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                          >
-                            Role <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            id="visitors"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Enter your role"
-                            required
-                            onChange={(e) => setRole(e.target.value)}
-                          />
-                        </div>
+
                         <div>
                           <label
                             for="visitors"
@@ -404,6 +425,22 @@ const EmployeeDetails = () => {
                             placeholder="Enter your department"
                             required
                             onChange={(e) => setDepartment(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label
+                            for="visitors"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            Role <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            id="visitors"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter your role"
+                            required
+                            onChange={(e) => setRole(e.target.value)}
                           />
                         </div>
                         <div>

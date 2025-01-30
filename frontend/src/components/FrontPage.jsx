@@ -77,13 +77,10 @@ const FrontPage = () => {
                     Full Name
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Location
-                  </th>
-                  <th scope="col" className="px-6 py-3">
                     Department
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Role
+                   Designation
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Emp-code
@@ -110,7 +107,7 @@ const FrontPage = () => {
                       <td className="px-6 py-4 font-medium text-gray-900">
                         {user.firstName} {user.lastName}
                       </td>
-                      <td className="px-6 py-4">{user.location}</td>
+
                       <td className="px-6 py-4">{user.department}</td>
                       <td className="px-6 py-4">{user.role}</td>
                       <td className="px-6 py-4">{user.employeeCode}</td>

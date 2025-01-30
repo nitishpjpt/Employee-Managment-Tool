@@ -153,7 +153,7 @@ const EmpPayslip = () => {
               <tr>
                 <th className="px-6 py-3">Full Name</th>
                 <th className="px-6 py-3">Department</th>
-                <th className="px-6 py-3">Role</th>
+                <th className="px-6 py-3">Designation</th>
                 <th className="px-6 py-3">Actual Salary</th>
                 <th className="px-6 py-3">Working Days</th>
                 <th className="px-6 py-3">Fund (12%)</th>

@@ -87,7 +87,7 @@ const EmpLocation = () => {
                   <th className="px-6 py-3">Email</th>
                   <th className="px-6 py-3">Location</th>
                   <th className="px-6 py-3">Department</th>
-                  <th className="px-6 py-3">Role</th>
+                  <th className="px-6 py-3">Designation</th>
                   <th className="px-6 py-3">Emp-code</th>
                 </tr>
               </thead>
