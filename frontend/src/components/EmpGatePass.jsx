@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import EmpDashboard from "../pages/EmpDashboard";
+import { toast } from "react-toastify";
 
 const EmpGatePass = () => {
   const [reason, setReason] = useState("");
@@ -72,7 +73,10 @@ const EmpGatePass = () => {
       // ✅ Update UI immediately
       setPreviousRequests((prevRequests) => [newRequest, ...prevRequests]);
 
-      alert("Gate Pass Request Submitted Successfully!");
+      toast.success("Gate Pass Send For Approval!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
 
       // ✅ Reset the form fields
       setReason("");
@@ -81,7 +85,13 @@ const EmpGatePass = () => {
       setCompanyWorkReason("");
     } catch (error) {
       console.error("Error submitting gate pass:", error);
-      alert("Failed to submit gate pass.");
+      toast.error(
+        error.response.data.message || "Failed to submit gate pass request.",
+        {
+          position: "top-right",
+          autoClose: 1000,
+        }
+      );
     } finally {
       setLoading(false);
     }

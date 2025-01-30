@@ -48,6 +48,7 @@ userRouter.route("/Register").post(userRegister);
 userRouter.route("/Login").post(userLogin);
 userRouter.route("/logout").post(userLogout);
 userRouter.route("/:employeeId/logout").post(employeeLogout);
+// routes for update the leave balance
 userRouter.route("/employee/requestLeave/update").patch(updateLeaveRequest);
 userRouter.route("/update-employee-leave").post(updateEmployeeLeaveBalance);
 userRouter.route("/:employeeId/leave/limits").get(getLeaveLimits);
@@ -59,23 +60,30 @@ userRouter.route("/employee/attendance/absent/count").get(getTotalAbsentEmployee
 userRouter.route("/employee/:employeeId/delete").delete(deleteEmployee);
 userRouter.route("/employee/daily/attendance").get(getTodayAttendance);
 userRouter.route("/projectDetails/:id").delete(deleteEmployee)
+
+// routes for reset password
 userRouter.route("/reset-password/request").post(requestPasswordReset);
 userRouter.route("/reset-password/verify").post(resetPassword);
 userRouter.route("/admin/reset-password/request").post(adminRequestPasswordReset);
 userRouter.route("/admin/reset-password/verify").post(adminResetPassword);
 userRouter.route("/employee/:id").put(editEmployeeDetails);
 userRouter.route("/project/delete/:deleteProject}").delete(deleteProject);
+
+
+// routes for assign the assets
 userRouter.route("/assign/assets").post(assets);
 userRouter.route("/employeeWithAssets").get(fetchAllAssets)
 userRouter.route("/clear/assets").post(clearAssignedAssets)
+
+// routes for terminate the employee
 userRouter.route("/terminate/:employeeId").patch(terminateEmployee);
+
+// routes for employee notes
 userRouter.route("/employee/:id/notes").post(addNote);
 userRouter.route("/get/:id/notes").get(getNotes);
 userRouter.route("/delete/:id/:noteId").delete(deleteNote);
 
-// userRouter.route("/update/salary/:employeeId").put(updateSalaries);
-// userRouter.route("/eligible/emploees").get(getEligibleEmployees);
-// userRouter.route("/all/employees").get(getAllEmployees);
+// routes for advanced money
 userRouter.route("/request/advance/:employeeId").post(requestAdvance);
 userRouter.route("/requests/advance/:employeeId").get(getAdvanceRequests);
 userRouter.route("/request/advance/approve/:employeeId/:requestId").put(approveAdvanceRequest);

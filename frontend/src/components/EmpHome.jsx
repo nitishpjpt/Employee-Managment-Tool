@@ -19,6 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { LuNotebookPen } from "react-icons/lu";
+import { GiSecurityGate } from "react-icons/gi";
 
 const EmpHome = () => {
   const [presentDates, setPresentDates] = useState([]);
@@ -153,7 +154,7 @@ const EmpHome = () => {
                     <Link to="/employee/request/leave">
                       {" "}
                       <img
-                        className="w-[3vw]"
+                        className="lg:w-[3vw] xs:w-[8vw]"
                         src="https://cdn-icons-png.flaticon.com/128/3387/3387188.png"
                       />
                     </Link>
@@ -251,7 +252,7 @@ const EmpHome = () => {
                 <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
                   <div class="text-red-500 bg-[#E1EFFE] p-4 rounded-full">
                     <Link to="/employee/gatepass/request">
-                      <LuNotebookPen className="font-extrabold text-2xl" />
+                      <GiSecurityGate className="font-extrabold text-2xl" />
                     </Link>
                   </div>
                   <Link to="/employee/gatepass/request">

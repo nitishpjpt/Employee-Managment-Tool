@@ -150,40 +150,51 @@ const EmpAdvanced = ({ employee }) => {
             </div>
           </div>
 
-          <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className="mt-8">
+            <h3 className="text-3xl font-semibold mb-6 text-gray-900">
               Previous Requests
             </h3>
             {advanceRequests.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-4 ">
                 {advanceRequests.map((req, index) => (
                   <div
                     key={index}
-                    className="border rounded-lg p-4 bg-gray-50 flex justify-between items-center"
+                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out border-l-4 border-blue-500 hover:bg-gray-50"
                   >
                     <div>
-                      <p>
-                        <strong>Amount:</strong> ₹ {req.amount}
+                      <p className="text-gray-800 font-semibold">
+                        <strong className="font-medium text-blue-600">
+                          Amount:
+                        </strong>{" "}
+                        ₹ {req.amount}
                       </p>
-                      <p>
-                        <strong>Reason:</strong> {req.reason}
+                      <p className="text-gray-800 font-semibold">
+                        <strong className="font-medium text-blue-600">
+                          Reason:
+                        </strong>{" "}
+                        {req.reason}
                       </p>
-                      <p>
-                        <strong>Status:</strong>{" "}
-                        <Button
-                          className={
+                      <p className="text-gray-700 mt-2 ">
+                        <span className="font-medium text-blue-600">
+                          Status :
+                        </span>{" "}
+                        <span
+                          className={`px-3 py-1 text-sm font-semibold text-white rounded-full ${
                             req.status === "approved"
-                              ? "text-gray-100"
+                              ? "bg-green-500"
                               : req.status === "rejected"
-                              ? "bg-red-600"
-                              : "text-gray-100"
-                          }
+                              ? "bg-red-500"
+                              : "bg-yellow-500"
+                          }`}
                         >
                           {req.status}
-                        </Button>
+                        </span>{" "}
                       </p>
                     </div>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-gray-700 mt-2">
+                      <span className="font-medium text-blue-600">
+                        Request Date:
+                      </span>{" "}
                       {new Date(req.requestDate).toLocaleDateString()}
                     </p>
                   </div>
