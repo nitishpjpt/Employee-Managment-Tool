@@ -68,7 +68,7 @@ const GatepassApproval = () => {
           req._id === gatePassId ? { ...req, status } : req
         )
       );
-      toast.success(response.data.message, "Gate Approve successfully", {
+      toast.success(response.data.message, "Gate Pass Approve successfully", {
         position: "top-right",
         autoClose: 1000,
       });
@@ -98,6 +98,9 @@ const GatepassApproval = () => {
   };
 
   const filteredRequests = getFilteredRequests();
+
+
+
 
   return (
     <>
