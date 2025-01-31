@@ -41,6 +41,7 @@ import { approveAdvanceRequest, getAdvanceRequests, rejectAdvanceRequest, reques
 import { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount } from "../controller/advanedMoneyEligiblity_controller.js";
 import { addNote, deleteNote, getNotes } from "../controller/empNotes_controller.js";
 import { gatePassApproval, gatePassRequest, getAllPassRequest } from "../controller/reqGatepass.controller.js";
+import { createShowCauseNotice, getShowCauseNotices, updateShowCauseStatus } from "../controller/showCauseNotice.controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -110,5 +111,10 @@ userRouter.route("/:employeeId/attendence/details").post(markAttendance);
 userRouter.route("/employee/gatepass/request").post(gatePassRequest);
 userRouter.route("/employee/gatepass/:employeeId/approve").put(gatePassApproval);
 userRouter.route("/employee/gatepass/all/:employeeId").get(getAllPassRequest);
+
+// show-cause-notice-routes
+userRouter.route("/showcause/notice").post(createShowCauseNotice);
+userRouter.route("/get/showcause/notice").get(getShowCauseNotices);
+userRouter.route("/update/showcause/notice/:id").put(updateShowCauseStatus);
 
 export default userRouter;

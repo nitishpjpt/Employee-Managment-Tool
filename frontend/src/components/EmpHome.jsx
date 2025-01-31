@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { LuNotebookPen } from "react-icons/lu";
 import { GiSecurityGate } from "react-icons/gi";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const EmpHome = () => {
   const [presentDates, setPresentDates] = useState([]);
@@ -258,6 +259,18 @@ const EmpHome = () => {
                   <Link to="/employee/gatepass/request">
                     <h3 class="text-lg font-semibold mt-4 text-gray-800">
                       Request Gate Pass
+                    </h3>
+                  </Link>
+                </div>
+                <div class="flex flex-col items-center bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow">
+                  <div class="text-red-500 bg-[#E1EFFE] p-4 rounded-full">
+                    <Link to="/employee/cause/notice">
+                      <FiAlertTriangle className="font-extrabold text-2xl" />
+                    </Link>
+                  </div>
+                  <Link to="/employee/gatepass/request">
+                    <h3 class="text-lg font-semibold mt-4 text-gray-800">
+                      Show Cause Notice
                     </h3>
                   </Link>
                 </div>

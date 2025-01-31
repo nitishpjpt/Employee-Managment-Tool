@@ -54,6 +54,7 @@ import {
 } from "react-icons/md";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import { GiSecurityGate } from "react-icons/gi";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const drawerWidth = 240;
 
@@ -359,6 +360,13 @@ export default function Dashboard() {
       ),
       icon: <GiSecurityGate className="text-2xl " />,
       path: "/gatepass/approval",
+    },
+    {
+      text: (
+        <span className="text-[1rem] font-semibold">Show Cause Notice</span>
+      ),
+      icon: <FiAlertTriangle className="text-2xl " />,
+      path: "/view/employee/show/cause/notice",
     },
     {
       text: <span className="text-[1rem] font-semibold">Emp Payslip</span>,

@@ -57,6 +57,23 @@ const attendanceSchema = new mongoose.Schema({
   logoutTime: { type: String }, // Store logout time
 });
 
+// Schema for Show Cause Notice within Employee Schema
+const showCauseNoticeSchema = new mongoose.Schema({
+  department: { type: String, required: true },
+  reason: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["Pending", "Reviewed"],
+    default: "Pending",
+  },
+  selectedEmployee: {
+    name: { type: String, required: true },
+    employeeCode: { type: String, required: true },
+  },
+  issuedAt: { type: Date, default: Date.now },
+  reviewedAt: { type: Date },
+});
+
 const employeeSchema = new mongoose.Schema(
   {
     firstName: {
@@ -80,7 +97,7 @@ const employeeSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
     },
-    dob:{
+    dob: {
       type: String,
     },
     employeeCode: {
@@ -194,6 +211,8 @@ const employeeSchema = new mongoose.Schema(
         nextLoginTime: { type: String }, // When employee can log back in
       },
     ],
+    // Show Cause Notice Section
+    showCauseNotices: [showCauseNoticeSchema],
   },
   { timestamps: true }
 );

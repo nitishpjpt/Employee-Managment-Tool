@@ -43,6 +43,8 @@ import EmpReqLeaveStatus from "./components/EmpReqLeaveStatus";
 import EmpNotes from "./components/EmpNotes";
 import GatepassApproval from "./components/GatepassApproval";
 import EmpGatePass from "./components/EmpGatePass";
+import EmpShowCauseNotice from "./components/EmpShowCauseNotice";
+import ReviewShowCauseNotice from "./components/ReviewShowCauseNotice";
 
 const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -157,6 +159,15 @@ const App = () => {
               isAuthenticated={isAuthenticated}
             ></ProtectedRoute>
           }
+        ></Route>
+        <Route
+        path="/view/employee/show/cause/notice"
+        element={
+          <ProtectedRoute
+          element={<ReviewShowCauseNotice/>}
+          isAuthenticated={isAuthenticated}
+          ></ProtectedRoute>
+        }
         ></Route>
         <Route
           path="/generate/employee/payslip"
@@ -414,7 +425,15 @@ const App = () => {
             isEmployeeAuthenticated={isEmployeeAuthenticated}
           ></EmployeeProtectedRoute>
         }
-
+        ></Route>
+        <Route
+        path="/employee/cause/notice"
+         element={
+          <EmployeeProtectedRoute
+          element={<EmpShowCauseNotice/>}
+          isEmployeeAuthenticated={isEmployeeAuthenticated}
+          ></EmployeeProtectedRoute>
+         }
         ></Route>
         <Route
           path="/employee/forgot/password"
