@@ -62,11 +62,11 @@ const ReviewShowCauseNotice = () => {
         <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold">Employee Show Cause Notices</h2>
         </div>
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full text-center border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border border-gray-300 px-4 py-2">Department</th>
               <th className="border border-gray-300 px-4 py-2">Complaint By</th>
+              <th className="border border-gray-300 px-4 py-2">Department</th>
               <th className="border border-gray-300 px-4 py-2">Reason</th>
               <th className="border border-gray-300 px-4 py-2">Issued At</th>
               <th className="border border-gray-300 px-4 py-2">Complaint To</th>
@@ -81,10 +81,10 @@ const ReviewShowCauseNotice = () => {
                   {" "}
                   {/* Make sure _id is always unique */}
                   <td className="border border-gray-300 px-4 py-2">
-                    {notice.department}
+                    {notice.employeeName}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {notice.employeeName}
+                    {notice.department}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {notice.reason}
@@ -99,7 +99,7 @@ const ReviewShowCauseNotice = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {notice.status}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-gray-300 px-2 py-3">
                     <button
                       onClick={() =>
                         handleStatusChange(

@@ -198,9 +198,7 @@ const EmpShowCauseNotice = () => {
                       {notice.department ?? "N/A"}
                     </p>
                     <p className="text-gray-800 font-semibold">
-                    <span className="font-medium text-blue-600">
-                        Status:
-                      </span>{" "}
+                      <span className="font-medium text-blue-600">Status:</span>{" "}
                       <span
                         className={`px-3 py-1 text-sm font-semibold text-white rounded-full ${
                           notice.status === "pending"
