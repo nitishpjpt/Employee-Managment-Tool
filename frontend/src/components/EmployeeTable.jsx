@@ -115,11 +115,11 @@ const EmployeeTable = () => {
 
   return (
     <>
-      <div className="relative min-h-screen  overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100">
+      <div className="relative min-h-screen overflow-x-auto pt-6 lg:ml-[15rem] xs:ml-[4rem] p-2 max-w-7xl bg-gray-100">
         <div className="bg-blue-600 text-white text-center py-4 mb-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold">Employee Details</h2>
         </div>
-        <div className=" bg-white shadow-md rounded-lg">
+        <div className=" bg-white shadow-md rounded-lg ">
           <table className="w-full overflow-x-auto  text-sm  text-center text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-200">
               <tr>
@@ -205,7 +205,7 @@ const EmployeeTable = () => {
             <div className="space-y-4">
               <div className="flex flex-col items-center">
                 <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center text-2xl font-bold text-white">
-                  {selectedEmployee.firstName.charAt(0)}
+                  <img src={selectedEmployee.avatar} alt="img" />
                 </div>
                 <p className="text-lg font-semibold text-gray-900 mt-2">
                   {selectedEmployee.firstName} {selectedEmployee.lastName}

@@ -42,6 +42,7 @@ import { advancedEligibility, getEligiblityPolicy, updateAdvanceAmount } from ".
 import { addNote, deleteNote, getNotes } from "../controller/empNotes_controller.js";
 import { gatePassApproval, gatePassRequest, getAllPassRequest } from "../controller/reqGatepass.controller.js";
 import { createShowCauseNotice, getShowCauseNotices, updateShowCauseStatus } from "../controller/showCauseNotice.controller.js";
+import {upload } from "../middleware/multer.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -97,7 +98,7 @@ userRouter.route("/edit/advanced/amount").put(updateAdvanceAmount);
 // employee login
 userRouter.route("/:employeeId/leaveStatus").get(getLeaveStatus);
 userRouter.route("/employee/login").post(employeeLogin);
-userRouter.route("/employee/register").post(employeeRegister);
+userRouter.route("/employee/register").post(upload.single("avatar"), employeeRegister);
 userRouter.route("/employee/all/registerDetails").post(getAllUser);
 userRouter.route("/projectDetails").post(projectDetails);
 userRouter.route("/all/projectDetails").post(getAllProject);

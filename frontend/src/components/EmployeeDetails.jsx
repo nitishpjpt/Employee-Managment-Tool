@@ -40,6 +40,7 @@ const EmployeeDetails = () => {
   const [user, setUser] = useState(null);
   const [allUser, setAllUser] = useState("");
   const [dob, setDOB] = useState("");
+  const [avatar, setAvatar] = useState(null);
   // state for the background verification form
   const [addhar, setAddhar] = useState("");
   const [pan, setPan] = useState("");
@@ -54,22 +55,7 @@ const EmployeeDetails = () => {
 
   const navigate = useNavigate();
   //register form data as a object
-  const userData = {
-    firstName,
-    lastName,
-    email,
-    password,
-    confirmPassword,
-    phoneNumber,
-    employeeCode,
-    location,
-    role,
-    department,
-    date,
-    salary,
-    employee,
-    dob,
-  };
+
   // backgroundVerification form object
   const bgObj = {
     addhar,
@@ -89,35 +75,50 @@ const EmployeeDetails = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    //Register employee api
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("employeeCode", employeeCode);
+    formData.append("location", location);
+    formData.append("role", role);
+    formData.append("department", department);
+    formData.append("date", date);
+    formData.append("salary", salary);
+    formData.append("dob", dob);
+    formData.append("avatar", avatar); // Append image
+
     try {
       const response = await axios.post(
         `${
           import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
         }/api/v1/user/employee/register`,
-        userData,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      setEmployee(response.data);
 
-      // Store user data in local storage
+      setEmployee(response.data);
+      console.log(response.data);
       localStorage.setItem(
         "EmployeeId",
         JSON.stringify(response.data.data._id)
       );
 
-      //handle the response
       toast.success("User registered successfully!", {
         position: "top-right",
         autoClose: 1000,
       });
       setRegisterModal(false);
+      setBulkRegisterModal(true);
     } catch (error) {
-      toast.error("User  does not register", {
+      toast.error("User registration failed!", {
         position: "top-right",
         autoClose: 1000,
       });
@@ -184,6 +185,7 @@ const EmployeeDetails = () => {
       );
       // Ensures page reloads after employee details
       setBulkRegisterModal(false);
+      setBulkUpdateModel(true);
     } catch (error) {
       toast.error("Employee background verification details does not added");
     }
@@ -487,9 +489,11 @@ const EmployeeDetails = () => {
                           <input
                             type="file"
                             id="visitors"
+                            name="avatar"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="upload profile pic"
                             className="rounded-full"
+                            onChange={(e) => setAvatar(e.target.files[0])}
                           />
                         </div>
                       </div>
@@ -629,6 +633,7 @@ const EmployeeDetails = () => {
                     </form>
                   </div>
                 </Modal.Body>
+
                 <Modal.Footer className="xs:pl-[4rem]">
                   <Button onClick={() => setBulkRegisterModal(false)}>
                     Closed

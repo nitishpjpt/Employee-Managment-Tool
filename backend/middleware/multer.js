@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from "path"
 
 // Set up multer storage configuration to save files locally
 const storage = multer.diskStorage({
@@ -10,4 +11,4 @@ const storage = multer.diskStorage({
   }
 });
 
-export const upload = multer({ storage: storage }).single('avatar'); // 'avatar' is the field name in the form
+export const upload = multer({ storage: storage }); // 'avatar' is the field name in the form

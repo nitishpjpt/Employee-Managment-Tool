@@ -4,7 +4,7 @@ import ApiResponse from "../utlis/ApiResponse.js";
 import moment from "moment";
 import axios from "axios";
 import bcrypt from "bcrypt";
-import { upload } from "../middleware/multer.js";
+
 
 // Generate access token function
 const generateAccessToken = async (userId) => {
@@ -18,6 +18,15 @@ const generateAccessToken = async (userId) => {
 };
 
 const employeeRegister = async (req, res) => {
+  console.log("File Uploaded:", req.file); // 🟢 Log uploaded file
+  console.log("Request Body:", req.body); // Log request data
+
+  if (!req.file) {
+    return res.status(400).json({ message: "Avatar file is required!" });
+  }
+
+  const avatarUrl = `${process.env.IMG_BASE_URL}/images/${req.file.filename}`; // Store file path
+
   const {
     firstName,
     lastName,
@@ -33,7 +42,9 @@ const employeeRegister = async (req, res) => {
     timezone,
     shift,
     salary,
-    dob
+    dob,
+    avatar
+    
   } = req.body;
 
   console.log("Request Body:", req.body);
@@ -71,7 +82,8 @@ const employeeRegister = async (req, res) => {
     timezone,
     shift,
     salary,
-    dob
+    dob,
+    avatar:avatarUrl
   });
 
   console.log("Employee:", employee);
