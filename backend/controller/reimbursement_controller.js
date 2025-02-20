@@ -11,19 +11,19 @@ const addReimbursement = async (req, res) => {
     }
 
     // Create a new incentive
-    const newIncentive = {
+    const newReimbursement = {
       amount,
       date: date || new Date(),
       notes,
     };
 
     // Save the incentive in the employee's record
-    employee.incentive.push(newIncentive);
+    employee.reimbursement.push(newReimbursement);
     await employee.save();
 
     res.status(201).json({
-      message: "Incentive added successfully",
-      incentive: newIncentive,
+      message: "Reimbursement added successfully",
+      incentive: newReimbursement,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

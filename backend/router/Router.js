@@ -109,7 +109,9 @@ userRouter.route("/:employeeId/bankDetails/verify").post(addBankVerification);
 userRouter.route("/:employeeId/request/leave").post(addRequestLeave);
 userRouter.route("/:employeeId/attendence/details").post(markAttendance);
 userRouter.route("/incentive").post(addIncentive);
-userRouter.route("/:employeeId/addReimbursement").post(addReimbursement);
+userRouter.route("/addReimbursement").post(addReimbursement);
+
+
 
 
 
