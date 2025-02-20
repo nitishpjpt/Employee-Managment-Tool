@@ -43,6 +43,8 @@ import { addNote, deleteNote, getNotes } from "../controller/empNotes_controller
 import { gatePassApproval, gatePassRequest, getAllPassRequest } from "../controller/reqGatepass.controller.js";
 import { createShowCauseNotice, getShowCauseNotices, updateShowCauseStatus } from "../controller/showCauseNotice.controller.js";
 import {upload } from "../middleware/multer.js";
+import { addIncentive } from "../controller/incentive_controller.js";
+import { addReimbursement } from "../controller/reimbursement_controller.js";
 const userRouter = Router();
 
 userRouter.route("/Register").post(userRegister);
@@ -106,6 +108,10 @@ userRouter.route("/:employeeId/verify").post(addBackgroundVerification);
 userRouter.route("/:employeeId/bankDetails/verify").post(addBankVerification);
 userRouter.route("/:employeeId/request/leave").post(addRequestLeave);
 userRouter.route("/:employeeId/attendence/details").post(markAttendance);
+userRouter.route("/incentive").post(addIncentive);
+userRouter.route("/:employeeId/addReimbursement").post(addReimbursement);
+
+
 
 
 //gate pass routes

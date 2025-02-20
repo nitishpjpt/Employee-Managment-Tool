@@ -190,6 +190,33 @@ const employeeSchema = new mongoose.Schema(
         timestamp: { type: Date, default: Date.now },
       },
     ],
+    incentive: [
+      {
+        amount: {
+          type: Number,
+          required: true,
+        },
+        date: {
+          type: Date,
+        },
+        notes: {
+          type: String,
+        },
+      },
+    ],
+    reimbursement: [
+      {
+        amount: {
+          type: Number,
+        },
+        paymentDate: {
+          type: Date,
+        },
+        notes: {
+          type: String,
+        },
+      },
+    ],
     // Gate Pass Requests added inside Employee schema
     gatePassRequests: [
       {
